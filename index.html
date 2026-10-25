@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zetta - Katalog Film</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            padding-top: 80px; 
+            padding-bottom: 80px; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 640px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 900;
+            font-style: italic;
+            background: linear-gradient(90deg, #ff3b30, #ff9500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 18px;
+            font-size: 20px;
+            color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 600px; 
+            margin: 0 auto;
+        }
+
+        .movie-card {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .badge-new {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #ff3b30;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .badge-rating {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #ffd700;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .badge-episode {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+        }
+
+        .movie-title {
+            font-size: 12px;
+            font-weight: normal;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 640px; 
+            background-color: rgba(18, 18, 18, 0.95); 
+            backdrop-filter: blur(10px); 
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #2a2a2a;
+            z-index: 1000; 
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #777; 
+            font-size: 11px;
+            text-decoration: none; 
+            gap: 6px;
+            transition: color 0.3s ease; 
+        }
+
+        .nav-item i {
+            font-size: 20px; 
+        }
+
+        .nav-item.active {
+            color: #ff3b30; 
+            position: relative;
+        }
+
+        .nav-item.active::before {
+            content: "";
+            position: absolute;
+            top: -12px; 
+            width: 4px;
+            height: 4px;
+            background-color: #ff3b30;
+            border-radius: 50%;
+            box-shadow: 0 0 12px 4px rgba(255, 59, 48, 0.4); 
+            animation: popIn 0.3s ease forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="logo">Zetta</div>
+        <div class="header-icons">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="fa-regular fa-bell"></i>
+        </div>
+    </header>
+
+    <div class="movie-grid">
+        <div class="movie-card">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1535016120720-40c74676578c?q=80&w=400&auto=format&fit=crop" alt="Battle Through the Heavens">
+                <div class="badge-new">New</div>
+                <div class="badge-rating">★ 8.38</div>
+                <div class="badge-episode">216 Eps</div>
+            </div>
+            <div class="movie-title">Battle Through the Heavens Season 5</div>
+        </div>
+        <div class="movie-card">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=400&auto=format&fit=crop" alt="Shuiro no Kamen">
+                <div class="badge-new">New</div>
+                <div class="badge-rating">★ 7.05</div>
+                <div class="badge-episode">3 Eps</div>
+            </div>
+            <div class="movie-title">Shuiro no Kamen</div>
+        </div>
+        <div class="movie-card">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1618336753974-aae8e04506aa?q=80&w=400&auto=format&fit=crop" alt="Lord of the Ancient God Grave">
+                <div class="badge-new">New</div>
+                <div class="badge-rating">★ 7.20</div>
+                <div class="badge-episode">494 Eps</div>
+            </div>
+            <div class="movie-title">Lord of the Ancient God Grave</div>
+        </div>
+        <div class="movie-card">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=400&auto=format&fit=crop" alt="Anime">
+                <div class="badge-new">New</div>
+                <div class="badge-rating">★ 7.70</div>
+                <div class="badge-episode">197 Eps</div>
+            </div>
+            <div class="movie-title">A Record of A Mortal's Journey to Immortality</div>
+        </div>
+        <div class="movie-card">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1618336753974-aae8e04506aa?q=80&w=400&auto=format&fit=crop" alt="Anime 2">
+                <div class="badge-new">New</div>
+                <div class="badge-rating">★ 8.10</div>
+                <div class="badge-episode">12 Eps</div>
+            </div>
+            <div class="movie-title">The Legend of Sword Domain</div>
+        </div>
+        <div class="movie-card">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1535016120720-40c74676578c?q=80&w=400&auto=format&fit=crop" alt="Anime 3">
+                <div class="badge-new">New</div>
+                <div class="badge-rating">★ 7.95</div>
+                <div class="badge-episode">On Going</div>
+            </div>
+            <div class="movie-title">Martial Universe Season 4</div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-regular fa-calendar"></i>
+            <span>Schedule</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Catalog</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span>Library</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script>
+        const navItems = document.querySelectorAll('.nav-item');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', function(event) {
+                event.preventDefault(); 
+                navItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
