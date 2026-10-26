@@ -54,11 +54,17 @@
         .btn-watch { flex: 1; background-color: #ff3b30; color: white; border: none; padding: 14px; border-radius: 30px; font-weight: bold; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(255,59,48,0.4); }
         .btn-sub { flex: 1; background-color: #2b2b2b; color: white; border: none; padding: 14px; border-radius: 30px; font-weight: bold; font-size: 14px; cursor: pointer; }
 
+        /* Bagian Daftar Episode (Grid Tombol Episode) */
+        .episode-section { margin-bottom: 30px; }
+        .episode-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-height: 180px; overflow-y: auto; padding-right: 5px; }
+        .episode-btn { background-color: #1e1e1e; color: #ddd; border: 1px solid #333; padding: 10px 0; border-radius: 8px; font-size: 13px; font-weight: bold; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .episode-btn:hover, .episode-btn.active { background-color: #ff3b30; color: white; border-color: #ff3b30; }
+
         .synopsis-section { margin-bottom: 30px; }
         .synopsis-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
         .synopsis-text { color: #bbb; font-size: 13px; line-height: 1.6; }
 
-        /* Halaman Form Upload Online */
+        /* Halaman Form Upload */
         .upload-container { max-width: 580px; margin: 20px auto; background: #1a1a1a; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; color: #aaa; margin-bottom: 6px; font-weight: bold; }
@@ -126,25 +132,29 @@
         </div>
     </div>
 
-    <!-- HALAMAN UPLOAD LINK ONLINE -->
+    <!-- HALAMAN UPLOAD -->
     <div id="pageUpload" class="page-content">
         <div class="upload-container">
-            <div class="section-title" style="margin-bottom: 20px;"><i class="fa-solid fa-link"></i> Tambah Donghua via Link Online</div>
+            <div class="section-title" style="margin-bottom: 20px;"><i class="fa-solid fa-link"></i> Tambah Donghua & Episode</div>
             <form id="uploadForm" onsubmit="tambahLinkOnline(event)">
                 <div class="form-group">
-                    <label>Judul Donghua / Episode</label>
-                    <input type="text" id="inputJudul" placeholder="Contoh: Black Clover Season 2" required>
+                    <label>Judul Donghua</label>
+                    <input type="text" id="inputJudul" placeholder="Contoh: Battle Through the Heavens" required>
                 </div>
                 <div class="form-group">
                     <label>Link Poster Foto (URL Gambar Online)</label>
-                    <input type="text" id="inputPoster" placeholder="https://contoh.com/poster.jpg" required>
+                    <input type="text" id="inputPoster" placeholder="https://..." required>
                 </div>
                 <div class="form-group">
-                    <label>Link Video / ID YouTube / Link Google Drive</label>
-                    <input type="text" id="inputVideo" placeholder="Contoh: https://www.youtube.com/watch?v=... atau ID YouTube" required>
+                    <label>Link Video Episode (YouTube / Link Streaming)</label>
+                    <input type="text" id="inputVideo" placeholder="https://www.youtube.com/watch?v=..." required>
                 </div>
                 <div class="form-group">
-                    <label>Jadwal Tayang (Menu Schedule)</label>
+                    <label>Nomor Episode (Contoh: Eps 1)</label>
+                    <input type="text" id="inputEpsNum" value="Eps 1" required>
+                </div>
+                <div class="form-group">
+                    <label>Jadwal Tayang</label>
                     <select id="inputHari">
                         <option value="Minggu">Minggu</option>
                         <option value="Senin">Senin</option>
@@ -156,19 +166,19 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Rating (Contoh: 8.68)</label>
+                    <label>Rating</label>
                     <input type="text" id="inputRating" value="8.5" required>
                 </div>
                 <div class="form-group">
                     <label>Sinopsis Cerita</label>
-                    <textarea id="inputSinopsis" rows="3" placeholder="Tulis sinopsis cerita..."></textarea>
+                    <textarea id="inputSinopsis" rows="3" placeholder="Tulis sinopsis..."></textarea>
                 </div>
                 <button type="submit" class="btn-submit-upload"><i class="fa-solid fa-cloud-arrow-up"></i> Catat & Tayangkan</button>
             </form>
         </div>
     </div>
 
-    <!-- DETAIL ANIME -->
+    <!-- DETAIL ANIME & PILIHAN EPS -->
     <div id="pageDetail" class="page-content" style="padding-top: 0;">
         <div class="detail-header-bg" id="detailBg">
             <button class="back-btn" onclick="kembaliKeHome()"><i class="fa-solid fa-arrow-left"></i></button>
@@ -186,13 +196,21 @@
             </div>
 
             <div class="action-buttons">
-                <button class="btn-watch" onclick="putarVideoOnline()"><i class="fa-solid fa-play"></i> Putar Video / Eps</button>
+                <button class="btn-watch" onclick="putarVideoEpisodeAktif()"><i class="fa-solid fa-play"></i> Putar Video</button>
                 <button class="btn-sub" onclick="alert('Berhasil berlangganan!')">Subscribe</button>
+            </div>
+
+            <!-- DAFTAR PILIHAN EPS (MIRIIP APLIKASI KOMERSIAL) -->
+            <div class="episode-section">
+                <div class="synopsis-title"><i class="fa-solid fa-list"></i> Pilih Episode</div>
+                <div class="episode-grid" id="episodeListContainer">
+                    <!-- Tombol Episode akan otomatis dimuat di sini -->
+                </div>
             </div>
 
             <div class="synopsis-section">
                 <div class="synopsis-title">Sinopsis</div>
-                <div class="synopsis-text" id="detailOverview">Sinopsis singkat akan muncul di sini...</div>
+                <div class="synopsis-text" id="detailOverview">Sinopsis singkat...</div>
             </div>
         </div>
     </div>
@@ -202,7 +220,7 @@
         <a onclick="gantiHalaman('home', this)" class="nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></a>
         <a onclick="gantiHalaman('schedule', this)" class="nav-item"><i class="fa-regular fa-calendar"></i><span>Schedule</span></a>
         <a onclick="gantiHalaman('upload', this)" class="nav-item"><i class="fa-solid fa-cloud-arrow-up"></i><span>Upload</span></a>
-        <a class="nav-item"><i class="fa-solid fa-boxes-stacked"></i><span>Library</span></a>
+        <a class="nav-item"><i class="fa-solid fa-layer-group"></i><span>Catalog</span></a>
         <a class="nav-item"><i class="fa-regular fa-user"></i><span>Profile</span></a>
     </nav>
 
@@ -220,6 +238,7 @@
         
         let semuaDataDonghua = [];
         let filmAktif = null;
+        let linkVideoAktif = "";
 
         // Ambil Data dari Google Sheets & Data Lokal
         fetch(urlAPI)
@@ -238,18 +257,22 @@
                         youtubeId: baris.c[4] ? baris.c[4].v : 'vOewtTIOX7w',
                         label: baris.c[5] ? baris.c[5].v : 'New',
                         sinopsis: "Kisah epik pertarungan kultivasi dunia persilatan Donghua penentang takdir.",
-                        hari: 'Minggu'
+                        hari: 'Minggu',
+                        daftarEpisode: [
+                            { nomor: "Eps 1", link: baris.c[4] ? baris.c[4].v : 'vOewtTIOX7w' },
+                            { nomor: "Eps 2", link: baris.c[4] ? baris.c[4].v : 'vOewtTIOX7w' }
+                        ]
                     };
                 });
 
-                const dataLokal = JSON.parse(localStorage.getItem('zettaOnlineUploads') || '[]');
+                const dataLokal = JSON.parse(localStorage.getItem('zettaProUploads') || '[]');
                 semuaDataDonghua = [...dataLokal, ...dataSheets];
 
                 tampilkanHome(semuaDataDonghua);
                 pilihHari('Minggu', document.querySelector('.day-btn.active'));
             })
             .catch(error => {
-                const dataLokal = JSON.parse(localStorage.getItem('zettaOnlineUploads') || '[]');
+                const dataLokal = JSON.parse(localStorage.getItem('zettaProUploads') || '[]');
                 semuaDataDonghua = dataLokal;
                 tampilkanHome(semuaDataDonghua);
                 pilihHari('Minggu', document.querySelector('.day-btn.active'));
@@ -300,6 +323,7 @@
             if(!film) return;
 
             filmAktif = film;
+            linkVideoAktif = film.daftarEpisode && film.daftarEpisode.length > 0 ? film.daftarEpisode[0].link : film.youtubeId;
 
             const posterBg = film.poster || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500';
             document.getElementById('detailBg').style.backgroundImage = `url('${posterBg}')`;
@@ -313,12 +337,30 @@
                 <div class="tag-pill">${film.episode || 'Ongoing'}</div>
             `;
 
+            // Render Tombol Pilihan Episode
+            let htmlEps = '';
+            if (film.daftarEpisode && film.daftarEpisode.length > 0) {
+                film.daftarEpisode.forEach((eps, idx) => {
+                    let activeClass = idx === 0 ? 'active' : '';
+                    htmlEps += `<div class="episode-btn ${activeClass}" onclick="pilihEpisode(this, '${eps.link}')">${eps.nomor}</div>`;
+                });
+            } else {
+                htmlEps = `<div class="episode-btn active" onclick="pilihEpisode(this, '${film.youtubeId}')">Eps 1</div>`;
+            }
+            document.getElementById('episodeListContainer').innerHTML = htmlEps;
+
             document.getElementById('mainHeader').style.display = 'none';
             document.getElementById('bottomNav').style.display = 'none';
             
             document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             document.getElementById('pageDetail').classList.add('active');
             window.scrollTo(0, 0);
+        }
+
+        function pilihEpisode(elemenBtn, link) {
+            document.querySelectorAll('.episode-btn').forEach(b => b.classList.remove('active'));
+            elemenBtn.classList.add('active');
+            linkVideoAktif = link;
         }
 
         function kembaliKeHome() {
@@ -343,54 +385,57 @@
             }
         }
 
-        // FUNGSI SIMPAN LINK ONLINE DENGAN MULUS
+        // FUNGSI UPLOAD / TAMBAH DONGHUA
         function tambahLinkOnline(event) {
             event.preventDefault();
 
             const judul = document.getElementById('inputJudul').value;
             const poster = document.getElementById('inputPoster').value;
             const videoLink = document.getElementById('inputVideo').value;
+            const epsNomor = document.getElementById('inputEpsNum').value;
             const hari = document.getElementById('inputHari').value;
             const rating = document.getElementById('inputRating').value;
             const sinopsis = document.getElementById('inputSinopsis').value;
 
             const animeBaru = {
-                id: 'online_' + Date.now(),
+                id: 'pro_' + Date.now(),
                 judul: judul,
                 poster: poster,
                 rating: rating,
-                episode: "Full Eps",
+                episode: epsNomor,
                 youtubeId: videoLink,
                 label: "Upload",
                 sinopsis: sinopsis || "Sinopsis belum ditambahkan.",
-                hari: hari
+                hari: hari,
+                daftarEpisode: [
+                    { nomor: epsNomor, link: videoLink }
+                ]
             };
 
-            let dataLokal = JSON.parse(localStorage.getItem('zettaOnlineUploads') || '[]');
+            let dataLokal = JSON.parse(localStorage.getItem('zettaProUploads') || '[]');
             dataLokal.unshift(animeBaru);
-            localStorage.setItem('zettaOnlineUploads', JSON.stringify(dataLokal));
+            localStorage.setItem('zettaProUploads', JSON.stringify(dataLokal));
 
             semuaDataDonghua.unshift(animeBaru);
             tampilkanHome(semuaDataDonghua);
             pilihHari(hari, document.querySelector('.day-btn'));
 
-            alert("Berhasil! Donghua baru sudah ditambahkan ke Zetta.");
+            alert("Berhasil! Donghua dan episode baru berhasil ditambahkan.");
             document.getElementById('uploadForm').reset();
             gantiHalaman('home', document.querySelector('.nav-item'));
         }
 
-        // PEMUTAR VIDEO OTOMATIS (YouTube, Google Drive, atau Link MP4)
-        function putarVideoOnline() {
-            if(!filmAktif) return;
+        // PEMUTAR VIDEO UTAMA
+        function putarVideoEpisodeAktif() {
+            if(!linkVideoAktif) return;
             
             const modalVideo = document.getElementById('videoModal');
             const container = document.getElementById('playerContainer');
             modalVideo.style.display = 'flex'; 
 
-            let link = filmAktif.youtubeId;
+            let link = linkVideoAktif;
             
             if (link.includes('youtube.com') || link.includes('youtu.be')) {
-                // Konversi link YouTube biasa menjadi format embed
                 let videoId = '';
                 if (link.includes('youtu.be/')) {
                     videoId = link.split('youtu.be/')[1].split('?')[0];
@@ -399,17 +444,15 @@
                 }
                 container.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
             } else if (link.startsWith('http')) {
-                // Link langsung (Google Drive / MP4)
                 container.innerHTML = `<video controls autoplay style="width:100%; height:100%; border-radius:12px;"><source src="${link}" type="video/mp4">Browser Anda tidak mendukung pemutar video.</video>`;
             } else {
-                // ID YouTube mentah
                 container.innerHTML = `<iframe src="https://www.youtube.com/embed/${link}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
             }
         }
 
         function tutupVideo() {
             document.getElementById('videoModal').style.display = 'none'; 
-            container.innerHTML = ""; 
+            document.getElementById('playerContainer').innerHTML = ""; 
         }
     </script>
 </body>
