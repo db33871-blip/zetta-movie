@@ -58,12 +58,11 @@
         .synopsis-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
         .synopsis-text { color: #bbb; font-size: 13px; line-height: 1.6; }
 
-        /* Halaman Form Upload Galeri */
+        /* Halaman Form Upload Online */
         .upload-container { max-width: 580px; margin: 20px auto; background: #1a1a1a; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; color: #aaa; margin-bottom: 6px; font-weight: bold; }
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; background: #252525; border: 1px solid #333; border-radius: 8px; color: white; font-size: 14px; }
-        .form-group input[type="file"] { padding: 8px; cursor: pointer; }
         .form-group input:focus, .form-group textarea:focus { border-color: #ff3b30; outline: none; }
         .btn-submit-upload { width: 100%; background: #ff3b30; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; }
 
@@ -76,7 +75,7 @@
 
         @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* Modal Video Player (Mendukung Video Lokal / HTML5 & YouTube) */
+        /* Modal Pemutar Video */
         .video-modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
         .modal-content { position: relative; width: 100%; max-width: 640px; padding: 20px; }
         .close-btn { position: absolute; top: -20px; right: 20px; color: white; font-size: 35px; font-weight: bold; cursor: pointer; z-index: 10000; }
@@ -127,25 +126,25 @@
         </div>
     </div>
 
-    <!-- HALAMAN UPLOAD DARI GALERI PERANGKAT -->
+    <!-- HALAMAN UPLOAD LINK ONLINE -->
     <div id="pageUpload" class="page-content">
         <div class="upload-container">
-            <div class="section-title" style="margin-bottom: 20px;"><i class="fa-solid fa-photo-film"></i> Upload Foto & Video dari Galeri</div>
-            <form id="uploadForm" onsubmit="uploadDariGaleri(event)">
+            <div class="section-title" style="margin-bottom: 20px;"><i class="fa-solid fa-link"></i> Tambah Donghua via Link Online</div>
+            <form id="uploadForm" onsubmit="tambahLinkOnline(event)">
                 <div class="form-group">
                     <label>Judul Donghua / Episode</label>
-                    <input type="text" id="inputJudul" placeholder="Contoh: Battle Through the Heavens Eps 164" required>
+                    <input type="text" id="inputJudul" placeholder="Contoh: Black Clover Season 2" required>
                 </div>
                 <div class="form-group">
-                    <label>Pilih File Foto Poster (Dari Galeri)</label>
-                    <input type="file" id="inputFilePoster" accept="image/*" required>
+                    <label>Link Poster Foto (URL Gambar Online)</label>
+                    <input type="text" id="inputPoster" placeholder="https://contoh.com/poster.jpg" required>
                 </div>
                 <div class="form-group">
-                    <label>Pilih File Video / Episode (Format .mp4)</label>
-                    <input type="file" id="inputFileVideo" accept="video/mp4,video/*" required>
+                    <label>Link Video / ID YouTube / Link Google Drive</label>
+                    <input type="text" id="inputVideo" placeholder="Contoh: https://www.youtube.com/watch?v=... atau ID YouTube" required>
                 </div>
                 <div class="form-group">
-                    <label>Jadwal Tayang (Untuk Menu Schedule)</label>
+                    <label>Jadwal Tayang (Menu Schedule)</label>
                     <select id="inputHari">
                         <option value="Minggu">Minggu</option>
                         <option value="Senin">Senin</option>
@@ -157,14 +156,14 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Rating (Contoh: 8.8)</label>
+                    <label>Rating (Contoh: 8.68)</label>
                     <input type="text" id="inputRating" value="8.5" required>
                 </div>
                 <div class="form-group">
                     <label>Sinopsis Cerita</label>
-                    <textarea id="inputSinopsis" rows="3" placeholder="Tulis deskripsi atau sinopsis episode ini..."></textarea>
+                    <textarea id="inputSinopsis" rows="3" placeholder="Tulis sinopsis cerita..."></textarea>
                 </div>
-                <button type="submit" class="btn-submit-upload"><i class="fa-solid fa-upload"></i> Unggah & Tayangkan</button>
+                <button type="submit" class="btn-submit-upload"><i class="fa-solid fa-cloud-arrow-up"></i> Catat & Tayangkan</button>
             </form>
         </div>
     </div>
@@ -187,7 +186,7 @@
             </div>
 
             <div class="action-buttons">
-                <button class="btn-watch" onclick="putarVideoLokal()"><i class="fa-solid fa-play"></i> Putar Video / Eps</button>
+                <button class="btn-watch" onclick="putarVideoOnline()"><i class="fa-solid fa-play"></i> Putar Video / Eps</button>
                 <button class="btn-sub" onclick="alert('Berhasil berlangganan!')">Subscribe</button>
             </div>
 
@@ -207,13 +206,11 @@
         <a class="nav-item"><i class="fa-regular fa-user"></i><span>Profile</span></a>
     </nav>
 
-    <!-- MODAL PEMUTAR VIDEO (SUPORT MP4 & YOUTUBE) -->
+    <!-- MODAL PEMUTAR VIDEO -->
     <div id="videoModal" class="video-modal">
         <div class="modal-content">
             <span class="close-btn" onclick="tutupVideo()">&times;</span>
-            <div class="iframe-container" id="playerContainer">
-                <!-- Pemutar dinamis akan disisipkan di sini -->
-            </div>
+            <div class="iframe-container" id="playerContainer"></div>
         </div>
     </div>
 
@@ -224,7 +221,7 @@
         let semuaDataDonghua = [];
         let filmAktif = null;
 
-        // Ambil Data dari Google Sheets & Gabungkan dengan Data Upload Lokal
+        // Ambil Data dari Google Sheets & Data Lokal
         fetch(urlAPI)
             .then(response => response.text())
             .then(data => {
@@ -241,21 +238,18 @@
                         youtubeId: baris.c[4] ? baris.c[4].v : 'vOewtTIOX7w',
                         label: baris.c[5] ? baris.c[5].v : 'New',
                         sinopsis: "Kisah epik pertarungan kultivasi dunia persilatan Donghua penentang takdir.",
-                        hari: 'Minggu',
-                        isVideoLokal: false
+                        hari: 'Minggu'
                     };
                 });
 
-                // Gabungkan dengan data tersimpan di perangkat (localStorage) jika ada
-                const dataLokal = JSON.parse(localStorage.getItem('zettaLocalUploads') || '[]');
+                const dataLokal = JSON.parse(localStorage.getItem('zettaOnlineUploads') || '[]');
                 semuaDataDonghua = [...dataLokal, ...dataSheets];
 
                 tampilkanHome(semuaDataDonghua);
                 pilihHari('Minggu', document.querySelector('.day-btn.active'));
             })
             .catch(error => {
-                // Fallback jika Google Sheets gagal dimuat
-                const dataLokal = JSON.parse(localStorage.getItem('zettaLocalUploads') || '[]');
+                const dataLokal = JSON.parse(localStorage.getItem('zettaOnlineUploads') || '[]');
                 semuaDataDonghua = dataLokal;
                 tampilkanHome(semuaDataDonghua);
                 pilihHari('Minggu', document.querySelector('.day-btn.active'));
@@ -274,9 +268,8 @@
             tombolElemen.classList.add('active');
             document.getElementById('activeDayTitle').innerText = namaHari;
 
-            // Filter berdasarkan hari yang dipilih
             let hasilFilter = semuaDataDonghua.filter(film => film.hari === namaHari);
-            if(hasilFilter.length === 0) hasilFilter = semuaDataDonghua.slice(0, 4); // Cadangan jika hari itu kosong
+            if(hasilFilter.length === 0) hasilFilter = semuaDataDonghua.slice(0, 4);
 
             document.getElementById('animeCount').innerText = `(${hasilFilter.length} Anime)`;
 
@@ -350,85 +343,73 @@
             }
         }
 
-        // FUNGSI UPLOAD FOTO & VIDEO DARI GALERI PERANGKAT
-        function uploadDariGaleri(event) {
+        // FUNGSI SIMPAN LINK ONLINE DENGAN MULUS
+        function tambahLinkOnline(event) {
             event.preventDefault();
 
             const judul = document.getElementById('inputJudul').value;
-            const filePoster = document.getElementById('inputFilePoster').files[0];
-            const fileVideo = document.getElementById('inputFileVideo').files[0];
+            const poster = document.getElementById('inputPoster').value;
+            const videoLink = document.getElementById('inputVideo').value;
             const hari = document.getElementById('inputHari').value;
             const rating = document.getElementById('inputRating').value;
             const sinopsis = document.getElementById('inputSinopsis').value;
 
-            if (!filePoster || !fileVideo) {
-                alert("Harap pilih file foto poster dan file video dari galeri Anda!");
-                return;
-            }
-
-            // Membaca file lokal menggunakan FileReader agar bisa disimpan & ditampilkan di browser
-            const readerPoster = new FileReader();
-            readerPoster.onload = function(eUploadPoster) {
-                const posterBase64 = eUploadPoster.target.result;
-
-                const readerVideo = new FileReader();
-                readerVideo.onload = function(eUploadVideo) {
-                    const videoBase64 = eUploadVideo.target.result;
-
-                    const animeBaru = {
-                        id: 'local_' + Date.now(),
-                        judul: judul,
-                        poster: posterBase64,
-                        rating: rating,
-                        episode: "New Eps",
-                        youtubeId: videoBase64,
-                        label: "Upload",
-                        sinopsis: sinopsis || "Video diunggah langsung dari galeri perangkat.",
-                        hari: hari,
-                        isVideoLokal: true
-                    };
-
-                    // Simpan ke memori lokal browser (localStorage) agar tidak hilang saat di-refresh
-                    let dataLokal = JSON.parse(localStorage.getItem('zettaLocalUploads') || '[]');
-                    dataLokal.unshift(animeBaru);
-                    localStorage.setItem('zettaLocalUploads', JSON.stringify(dataLokal));
-
-                    // Masukkan ke array utama & perbarui tampilan
-                    semuaDataDonghua.unshift(animeBaru);
-                    tampilkanHome(semuaDataDonghua);
-                    pilihHari(hari, document.querySelector(`.day-btn`));
-
-                    alert("Berhasil mengunggah foto dan video dari galeri!");
-                    document.getElementById('uploadForm').reset();
-                    gantiHalaman('home', document.querySelector('.nav-item'));
-                };
-                readerVideo.readAsDataURL(fileVideo);
+            const animeBaru = {
+                id: 'online_' + Date.now(),
+                judul: judul,
+                poster: poster,
+                rating: rating,
+                episode: "Full Eps",
+                youtubeId: videoLink,
+                label: "Upload",
+                sinopsis: sinopsis || "Sinopsis belum ditambahkan.",
+                hari: hari
             };
-            readerPoster.readAsDataURL(filePoster);
+
+            let dataLokal = JSON.parse(localStorage.getItem('zettaOnlineUploads') || '[]');
+            dataLokal.unshift(animeBaru);
+            localStorage.setItem('zettaOnlineUploads', JSON.stringify(dataLokal));
+
+            semuaDataDonghua.unshift(animeBaru);
+            tampilkanHome(semuaDataDonghua);
+            pilihHari(hari, document.querySelector('.day-btn'));
+
+            alert("Berhasil! Donghua baru sudah ditambahkan ke Zetta.");
+            document.getElementById('uploadForm').reset();
+            gantiHalaman('home', document.querySelector('.nav-item'));
         }
 
-        // PEMUTAR VIDEO (Mendukung video lokal dari galeri maupun YouTube)
-        function putarVideoLokal() {
+        // PEMUTAR VIDEO OTOMATIS (YouTube, Google Drive, atau Link MP4)
+        function putarVideoOnline() {
             if(!filmAktif) return;
             
             const modalVideo = document.getElementById('videoModal');
             const container = document.getElementById('playerContainer');
             modalVideo.style.display = 'flex'; 
 
-            if (filmAktif.isVideoLokal || filmAktif.youtubeId.startsWith('data:')) {
-                // Putar video lokal (MP4 dari galeri)
-                container.innerHTML = `<video controls autoplay style="width:100%; height:100%; border-radius:12px;"><source src="${filmAktif.youtubeId}" type="video/mp4">Browser Anda tidak mendukung pemutar video.</video>`;
+            let link = filmAktif.youtubeId;
+            
+            if (link.includes('youtube.com') || link.includes('youtu.be')) {
+                // Konversi link YouTube biasa menjadi format embed
+                let videoId = '';
+                if (link.includes('youtu.be/')) {
+                    videoId = link.split('youtu.be/')[1].split('?')[0];
+                } else if (link.includes('v=')) {
+                    videoId = link.split('v=')[1].split('&')[0];
+                }
+                container.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            } else if (link.startsWith('http')) {
+                // Link langsung (Google Drive / MP4)
+                container.innerHTML = `<video controls autoplay style="width:100%; height:100%; border-radius:12px;"><source src="${link}" type="video/mp4">Browser Anda tidak mendukung pemutar video.</video>`;
             } else {
-                // Putar dari link / YouTube ID
-                let linkVideo = filmAktif.youtubeId;
-                let embedUrl = linkVideo.startsWith('http') ? (linkVideo + (linkVideo.includes('?') ? '&autoplay=1' : '?autoplay=1')) : `https://www.youtube.com/embed/${linkVideo}?autoplay=1`;
-                container.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                // ID YouTube mentah
+                container.innerHTML = `<iframe src="https://www.youtube.com/embed/${link}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
             }
         }
 
         function tutupVideo() {
             document.getElementById('videoModal').style.display = 'none'; 
-            document.getElementById('playerContainer').innerHTML = ""; 
+            container.innerHTML = ""; 
         }
     </script>
 </body>
