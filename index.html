@@ -58,6 +58,14 @@
         .synopsis-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
         .synopsis-text { color: #bbb; font-size: 13px; line-height: 1.6; }
 
+        /* Halaman Form Upload Admin */
+        .upload-container { max-width: 580px; margin: 20px auto; background: #1a1a1a; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; color: #aaa; margin-bottom: 6px; font-weight: bold; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; background: #252525; border: 1px solid #333; border-radius: 8px; color: white; font-size: 14px; }
+        .form-group input:focus, .form-group textarea:focus { border-color: #ff3b30; outline: none; }
+        .btn-submit-upload { width: 100%; background: #ff3b30; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; }
+
         /* Navigasi Bawah */
         .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 640px; background-color: rgba(18, 18, 18, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #2a2a2a; z-index: 1000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: #777; font-size: 11px; text-decoration: none; gap: 6px; transition: color 0.3s ease; cursor: pointer; }
@@ -72,7 +80,7 @@
         .modal-content { position: relative; width: 100%; max-width: 640px; padding: 20px; }
         .close-btn { position: absolute; top: -20px; right: 20px; color: white; font-size: 35px; font-weight: bold; cursor: pointer; z-index: 10000; }
         .close-btn:hover { color: #ff3b30; }
-        .iframe-container { position: relative; width: 100%; padding-bottom: 56.25%; background-color: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 0 20px rgba(255, 59, 48, 0.5); }
+        .iframe-container { position: relative; width: 100%; height: 75vh; background-color: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 0 25px rgba(255, 59, 48, 0.6); }
         .iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         
         .loading-text { text-align: center; width: 100%; font-size: 14px; color: #777; grid-column: span 3; padding: 40px; }
@@ -91,7 +99,7 @@
     <!-- HOME -->
     <div id="pageHome" class="page-content active">
         <div class="movie-grid" id="movieContainer">
-            <div class="loading-text"><i class="fa-solid fa-spinner fa-spin"></i> Memuat database Google Sheets...</div>
+            <div class="loading-text"><i class="fa-solid fa-spinner fa-spin"></i> Memuat database...</div>
         </div>
     </div>
 
@@ -115,6 +123,40 @@
                 <button class="day-btn" onclick="pilihHari('Sabtu', this)">Sabtu</button>
                 <button class="day-btn active" onclick="pilihHari('Minggu', this)">Minggu</button>
             </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN UPLOAD / ADMIN PANEL (BARU) -->
+    <div id="pageUpload" class="page-content">
+        <div class="upload-container">
+            <div class="section-title" style="margin-bottom: 20px;"><i class="fa-solid fa-cloud-arrow-up"></i> Tambah / Upload Donghua</div>
+            <form id="uploadForm" onsubmit="simpanDonghuaBaru(event)">
+                <div class="form-group">
+                    <label>Judul Donghua</label>
+                    <input type="text" id="inputJudul" placeholder="Contoh: Perfect World Episode Terbaru" required>
+                </div>
+                <div class="form-group">
+                    <label>Link Poster Gambar (URL)</label>
+                    <input type="text" id="inputPoster" placeholder="https://..." required>
+                </div>
+                <div class="form-group">
+                    <label>Rating (Contoh: 8.5)</label>
+                    <input type="text" id="inputRating" value="8.5" required>
+                </div>
+                <div class="form-group">
+                    <label>Keterangan Episode (Contoh: 150 Eps atau Ongoing)</label>
+                    <input type="text" id="inputEpisode" value="Ongoing" required>
+                </div>
+                <div class="form-group">
+                    <label>Link Video / Link Google Drive / ID YouTube</label>
+                    <input type="text" id="inputVideo" placeholder="Tempel link video atau ID YouTube di sini" required>
+                </div>
+                <div class="form-group">
+                    <label>Sinopsis Singkat</label>
+                    <textarea id="inputSinopsis" rows="3" placeholder="Tulis sinopsis cerita..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit-upload"><i class="fa-solid fa-plus"></i> Tambahkan ke Zetta</button>
+            </form>
         </div>
     </div>
 
@@ -147,11 +189,11 @@
         </div>
     </div>
 
-    <!-- NAVIGASI BAWAH -->
+    <!-- NAVIGASI BAWAH (MENU UPLOAD DITAMBAHKAN) -->
     <nav class="bottom-nav" id="bottomNav">
         <a onclick="gantiHalaman('home', this)" class="nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></a>
         <a onclick="gantiHalaman('schedule', this)" class="nav-item"><i class="fa-regular fa-calendar"></i><span>Schedule</span></a>
-        <a class="nav-item"><i class="fa-solid fa-layer-group"></i><span>Catalog</span></a>
+        <a onclick="gantiHalaman('upload', this)" class="nav-item"><i class="fa-solid fa-cloud-arrow-up"></i><span>Upload</span></a>
         <a class="nav-item"><i class="fa-solid fa-boxes-stacked"></i><span>Library</span></a>
         <a class="nav-item"><i class="fa-regular fa-user"></i><span>Profile</span></a>
     </nav>
@@ -167,7 +209,6 @@
     </div>
 
     <script>
-        // ID Google Sheets Anda
         const sheetId = '1dS8YSbNXsvhn10v6LXLMrawzmyczAcqcCyl9GrylHTU';
         const urlAPI = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&headers=1`;
         
@@ -188,7 +229,7 @@
                         poster: baris.c[1] ? baris.c[1].v : '',
                         rating: baris.c[2] ? baris.c[2].v : '8.0',
                         episode: baris.c[3] ? baris.c[3].v : 'Ongoing',
-                        youtubeId: baris.c[4] ? baris.c[4].v : 'vOewtTIOX7w', // Bisa berupa ID YouTube atau Link Full Video
+                        youtubeId: baris.c[4] ? baris.c[4].v : 'vOewtTIOX7w',
                         label: baris.c[5] ? baris.c[5].v : 'New',
                         sinopsis: "Kisah epik pertarungan kultivasi dunia persilatan Donghua penentang takdir."
                     };
@@ -198,7 +239,7 @@
                 pilihHari('Minggu', document.querySelector('.day-btn.active'));
             })
             .catch(error => {
-                document.getElementById('movieContainer').innerHTML = '<div class="loading-text" style="color:red;">Gagal memuat Google Sheets. Pastikan akses link sudah diatur ke "Siapa saja yang memiliki link".</div>';
+                document.getElementById('movieContainer').innerHTML = '<div class="loading-text" style="color:red;">Gagal memuat Google Sheets.</div>';
             });
 
         function tampilkanHome(daftar) {
@@ -283,19 +324,49 @@
                 document.getElementById('pageHome').classList.add('active');
             } else if (namaHalaman === 'schedule') {
                 document.getElementById('pageSchedule').classList.add('active');
+            } else if (namaHalaman === 'upload') {
+                document.getElementById('pageUpload').classList.add('active');
             }
         }
 
-        // FUNGSI MEMUTAR VIDEO FULL / EPISODE DARI GOOGLE SHEETS
+        // Fungsi Simpan Donghua Baru dari Form Admin Web
+        function simpanDonghuaBaru(event) {
+            event.preventDefault();
+            
+            const judulBaru = document.getElementById('inputJudul').value;
+            const posterBaru = document.getElementById('inputPoster').value;
+            const ratingBaru = document.getElementById('inputRating').value;
+            const epsBaru = document.getElementById('inputEpisode').value;
+            const videoBaru = document.getElementById('inputVideo').value;
+            const sinopsisBaru = document.getElementById('inputSinopsis').value;
+
+            // Masukkan data ke array lokal
+            const filmBaruObj = {
+                id: semuaDataDonghua.length,
+                judul: judulBaru,
+                poster: posterBaru,
+                rating: ratingBaru,
+                episode: epsBaru,
+                youtubeId: videoBaru,
+                label: "New",
+                sinopsis: sinopsisBaru || "Sinopsis belum ditambahkan."
+            };
+
+            semuaDataDonghua.unshift(filmBaruObj);
+            tampilkanHome(semuaDataDonghua);
+
+            alert("Donghua berhasil ditambahkan ke halaman Zetta!");
+            document.getElementById('uploadForm').reset();
+            gantiHalaman('home', document.querySelector('.nav-item'));
+        }
+
         function putarVideoFull() {
             if(!filmAktif) return;
             
             const modalVideo = document.getElementById('videoModal');
             const youtubePlayer = document.getElementById('youtubePlayer');
-            
             modalVideo.style.display = 'flex'; 
 
-            // Mengecek apakah link dari Google Sheets berupa URL lengkap atau ID YouTube saja
             let linkVideo = filmAktif.youtubeId;
             if (linkVideo.startsWith('http')) {
                 youtubePlayer.src = linkVideo + (linkVideo.includes('?') ? '&autoplay=1' : '?autoplay=1');
@@ -306,7 +377,7 @@
 
         function tutupVideo() {
             document.getElementById('videoModal').style.display = 'none'; 
-            youtubePlayer.src = ""; 
+            document.getElementById('youtubePlayer').src = ""; 
         }
     </script>
 </body>
