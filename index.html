@@ -1,808 +1,1199 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Inisialisasi Firebase
-  runApp(SosmedApp());
-}
-
-class SosmedApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Aplikasi Sosmed',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-        ),
-      ),
-      // Jika user sudah login, langsung ke Feed, jika belum ke Login
-      home: FirebaseAuth.instance.currentUser != null ? FeedScreen() : LoginScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-// ==========================================
-// 1. HALAMAN LOGIN
-// ==========================================
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool isLoading = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.diversity_3, size: 80, color: Colors.blueAccent),
-              SizedBox(height: 20),
-              Text("Selamat Datang", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              Text("Silakan login untuk melanjutkan", style: TextStyle(color: Colors.grey)),
-              SizedBox(height: 40),
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: 'Email', 
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)), 
-                  prefixIcon: Icon(Icons.email)
-                ),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password', 
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)), 
-                  prefixIcon: Icon(Icons.lock)
-                ),
-              ),
-              SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : () async {
-                    setState(() => isLoading = true);
-                    try {
-                      await FirebaseAuth.instance.signInWithEmailAndPassword(
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FeedScreen()));
-                    } on FirebaseAuthException catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message ?? "Gagal Login")));
-                    }
-                    setState(() => isLoading = false);
-                  },
-                  child: isLoading ? CircularProgressIndicator(color: Colors.white) : Text("Login", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ),
-              ),
-              SizedBox(height: 16),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
-                },
-                child: Text("Belum punya akun? Daftar di sini", style: TextStyle(color: Colors.blueAccent)),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ==========================================
-// 2. HALAMAN REGISTER (DAFTAR)
-// ==========================================
-class RegisterScreen extends StatefulWidget {
-  @override
-  _RegisterScreenState createState() => _RegisterScreenState();
-}
-
-class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool isLoading = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, elevation: 0, iconTheme: IconThemeData(color: Colors.black)),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Buat Akun", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              Text("Daftar untuk mulai terhubung", style: TextStyle(color: Colors.grey)),
-              SizedBox(height: 40),
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Nama Tampilan', 
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)), 
-                  prefixIcon: Icon(Icons.person)
-                ),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: 'Email', 
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)), 
-                  prefixIcon: Icon(Icons.email)
-                ),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password', 
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)), 
-                  prefixIcon: Icon(Icons.lock)
-                ),
-              ),
-              SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : () async {
-                    setState(() => isLoading = true);
-                    try {
-                      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
-                      await userCredential.user?.updateDisplayName(_nameController.text.trim());
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Pendaftaran Berhasil! Silakan Login.")));
-                      Navigator.pop(context);
-                    } on FirebaseAuthException catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message ?? "Gagal Mendaftar")));
-                    }
-                    setState(() => isLoading = false);
-                  },
-                  child: isLoading ? CircularProgressIndicator(color: Colors.white) : Text("Daftar", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ==========================================
-// 3. HALAMAN BERANDA (FEED)
-// ==========================================
-class FeedScreen extends StatefulWidget {
-  @override
-  _FeedScreenState createState() => _FeedScreenState();
-}
-
-class _FeedScreenState extends State<FeedScreen> {
-  final DatabaseReference _database = FirebaseDatabase.instance.ref().child('posts');
-  final TextEditingController _postController = TextEditingController();
-  final User? currentUser = FirebaseAuth.instance.currentUser;
-
-  void _toggleLike(String postId, Map<dynamic, dynamic>? likes) async {
-    if (currentUser == null) return;
-    final String uid = currentUser!.uid;
-    final DatabaseReference postRef = _database.child(postId).child('likes');
-    if (likes != null && likes.containsKey(uid)) {
-      await postRef.child(uid).remove();
-    } else {
-      await postRef.child(uid).set(true);
-    }
-  }
-
-  void _konfirmasiHapus(String postId) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Hapus Postingan"),
-        content: Text("Apakah Anda yakin ingin menghapus postingan ini?"),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: Text("Batal", style: TextStyle(color: Colors.grey))),
-          ElevatedButton(
-            onPressed: () async {
-              await _database.child(postId).remove();
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Postingan berhasil dihapus")));
-            },
-            child: Text("Hapus"),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _tampilKomentar(String postId) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => CommentSheet(postId: postId),
-    );
-  }
-
-  void _tampilDialogPostingan() {
-    File? imageFile;
-    bool isUploading = false;
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setStateDialog) {
-          return AlertDialog(
-            title: Text("Buat Postingan"),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: _postController,
-                    decoration: InputDecoration(hintText: "Apa yang Anda pikirkan?"),
-                    maxLines: 3,
-                  ),
-                  SizedBox(height: 10),
-                  if (imageFile != null)
-                    Stack(
-                      alignment: Alignment.topRight,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.file(imageFile!, height: 150, width: double.infinity, fit: BoxFit.cover),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.cancel, color: Colors.white),
-                          onPressed: () => setStateDialog(() => imageFile = null),
-                        )
-                      ],
-                    ),
-                  TextButton.icon(
-                    icon: Icon(Icons.image, color: Colors.blueAccent),
-                    label: Text("Tambah Gambar"),
-                    onPressed: () async {
-                      final picker = ImagePicker();
-                      final pickedFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
-                      if (pickedFile != null) {
-                        setStateDialog(() => imageFile = File(pickedFile.path));
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              if (!isUploading)
-                TextButton(
-                  onPressed: () {
-                    _postController.clear();
-                    Navigator.pop(context);
-                  }, 
-                  child: Text("Batal", style: TextStyle(color: Colors.grey))
-                ),
-              isUploading 
-                ? Padding(padding: EdgeInsets.all(8.0), child: CircularProgressIndicator())
-                : ElevatedButton(
-                    onPressed: () async {
-                      if (_postController.text.isEmpty && imageFile == null) return;
-                      setStateDialog(() => isUploading = true);
-                      String? imageUrl;
-                      if (imageFile != null) {
-                        try {
-                          String fileName = "IMG_${DateTime.now().millisecondsSinceEpoch}.jpg";
-                          Reference ref = FirebaseStorage.instance.ref().child('post_images').child(fileName);
-                          await ref.putFile(imageFile!);
-                          imageUrl = await ref.getDownloadURL();
-                        } catch (e) {
-                          print("Gagal upload: $e");
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS TOPUP - Web Top Up Game & Digital Otomatis 24 Jam</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            100: '#1e293b',
+                            200: '#0f172a',
+                            300: '#0b0f19',
+                            400: '#060911'
+                        },
+                        primary: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9'
+                        },
+                        accent: {
+                            500: '#06b6d4',
+                            600: '#0891b2'
                         }
-                      }
-                      await _database.push().set({
-                        'teks': _postController.text,
-                        'penulis': currentUser?.displayName ?? currentUser?.email ?? 'Anonim',
-                        'email': currentUser?.email, // Disimpan untuk validasi hapus post
-                        'waktu': ServerValue.timestamp,
-                        if (imageUrl != null) 'gambar': imageUrl,
-                      });
-                      _postController.clear();
-                      Navigator.pop(context);
-                    },
-                    child: Text("Posting"),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
-                  ),
-            ],
-          );
+                    }
+                }
+            }
         }
-      ),
-    );
-  }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: Text('Beranda', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 1,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.person, color: Colors.black),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.logout, color: Colors.black),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.pushAndRemoveUntil(
-                context, 
-                MaterialPageRoute(builder: (context) => LoginScreen()), 
-                (Route<dynamic> route) => false
-              );
-            },
-          )
-        ],
-      ),
-      body: StreamBuilder(
-        stream: _database.orderByChild('waktu').onValue,
-        builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator());
-          if (!snapshot.hasData || snapshot.data!.snapshot.value == null) return Center(child: Text("Belum ada postingan."));
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-nav {
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: 200%;
+            animation: marquee 25s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b5cf6;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-purple-500 selection:text-white">
 
-          Map<dynamic, dynamic> map = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
-          List<Map<dynamic, dynamic>> posts = [];
-          map.forEach((key, value) {
-            var postData = Map<dynamic, dynamic>.from(value);
-            postData['id'] = key; 
-            posts.add(postData);
-          });
-          posts.sort((a, b) => b['waktu'].compareTo(a['waktu']));
+    <!-- TOP RUNNING TICKER -->
+    <div class="bg-slate-900 border-b border-slate-800 text-xs py-2 overflow-hidden select-none">
+        <div class="animate-marquee whitespace-nowrap flex items-center gap-8 text-slate-300">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400"></i> User <b>0812***4321</b> berhasil top up <b>86 Diamonds Mobile Legends</b> (Rp 20.000) - 1 detik lalu</span>
+            <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400"></i> User <b>0857***9812</b> berhasil beli <b>355 Diamonds Free Fire</b> (Rp 48.500) - 3 detik lalu</span>
+            <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400"></i> User <b>0821***1102</b> berhasil top up <b>Genesis Crystal 300 Genshin</b> (Rp 64.000) - 7 detik lalu</span>
+            <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400"></i> User <b>0895***7781</b> berhasil saldo <b>DANA Rp 100.000</b> - 12 detik lalu</span>
+            <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400"></i> User <b>0812***4321</b> berhasil top up <b>86 Diamonds Mobile Legends</b> (Rp 20.000) - 1 detik lalu</span>
+            <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400"></i> User <b>0857***9812</b> berhasil beli <b>355 Diamonds Free Fire</b> (Rp 48.500) - 3 detik lalu</span>
+        </div>
+    </div>
 
-          return ListView.builder(
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              var post = posts[index];
-              var likes = post['likes'] as Map<dynamic, dynamic>?;
-              var comments = post['comments'] as Map<dynamic, dynamic>?; 
-              
-              int likeCount = likes?.length ?? 0;
-              int commentCount = comments?.length ?? 0;
-              bool isLiked = currentUser != null && likes != null && likes.containsKey(currentUser!.uid);
-              // Validasi kepemilikan postingan dari email
-              bool isMyPost = currentUser?.email == post['email'];
+    <!-- NAVBAR -->
+    <nav class="sticky top-0 z-40 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand -->
+                <a href="#" onclick="showPage('home')" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-cyan-500 flex items-center justify-center text-white font-extrabold text-xl shadow-lg group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold tracking-wider gradient-text uppercase">NEXUS<span class="text-white">TOPUP</span></span>
+                        <span class="block text-[10px] text-slate-400 font-medium tracking-widest -mt-1">AUTOMATED SYSTEM 24/7</span>
+                    </div>
+                </a>
 
-              return Card(
-                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: Colors.blueAccent,
-                                child: Icon(Icons.person, color: Colors.white),
-                              ),
-                              SizedBox(width: 10),
-                              Text(post['penulis'] ?? 'Anonim', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                            ],
-                          ),
-                          if (isMyPost)
-                            IconButton(
-                              icon: Icon(Icons.delete_outline, color: Colors.red),
-                              onPressed: () => _konfirmasiHapus(post['id']),
-                            )
-                        ],
-                      ),
-                      SizedBox(height: 12),
-                      if (post['teks'] != "")
-                        Text(post['teks'], style: TextStyle(fontSize: 15)),
-                      if (post['gambar'] != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              post['gambar'],
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(height: 200, color: Colors.grey[200], child: Center(child: CircularProgressIndicator()));
-                              },
-                            ),
-                          ),
-                        ),
-                      SizedBox(height: 12),
-                      Divider(color: Colors.grey[300]),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () => _toggleLike(post['id'], likes),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                              child: Row(
-                                children: [
-                                  Icon(isLiked ? Icons.favorite : Icons.favorite_border, color: isLiked ? Colors.red : Colors.grey),
-                                  SizedBox(width: 5),
-                                  Text("$likeCount Suka", style: TextStyle(color: isLiked ? Colors.red : Colors.grey, fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 24),
-                          InkWell(
-                            onTap: () => _tampilKomentar(post['id']),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.comment_outlined, color: Colors.grey),
-                                  SizedBox(width: 5),
-                                  Text("$commentCount Komen", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _tampilDialogPostingan,
-        backgroundColor: Colors.blueAccent,
-        child: Icon(Icons.edit, color: Colors.white),
-      ),
-    );
-  }
-}
+                <!-- Nav Links Desktop -->
+                <div class="hidden md:flex items-center gap-1">
+                    <button onclick="showPage('home')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:text-white hover:bg-slate-800/60 transition flex items-center gap-2">
+                        <i class="fa-solid fa-house text-purple-400"></i> Beranda
+                    </button>
+                    <button onclick="showPage('tracking')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:text-white hover:bg-slate-800/60 transition flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass text-cyan-400"></i> Cek Pesanan
+                    </button>
+                    <button onclick="showPage('pricelist')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:text-white hover:bg-slate-800/60 transition flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-emerald-400"></i> Daftar Harga
+                    </button>
+                    <button onclick="showPage('calc')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:text-white hover:bg-slate-800/60 transition flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-amber-400"></i> Kalkulator ML
+                    </button>
+                </div>
 
-// ==========================================
-// 4. WIDGET PANEL KOMENTAR
-// ==========================================
-class CommentSheet extends StatefulWidget {
-  final String postId;
-  CommentSheet({required this.postId});
-  @override
-  _CommentSheetState createState() => _CommentSheetState();
-}
+                <!-- Right Actions -->
+                <div class="hidden md:flex items-center gap-3">
+                    <button onclick="openAdminModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-300 border border-slate-700 hover:border-purple-500 hover:text-purple-400 transition flex items-center gap-2 bg-slate-900/50">
+                        <i class="fa-solid fa-shield-halved"></i> Admin Panel
+                    </button>
+                    <a href="https://wa.me/6281234567890" target="_blank" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 shadow-md shadow-emerald-900/30 transition flex items-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> CS WhatsApp
+                    </a>
+                </div>
 
-class _CommentSheetState extends State<CommentSheet> {
-  final TextEditingController _commentController = TextEditingController();
-  final User? currentUser = FirebaseAuth.instance.currentUser;
-  late DatabaseReference _commentsRef;
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden text-slate-300 hover:text-white text-2xl focus:outline-none">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+            </div>
+        </div>
 
-  @override
-  void initState() {
-    super.initState();
-    _commentsRef = FirebaseDatabase.instance.ref().child('posts').child(widget.postId).child('comments');
-  }
+        <!-- Mobile Drawer -->
+        <div id="mobileMenu" class="hidden md:hidden bg-slate-900/95 border-b border-slate-800 px-4 pt-2 pb-6 space-y-2">
+            <button onclick="showPage('home'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-200 hover:bg-slate-800 flex items-center gap-3">
+                <i class="fa-solid fa-house text-purple-400"></i> Beranda
+            </button>
+            <button onclick="showPage('tracking'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-200 hover:bg-slate-800 flex items-center gap-3">
+                <i class="fa-solid fa-magnifying-glass text-cyan-400"></i> Cek Pesanan
+            </button>
+            <button onclick="showPage('pricelist'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-200 hover:bg-slate-800 flex items-center gap-3">
+                <i class="fa-solid fa-list-check text-emerald-400"></i> Daftar Harga
+            </button>
+            <button onclick="showPage('calc'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-200 hover:bg-slate-800 flex items-center gap-3">
+                <i class="fa-solid fa-calculator text-amber-400"></i> Kalkulator ML
+            </button>
+            <div class="pt-2 border-t border-slate-800 flex flex-col gap-2">
+                <button onclick="openAdminModal(); toggleMobileMenu()" class="w-full py-2.5 rounded-lg text-xs font-bold text-slate-300 border border-slate-700 text-center">
+                    <i class="fa-solid fa-shield-halved mr-1"></i> Admin Panel
+                </button>
+                <a href="https://wa.me/6281234567890" target="_blank" class="w-full py-2.5 rounded-lg text-xs font-bold text-white bg-emerald-600 text-center flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp"></i> Hubungi Customer Service
+                </a>
+            </div>
+        </div>
+    </nav>
 
-  void _kirimKomentar() {
-    if (_commentController.text.isNotEmpty) {
-      _commentsRef.push().set({
-        'teks': _commentController.text,
-        'penulis': currentUser?.displayName ?? currentUser?.email ?? 'Anonim',
-        'waktu': ServerValue.timestamp,
-      });
-      _commentController.clear();
-      FocusScope.of(context).unfocus(); 
-    }
-  }
+    <!-- MAIN CONTENT CONTAINERS -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-  @override
-  Widget build(BuildContext context) {
-    double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.7 + keyboardHeight,
-      margin: EdgeInsets.only(top: 40),
-      padding: EdgeInsets.only(bottom: keyboardHeight),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text("Komentar", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          ),
-          Divider(height: 1),
-          Expanded(
-            child: StreamBuilder(
-              stream: _commentsRef.orderByChild('waktu').onValue,
-              builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator());
-                if (!snapshot.hasData || snapshot.data!.snapshot.value == null) return Center(child: Text("Belum ada komentar.", style: TextStyle(color: Colors.grey)));
-
-                Map<dynamic, dynamic> map = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
-                List<dynamic> comments = map.values.toList();
-                comments.sort((a, b) => a['waktu'].compareTo(b['waktu']));
-
-                return ListView.builder(
-                  padding: EdgeInsets.all(16.0),
-                  itemCount: comments.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 12.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(radius: 16, backgroundColor: Colors.grey[300], child: Icon(Icons.person, size: 20, color: Colors.white)),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Container(
-                              padding: EdgeInsets.all(12),
-                              decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(comments[index]['penulis'], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                                  SizedBox(height: 4),
-                                  Text(comments[index]['teks'], style: TextStyle(fontSize: 14)),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-          Divider(height: 1),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            color: Colors.white,
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _commentController,
-                    decoration: InputDecoration(hintText: "Tulis komentar...", border: InputBorder.none),
-                  ),
-                ),
-                IconButton(icon: Icon(Icons.send, color: Colors.blueAccent), onPressed: _kirimKomentar)
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-// ==========================================
-// 5. HALAMAN PROFIL
-// ==========================================
-class ProfileScreen extends StatefulWidget {
-  @override
-  _ProfileScreenState createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  final User? currentUser = FirebaseAuth.instance.currentUser;
-  final DatabaseReference _database = FirebaseDatabase.instance.ref().child('posts');
-  bool isUploadingFoto = false;
-
-  Future<void> _gantiFotoProfil() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
-    
-    if (pickedFile != null && currentUser != null) {
-      setState(() => isUploadingFoto = true);
-      try {
-        File imageFile = File(pickedFile.path);
-        String fileName = "PROFILE_${currentUser!.uid}.jpg";
-        Reference ref = FirebaseStorage.instance.ref().child('profiles').child(fileName);
-        await ref.putFile(imageFile);
-        String newPhotoUrl = await ref.getDownloadURL();
-        await currentUser!.updatePhotoURL(newPhotoUrl);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Foto profil berhasil diperbarui!")));
-      } catch (e) {
-        print("Gagal upload foto profil: $e");
-      }
-      setState(() => isUploadingFoto = false);
-    }
-  }
-
-  void _konfirmasiHapus(String postId) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Hapus Postingan"),
-        content: Text("Yakin ingin menghapus postingan ini?"),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: Text("Batal")),
-          ElevatedButton(
-            onPressed: () async {
-              await _database.child(postId).remove();
-              Navigator.pop(context);
-            },
-            child: Text("Hapus"),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    String? photoUrl = FirebaseAuth.instance.currentUser?.photoURL;
-
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: Text('Profil Saya', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 1,
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            color: Colors.white,
-            padding: EdgeInsets.all(24.0),
-            child: Column(
-              children: [
-                Stack(
-                  alignment: Alignment.bottomRight,
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.blueAccent,
-                      backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
-                      child: photoUrl == null ? Icon(Icons.person, size: 50, color: Colors.white) : null,
-                    ),
-                    InkWell(
-                      onTap: isUploadingFoto ? null : _gantiFotoProfil,
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundColor: Colors.blue,
-                        child: isUploadingFoto 
-                            ? CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
-                            : Icon(Icons.camera_alt, size: 18, color: Colors.white),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 16),
-                Text(currentUser?.displayName ?? "Pengguna", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                Text(currentUser?.email ?? "", style: TextStyle(color: Colors.grey)),
-              ],
-            ),
-          ),
-          
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text("Postingan Saya", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
-          ),
-
-          Expanded(
-            child: StreamBuilder(
-              stream: _database.orderByChild('waktu').onValue,
-              builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator());
-                if (!snapshot.hasData || snapshot.data!.snapshot.value == null) return Center(child: Text("Anda belum membuat postingan."));
-
-                Map<dynamic, dynamic> map = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
-                List<Map<dynamic, dynamic>> posts = [];
+        <!-- ================= PAGE 1: HOME ================= -->
+        <div id="page-home" class="space-y-10">
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-800 bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 p-6 sm:p-10">
+                <div class="absolute -right-20 -top-20 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-cyan-600/20 rounded-full blur-3xl pointer-events-none"></div>
                 
-                map.forEach((key, value) {
-                  var postData = Map<dynamic, dynamic>.from(value);
-                  if (postData['email'] == currentUser?.email) {
-                    postData['id'] = key; 
-                    posts.add(postData);
-                  }
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-7 space-y-4 text-center lg:text-left">
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                            <i class="fa-solid fa-fire text-amber-400"></i> PROMO FLASHSALE HARI INI
+                        </span>
+                        <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-white">
+                            Top Up Game & Digital <br>
+                            <span class="gradient-text">Proses Otomatis 1 Detik</span>
+                        </h1>
+                        <p class="text-slate-400 text-sm sm:text-base max-w-xl">
+                            Layanan top up Diamond Mobile Legends, Free Fire, Genshin Impact, Pulsa & E-Wallet termurah dengan metode pembayaran QRIS, E-Wallet, dan Bank VA 24/7.
+                        </p>
+                        <div class="pt-2 flex flex-wrap gap-4 justify-center lg:justify-start">
+                            <a href="#games-section" class="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold text-sm shadow-lg glow-effect transition flex items-center gap-2">
+                                <i class="fa-solid fa-gamepad"></i> Top Up Sekarang
+                            </a>
+                            <button onclick="showPage('tracking')" class="px-6 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-semibold text-sm border border-slate-700 transition flex items-center gap-2">
+                                <i class="fa-solid fa-receipt text-cyan-400"></i> Lacak Pesanan
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+                        <div class="glass-card p-4 rounded-2xl border border-slate-800 text-center space-y-2">
+                            <div class="w-12 h-12 mx-auto rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-2xl">
+                                <i class="fa-solid fa-bolt-lightning"></i>
+                            </div>
+                            <h4 class="font-bold text-sm text-white">Instan & Otomatis</h4>
+                            <p class="text-xs text-slate-400">Sistem API terhubung langsung 24 jam non-stop.</p>
+                        </div>
+                        <div class="glass-card p-4 rounded-2xl border border-slate-800 text-center space-y-2">
+                            <div class="w-12 h-12 mx-auto rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-2xl">
+                                <i class="fa-solid fa-shield-check"></i>
+                            </div>
+                            <h4 class="font-bold text-sm text-white">100% Legal & Aman</h4>
+                            <p class="text-xs text-slate-400">Garansi diamond & produk legal anti minus.</p>
+                        </div>
+                        <div class="glass-card p-4 rounded-2xl border border-slate-800 text-center space-y-2">
+                            <div class="w-12 h-12 mx-auto rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-2xl">
+                                <i class="fa-solid fa-qrcode"></i>
+                            </div>
+                            <h4 class="font-bold text-sm text-white">QRIS All Payment</h4>
+                            <p class="text-xs text-slate-400">Bisa bayar pakai GoPay, DANA, OVO, ShopeePay & Bank.</p>
+                        </div>
+                        <div class="glass-card p-4 rounded-2xl border border-slate-800 text-center space-y-2">
+                            <div class="w-12 h-12 mx-auto rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 text-2xl">
+                                <i class="fa-solid fa-headset"></i>
+                            </div>
+                            <h4 class="font-bold text-sm text-white">Bantuan CS Fast</h4>
+                            <p class="text-xs text-slate-400">Tim Support siap bantu kendala transaksi kapan saja.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEARCH & CATEGORY FILTER -->
+            <div id="games-section" class="space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-fire text-purple-500"></i> Layanan Populer
+                        </h2>
+                        <p class="text-xs sm:text-sm text-slate-400">Pilih game atau layanan favoritmu untuk mulai top up</p>
+                    </div>
+
+                    <!-- Search Box -->
+                    <div class="relative w-full md:w-72">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="searchInput" oninput="filterGames()" placeholder="Cari Game / Pulsa..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
+                    </div>
+                </div>
+
+                <!-- Category Tabs -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                    <button onclick="setCategory('all')" class="cat-tab active border border-purple-500 bg-purple-600/20 text-purple-300 font-semibold text-xs px-5 py-2.5 rounded-xl whitespace-nowrap transition">
+                        🔥 Semua
+                    </button>
+                    <button onclick="setCategory('mobile')" class="cat-tab border border-slate-800 bg-slate-900 hover:border-slate-700 text-slate-300 font-medium text-xs px-5 py-2.5 rounded-xl whitespace-nowrap transition">
+                        📱 Mobile Games
+                    </button>
+                    <button onclick="setCategory('pc')" class="cat-tab border border-slate-800 bg-slate-900 hover:border-slate-700 text-slate-300 font-medium text-xs px-5 py-2.5 rounded-xl whitespace-nowrap transition">
+                        💻 PC Games
+                    </button>
+                    <button onclick="setCategory('ewallet')" class="cat-tab border border-slate-800 bg-slate-900 hover:border-slate-700 text-slate-300 font-medium text-xs px-5 py-2.5 rounded-xl whitespace-nowrap transition">
+                        💳 Pulsa & E-Wallet
+                    </button>
+                    <button onclick="setCategory('voucher')" class="cat-tab border border-slate-800 bg-slate-900 hover:border-slate-700 text-slate-300 font-medium text-xs px-5 py-2.5 rounded-xl whitespace-nowrap transition">
+                        🎟️ Voucher
+                    </button>
+                </div>
+
+                <!-- GAME GRID -->
+                <div id="gameGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= PAGE 2: TOPUP ORDER FORM ================= -->
+        <div id="page-order" class="hidden space-y-8">
+            <div class="flex items-center justify-between">
+                <button onclick="showPage('home')" class="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-2 bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 transition">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Katalog
+                </button>
+                <span class="text-xs text-slate-500 font-mono" id="selectedGameSlug">mlbb-indonesia</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Left Sidebar: Game Info -->
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="glass-card p-6 rounded-3xl border border-slate-800 text-center space-y-4 sticky top-24">
+                        <img id="orderGameImg" src="" alt="Game Logo" class="w-28 h-28 mx-auto rounded-2xl object-cover shadow-xl border-2 border-purple-500/30">
+                        <div>
+                            <h2 id="orderGameTitle" class="text-xl font-black text-white">Mobile Legends</h2>
+                            <p id="orderGamePublisher" class="text-xs text-purple-400 font-semibold">Moonton</p>
+                        </div>
+                        <div class="text-left bg-slate-900/80 p-4 rounded-2xl border border-slate-800 text-xs space-y-2 text-slate-300">
+                            <p class="font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-circle-info text-cyan-400"></i> Cara Top Up:
+                            </p>
+                            <ol class="list-decimal list-inside space-y-1 text-slate-400">
+                                <li>Masukkan User ID dan Zone/Server ID Anda.</li>
+                                <li>Pilih nominal paket diamond yang diinginkan.</li>
+                                <li>Pilih metode pembayaran (QRIS / E-Wallet / VA).</li>
+                                <li>Masukkan nomor WhatsApp aktif Anda.</li>
+                                <li>Klik <b>Beli Sekarang</b> & lakukan pembayaran.</li>
+                            </ol>
+                        </div>
+                        <div class="flex items-center justify-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-800">
+                            <span class="flex items-center gap-1"><i class="fa-solid fa-bolt text-amber-400"></i> 1 Detik</span>
+                            <span class="flex items-center gap-1"><i class="fa-solid fa-shield-halved text-emerald-400"></i> Aman 100%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Step-by-Step Form -->
+                <div class="lg:col-span-8 space-y-6">
+
+                    <!-- STEP 1: ACCOUNT DATA -->
+                    <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-800/80 pb-3">
+                            <div class="w-8 h-8 rounded-xl bg-purple-600 text-white font-bold flex items-center justify-center text-sm shadow">1</div>
+                            <h3 class="font-extrabold text-white text-base">Lengkapi Data Akun</h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">User ID / ID Game</label>
+                                <input type="text" id="inputUserId" placeholder="Contoh: 12345678" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
+                            </div>
+                            <div id="zoneIdContainer">
+                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Zone ID / Server</label>
+                                <input type="text" id="inputZoneId" placeholder="Contoh: 1234" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-1">
+                            <button type="button" onclick="checkNickname()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-purple-300 border border-purple-500/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-user-check"></i> Cek Nickname Akun
+                            </button>
+                            <span id="nicknameResult" class="text-xs font-bold text-emerald-400"></span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: NOMINAL PACKAGE -->
+                    <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-800/80 pb-3">
+                            <div class="w-8 h-8 rounded-xl bg-purple-600 text-white font-bold flex items-center justify-center text-sm shadow">2</div>
+                            <h3 class="font-extrabold text-white text-base">Pilih Nominal Top Up</h3>
+                        </div>
+
+                        <div id="nominalGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: PAYMENT METHOD -->
+                    <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-800/80 pb-3">
+                            <div class="w-8 h-8 rounded-xl bg-purple-600 text-white font-bold flex items-center justify-center text-sm shadow">3</div>
+                            <h3 class="font-extrabold text-white text-base">Pilih Metode Pembayaran</h3>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">QRIS & E-Wallet (Proses Otomatis)</span>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                    <div onclick="selectPayment('qris', 'QRIS All Payment', 0)" class="payment-card border border-slate-800 bg-slate-900/90 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition relative">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-bold text-xs text-white">QRIS Instant</span>
+                                            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">Bebas Admin</span>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400 mt-1">GoPay, DANA, OVO, Shopee</p>
+                                        <span class="payment-price block text-xs font-extrabold text-purple-400 mt-2">Rp 0</span>
+                                    </div>
+                                    <div onclick="selectPayment('dana', 'DANA Automatic', 0)" class="payment-card border border-slate-800 bg-slate-900/90 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition relative">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-bold text-xs text-white">DANA</span>
+                                            <i class="fa-solid fa-wallet text-sky-400 text-xs"></i>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400 mt-1">Direct E-Wallet</p>
+                                        <span class="payment-price block text-xs font-extrabold text-purple-400 mt-2">Rp 0</span>
+                                    </div>
+                                    <div onclick="selectPayment('gopay', 'GoPay Instant', 0)" class="payment-card border border-slate-800 bg-slate-900/90 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition relative">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-bold text-xs text-white">GoPay</span>
+                                            <i class="fa-solid fa-mobile-screen-button text-emerald-400 text-xs"></i>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400 mt-1">Gojek App</p>
+                                        <span class="payment-price block text-xs font-extrabold text-purple-400 mt-2">Rp 0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">Virtual Account (Cek Otomatis 24 Jam)</span>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                    <div onclick="selectPayment('bca_va', 'BCA Virtual Account', 2500)" class="payment-card border border-slate-800 bg-slate-900/90 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition relative">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-bold text-xs text-white">BCA VA</span>
+                                            <span class="text-[10px] text-slate-400">+Rp 2.500</span>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400 mt-1">Bank Central Asia</p>
+                                        <span class="payment-price block text-xs font-extrabold text-purple-400 mt-2">Rp 0</span>
+                                    </div>
+                                    <div onclick="selectPayment('bri_va', 'BRI Virtual Account', 2500)" class="payment-card border border-slate-800 bg-slate-900/90 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition relative">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-bold text-xs text-white">BRI VA (BRIVA)</span>
+                                            <span class="text-[10px] text-slate-400">+Rp 2.500</span>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400 mt-1">Bank BRI</p>
+                                        <span class="payment-price block text-xs font-extrabold text-purple-400 mt-2">Rp 0</span>
+                                    </div>
+                                    <div onclick="selectPayment('mandiri_va', 'Mandiri Virtual Account', 2500)" class="payment-card border border-slate-800 bg-slate-900/90 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition relative">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-bold text-xs text-white">Mandiri VA</span>
+                                            <span class="text-[10px] text-slate-400">+Rp 2.500</span>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400 mt-1">Bank Mandiri</p>
+                                        <span class="payment-price block text-xs font-extrabold text-purple-400 mt-2">Rp 0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: CONTACT & PROMO -->
+                    <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-800/80 pb-3">
+                            <div class="w-8 h-8 rounded-xl bg-purple-600 text-white font-bold flex items-center justify-center text-sm shadow">4</div>
+                            <h3 class="font-extrabold text-white text-base">Kontak & Kode Promo</h3>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">No. WhatsApp Aktif (Untuk Bukti Transaksi)</label>
+                                <input type="tel" id="inputWhatsapp" placeholder="Contoh: 081234567890" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kode Promo (Opsional)</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="inputPromo" placeholder="Masukkan kode promo (misal: DISPAD)" class="uppercase w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
+                                    <button type="button" onclick="applyPromo()" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-400 font-bold text-xs border border-purple-500/30 transition">Gunakan</button>
+                                </div>
+                                <span id="promoStatus" class="text-[11px] block mt-1"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUMMARY & SUBMIT -->
+                    <div class="glass-card p-6 rounded-3xl border border-purple-500/30 bg-purple-950/20 space-y-4">
+                        <div class="flex justify-between items-center text-xs text-slate-300">
+                            <span>Item Dipilih:</span>
+                            <span id="summaryItem" class="font-bold text-white">-</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs text-slate-300">
+                            <span>Metode Pembayaran:</span>
+                            <span id="summaryPayment" class="font-bold text-white">-</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs text-slate-300">
+                            <span>Diskon Promo:</span>
+                            <span id="summaryDiscount" class="font-bold text-emerald-400">Rp 0</span>
+                        </div>
+                        <div class="pt-3 border-t border-slate-800 flex justify-between items-center">
+                            <div>
+                                <span class="text-xs text-slate-400 block">Total Pembayaran</span>
+                                <span id="summaryTotal" class="text-xl font-black text-white">Rp 0</span>
+                            </div>
+                            <button onclick="processOrder()" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-black text-sm shadow-xl glow-effect transition flex items-center gap-2">
+                                <i class="fa-solid fa-cart-shopping"></i> Beli Sekarang
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= PAGE 3: ORDER TRACKING ================= -->
+        <div id="page-tracking" class="hidden space-y-8 max-w-3xl mx-auto">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl font-extrabold text-white">Cek Status Transaksi</h2>
+                <p class="text-slate-400 text-sm">Lacak progres transaksi top up kamu secara real-time dengan No Invoice / WhatsApp</p>
+            </div>
+
+            <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input type="text" id="trackInput" placeholder="Masukkan No Invoice (cth: INV-20261028-9812) atau WhatsApp" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                    <button onclick="searchOrder()" class="px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition flex items-center justify-center gap-2 whitespace-nowrap">
+                        <i class="fa-solid fa-magnifying-glass"></i> Cari Invoice
+                    </button>
+                </div>
+            </div>
+
+            <div id="trackingResult" class="hidden glass-card p-6 rounded-3xl border border-slate-800 space-y-6">
+                <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <span class="text-xs text-slate-400 block">Nomor Invoice</span>
+                        <span id="trackInvoiceId" class="font-mono text-sm font-bold text-cyan-400">INV-20261028-7712</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-slate-400 block">Status Transaksi</span>
+                        <span id="trackStatusBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">BERHASIL / SUKSES</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+                    <div>
+                        <span class="text-slate-500 block">Layanan Game</span>
+                        <span id="trackGame" class="font-semibold text-white">Mobile Legends</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block">Item / Produk</span>
+                        <span id="trackItem" class="font-semibold text-white">86 Diamonds</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block">Target Account</span>
+                        <span id="trackTarget" class="font-semibold text-white">12345678 (1234)</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block">Total Bayar</span>
+                        <span id="trackPrice" class="font-bold text-purple-400">Rp 20.000</span>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-800 pt-6 space-y-4">
+                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Progres Sistem API</h4>
+                    <div class="relative border-l-2 border-slate-800 ml-3 space-y-6">
+                        <div class="ml-6 relative">
+                            <div class="absolute -left-9 top-0.5 w-6 h-6 rounded-full bg-emerald-500 text-slate-900 text-[10px] font-bold flex items-center justify-center">✓</div>
+                            <p class="text-xs font-bold text-white">Pesanan Dibuat</p>
+                            <p class="text-[11px] text-slate-400">Sistem menerima pesanan dan menunggu pembayaran.</p>
+                        </div>
+                        <div class="ml-6 relative">
+                            <div class="absolute -left-9 top-0.5 w-6 h-6 rounded-full bg-emerald-500 text-slate-900 text-[10px] font-bold flex items-center justify-center">✓</div>
+                            <p class="text-xs font-bold text-white">Pembayaran Diterima</p>
+                            <p class="text-[11px] text-slate-400">Sistem otomatis memverifikasi mutasi saldo via QRIS / Bank.</p>
+                        </div>
+                        <div class="ml-6 relative">
+                            <div class="absolute -left-9 top-0.5 w-6 h-6 rounded-full bg-emerald-500 text-slate-900 text-[10px] font-bold flex items-center justify-center">✓</div>
+                            <p class="text-xs font-bold text-white">Pengiriman Item Sukses</p>
+                            <p class="text-[11px] text-slate-400">Diamond / Produk telah sukses masuk ke akun target.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= PAGE 4: PRICE LIST ================= -->
+        <div id="page-pricelist" class="hidden space-y-6">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl font-extrabold text-white">Daftar Harga Lengkap</h2>
+                <p class="text-slate-400 text-sm">Update harga otomatis dari Provider Digiflazz / VIP Reseller 24 Jam</p>
+            </div>
+
+            <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4 overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider">
+                            <th class="py-3 px-4">Kategori Game</th>
+                            <th class="py-3 px-4">Nama Produk / Item</th>
+                            <th class="py-3 px-4">Harga Normal</th>
+                            <th class="py-3 px-4">Harga Reseller / Promo</th>
+                            <th class="py-3 px-4">Status Layanan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pricelistTableBody" class="divide-y divide-slate-800/60 text-slate-200">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <!-- ================= PAGE 5: MLBB CALCULATOR ================= -->
+        <div id="page-calc" class="hidden space-y-8 max-w-3xl mx-auto">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl font-extrabold text-white">Kalkulator Mobile Legends</h2>
+                <p class="text-slate-400 text-sm">Hitung jumlah kemenangan WR atau sisa diamond Magic Wheel / Zodiac</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Win Rate Calculator -->
+                <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+                    <h3 class="font-bold text-base text-purple-400 flex items-center gap-2">
+                        <i class="fa-solid fa-trophy"></i> Kalkulator Win Rate (WR)
+                    </h3>
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="block text-slate-300 mb-1">Total Match Saat Ini</label>
+                            <input type="number" id="wrTotalMatches" placeholder="Contoh: 500" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 mb-1">Win Rate Saat Ini (%)</label>
+                            <input type="number" step="0.1" id="wrCurrentWr" placeholder="Contoh: 52.4" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 mb-1">Target Win Rate (%)</label>
+                            <input type="number" step="0.1" id="wrTargetWr" placeholder="Contoh: 60" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white">
+                        </div>
+                        <button onclick="calcWR()" class="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 font-bold text-white transition">
+                            Hitung Sisa Kemenangan
+                        </button>
+                        <div id="wrResult" class="p-3 bg-purple-950/30 border border-purple-500/20 rounded-xl font-bold text-center text-purple-300">
+                            Hasil perhitungan akan tampil di sini
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Magic Wheel Calculator -->
+                <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+                    <h3 class="font-bold text-base text-cyan-400 flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Kalkulator Magic Wheel
+                    </h3>
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="block text-slate-300 mb-1">Point Magic Wheel Saat Ini</label>
+                            <input type="number" id="mwPoints" placeholder="Contoh: 140" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white">
+                        </div>
+                        <p class="text-[11px] text-slate-400">Dibutuhkan 200 Magic Points untuk klaim Legend Skin.</p>
+                        <button onclick="calcMagicWheel()" class="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 font-bold text-white transition">
+                            Hitung Estimasi Diamond
+                        </button>
+                        <div id="mwResult" class="p-3 bg-cyan-950/30 border border-cyan-500/20 rounded-xl font-bold text-center text-cyan-300">
+                            Hasil perhitungan akan tampil di sini
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+
+    <!-- ================= MODAL 1: INVOICE SIMULATOR ================= -->
+    <div id="invoiceModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-card max-w-lg w-full rounded-3xl border border-purple-500/40 p-6 space-y-6 relative my-8">
+            <button onclick="closeInvoiceModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center space-y-2">
+                <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">MENUNGGU PEMBAYARAN</span>
+                <h3 class="text-xl font-black text-white">Invoice Transaksi Top Up</h3>
+                <p class="text-xs text-slate-400">Selesaikan pembayaran sebelum batas waktu habis</p>
+            </div>
+
+            <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 text-center">
+                <span class="text-xs text-slate-400 block">Batas Waktu Pembayaran</span>
+                <span id="invoiceTimer" class="text-2xl font-mono font-black text-amber-400">14:59</span>
+            </div>
+
+            <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-800/80 space-y-2 text-xs">
+                <div class="flex justify-between text-slate-400">
+                    <span>No Invoice:</span>
+                    <span id="invModalId" class="font-mono text-white font-bold">INV-20261028-1234</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Item Game:</span>
+                    <span id="invModalItem" class="text-white font-bold">-</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Target ID:</span>
+                    <span id="invModalTarget" class="text-white font-bold">-</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Metode Bayar:</span>
+                    <span id="invModalMethod" class="text-white font-bold">-</span>
+                </div>
+                <div class="flex justify-between text-slate-400 pt-2 border-t border-slate-800">
+                    <span>Total Tagihan:</span>
+                    <span id="invModalTotal" class="text-lg font-black text-purple-400">Rp 0</span>
+                </div>
+            </div>
+
+            <div id="paymentDisplayArea" class="text-center p-4 bg-white rounded-2xl space-y-3">
+                <p class="text-xs font-bold text-slate-900">Scan QRIS Di Bawah Ini Menggunakan Aplikasi E-Wallet / Mobile Banking</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=NEXUSTOPUP_SIMULATION_QRIS_PAYMENT" alt="QRIS Code" class="w-48 h-48 mx-auto border-2 border-slate-200 rounded-xl">
+                <p class="text-[10px] text-slate-500 font-medium">Auto detect callback mutasi server 24/7</p>
+            </div>
+
+            <div class="space-y-2">
+                <button onclick="simulatePaymentSuccess()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-xs shadow-lg shadow-emerald-900/40 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-check"></i> SIMULASI BAYAR SEKARANG (TESTING)
+                </button>
+                <p class="text-[10px] text-center text-slate-500">*Klik tombol di atas untuk menguji coba callback webhook otomatis.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= MODAL 2: ADMIN PANEL ================= -->
+    <div id="adminModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-card max-w-2xl w-full rounded-3xl border border-slate-800 p-6 space-y-6 relative my-8">
+            <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-600/20 text-purple-400 border border-purple-500/30 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-sliders"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">Admin Dashboard & API Config</h3>
+                    <p class="text-xs text-slate-400">Konfigurasi Gateway Payment (Tripay/Midtrans) & Provider H2H</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 text-center">
+                    <span class="text-[10px] text-slate-400 block">Total Omset Hari Ini</span>
+                    <span class="text-sm font-bold text-emerald-400">Rp 1.480.000</span>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 text-center">
+                    <span class="text-[10px] text-slate-400 block">Total Transaksi</span>
+                    <span class="text-sm font-bold text-cyan-400">74 Sukses</span>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 text-center">
+                    <span class="text-[10px] text-slate-400 block">Status API Provider</span>
+                    <span class="text-xs font-bold text-emerald-400">ONLINE 100%</span>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">API Key Digiflazz / VIP Reseller</label>
+                    <input type="password" value="df_live_98a7a8d7a98sd7f98as7f9" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-mono">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Merchant Code Payment Gateway (Tripay)</label>
+                    <input type="text" value="T129840" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-mono">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Webhook Callback URL</label>
+                    <input type="text" readonly value="https://domain-anda.com/api/callback/tripay" class="w-full p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-purple-400 font-mono select-all">
+                </div>
+                <button onclick="Swal.fire('Sukses', 'Pengaturan API Gateway berhasil disimpan!', 'success')" class="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition">
+                    Simpan Konfigurasi
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 border-t border-slate-900 mt-16 text-xs text-slate-400 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white font-bold">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <span class="text-base font-extrabold text-white tracking-wider">NEXUSTOPUP</span>
+                </div>
+                <p class="text-slate-500 leading-relaxed">
+                    Platform penyedia top up game murah, terpercaya, dan serba otomatis 24/7 di Indonesia.
+                </p>
+            </div>
+            <div class="space-y-2">
+                <h4 class="font-bold text-white text-sm">Navigasi Cepat</h4>
+                <ul class="space-y-1.5">
+                    <li><a href="#" onclick="showPage('home')" class="hover:text-purple-400">Katalog Game</a></li>
+                    <li><a href="#" onclick="showPage('tracking')" class="hover:text-purple-400">Lacak Transaksi</a></li>
+                    <li><a href="#" onclick="showPage('pricelist')" class="hover:text-purple-400">Daftar Harga</a></li>
+                    <li><a href="#" onclick="showPage('calc')" class="hover:text-purple-400">Kalkulator MLBB</a></li>
+                </ul>
+            </div>
+            <div class="space-y-2">
+                <h4 class="font-bold text-white text-sm">Metode Pembayaran</h4>
+                <p class="text-slate-500">Mendukung QRIS, DANA, GoPay, OVO, ShopeePay, Bank BCA, Mandiri, BRI, BSI, Indomaret & Alfamart.</p>
+            </div>
+            <div class="space-y-2">
+                <h4 class="font-bold text-white text-sm">Hubungi Kami</h4>
+                <p class="text-slate-500">WhatsApp CS: +62 812-3456-7890</p>
+                <p class="text-slate-500">Jam Operasional: 24 Jam Non-Stop</p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-900 mt-8 pt-6 text-center text-slate-600">
+            © 2026 NEXUS TOPUP. All Rights Reserved. Built for Speed & Automation.
+        </div>
+    </footer>
+
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const gamesData = [
+            {
+                id: 'mlbb',
+                title: 'Mobile Legends',
+                publisher: 'Moonton',
+                category: 'mobile',
+                badge: 'POPULER',
+                image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80',
+                hasZone: true,
+                items: [
+                    { id: 'ml_86', name: '86 Diamonds', price: 20000, badge: 'FLASH SALE' },
+                    { id: 'ml_172', name: '172 Diamonds', price: 40000 },
+                    { id: 'ml_257', name: '257 Diamonds', price: 60000, badge: 'BEST SELLER' },
+                    { id: 'ml_706', name: '706 Diamonds', price: 160000 },
+                    { id: 'ml_pass', name: 'Weekly Diamond Pass', price: 28000, badge: 'HEMAT' },
+                    { id: 'ml_starlight', name: 'Starlight Member Card', price: 135000 }
+                ]
+            },
+            {
+                id: 'ff',
+                title: 'Free Fire',
+                publisher: 'Garena',
+                category: 'mobile',
+                badge: 'HOT',
+                image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'ff_140', name: '140 Diamonds', price: 19000 },
+                    { id: 'ff_355', name: '355 Diamonds', price: 48500, badge: 'BEST SELLER' },
+                    { id: 'ff_720', name: '720 Diamonds', price: 96000 },
+                    { id: 'ff_1450', name: '1450 Diamonds', price: 190000 }
+                ]
+            },
+            {
+                id: 'pubg',
+                title: 'PUBG Mobile',
+                publisher: 'Tencent',
+                category: 'mobile',
+                badge: 'POPULER',
+                image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'pubg_60', name: '60 UC', price: 14500 },
+                    { id: 'pubg_325', name: '325 UC', price: 72000, badge: 'PROMO' },
+                    { id: 'pubg_660', name: '660 UC', price: 142000 }
+                ]
+            },
+            {
+                id: 'genshin',
+                title: 'Genshin Impact',
+                publisher: 'HoYoverse',
+                category: 'mobile',
+                badge: 'OFFICIAL',
+                image: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=400&auto=format&fit=crop&q=80',
+                hasZone: true,
+                items: [
+                    { id: 'gi_welkin', name: 'Blessing of Welkin Moon', price: 64000, badge: 'BEST SELLER' },
+                    { id: 'gi_300', name: '300 Genesis Crystal', price: 64000 },
+                    { id: 'gi_980', name: '980 Genesis Crystal', price: 205000 }
+                ]
+            },
+            {
+                id: 'valorant',
+                title: 'Valorant',
+                publisher: 'Riot Games',
+                category: 'pc',
+                badge: 'HOT',
+                image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'val_475', name: '475 Valorant Points', price: 55000 },
+                    { id: 'val_1000', name: '1000 Valorant Points', price: 110000, badge: 'POPULER' }
+                ]
+            },
+            {
+                id: 'dana',
+                title: 'Saldo DANA',
+                publisher: 'E-Wallet',
+                category: 'ewallet',
+                badge: 'INSTAN',
+                image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'dana_20', name: 'Saldo Rp 20.000', price: 20500 },
+                    { id: 'dana_50', name: 'Saldo Rp 50.000', price: 50500 },
+                    { id: 'dana_100', name: 'Saldo Rp 100.000', price: 100500 }
+                ]
+            }
+        ];
+
+        let currentSelectedGame = null;
+        let currentSelectedNominal = null;
+        let currentSelectedPayment = null;
+        let currentDiscount = 0;
+        let countdownInterval = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGameGrid(gamesData);
+            renderPricelistTable();
+        });
+
+        function renderGameGrid(data) {
+            const container = document.getElementById('gameGrid');
+            container.innerHTML = '';
+            
+            data.forEach(game => {
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-2xl p-3 border border-slate-800 hover:border-purple-500/80 transition cursor-pointer group flex flex-col justify-between space-y-3 hover:scale-[1.02]";
+                card.onclick = () => selectGameForOrder(game.id);
+
+                card.innerHTML = `
+                    <div class="relative rounded-xl overflow-hidden aspect-square">
+                        <img src="${game.image}" alt="${game.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+                        <span class="absolute top-2 right-2 px-2 py-0.5 rounded-md text-[9px] font-black bg-purple-600 text-white shadow">${game.badge}</span>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-xs text-white group-hover:text-purple-400 transition line-clamp-1">${game.title}</h3>
+                        <p class="text-[10px] text-slate-400">${game.publisher}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function setCategory(cat) {
+            document.querySelectorAll('.cat-tab').forEach(btn => {
+                btn.classList.remove('active', 'border-purple-500', 'bg-purple-600/20', 'text-purple-300');
+                btn.classList.add('border-slate-800', 'bg-slate-900', 'text-slate-300');
+            });
+            event.currentTarget.classList.add('active', 'border-purple-500', 'bg-purple-600/20', 'text-purple-300');
+
+            if(cat === 'all') {
+                renderGameGrid(gamesData);
+            } else {
+                const filtered = gamesData.filter(g => g.category === cat);
+                renderGameGrid(filtered);
+            }
+        }
+
+        function filterGames() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = gamesData.filter(g => g.title.toLowerCase().includes(query) || g.publisher.toLowerCase().includes(query));
+            renderGameGrid(filtered);
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
+            document.getElementById('page-' + pageId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function selectGameForOrder(gameId) {
+            currentSelectedGame = gamesData.find(g => g.id === gameId);
+            if(!currentSelectedGame) return;
+
+            document.getElementById('selectedGameSlug').innerText = currentSelectedGame.id + '-id';
+            document.getElementById('orderGameImg').src = currentSelectedGame.image;
+            document.getElementById('orderGameTitle').innerText = currentSelectedGame.title;
+            document.getElementById('orderGamePublisher').innerText = currentSelectedGame.publisher;
+
+            if(currentSelectedGame.hasZone) {
+                document.getElementById('zoneIdContainer').classList.remove('hidden');
+            } else {
+                document.getElementById('zoneIdContainer').classList.add('hidden');
+            }
+
+            const nominalGrid = document.getElementById('nominalGrid');
+            nominalGrid.innerHTML = '';
+            currentSelectedNominal = null;
+
+            currentSelectedGame.items.forEach(item => {
+                const nCard = document.createElement('div');
+                nCard.className = "nominal-card border border-slate-800 bg-slate-900/80 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition relative flex flex-col justify-between";
+                nCard.onclick = () => selectNominal(item, nCard);
+
+                nCard.innerHTML = `
+                    ${item.badge ? `<span class="absolute -top-2 right-2 px-1.5 py-0.5 rounded text-[8px] font-black bg-cyan-500 text-slate-950">${item.badge}</span>` : ''}
+                    <span class="font-bold text-xs text-white block">${item.name}</span>
+                    <span class="text-xs font-extrabold text-purple-400 mt-2 block">Rp ${item.price.toLocaleString('id-ID')}</span>
+                `;
+                nominalGrid.appendChild(nCard);
+            });
+
+            resetSummary();
+            showPage('order');
+        }
+
+        function selectNominal(item, element) {
+            document.querySelectorAll('.nominal-card').forEach(el => el.classList.remove('border-purple-500', 'bg-purple-900/30', 'glow-effect'));
+            element.classList.add('border-purple-500', 'bg-purple-900/30', 'glow-effect');
+
+            currentSelectedNominal = item;
+            updateSummary();
+        }
+
+        function selectPayment(key, name, fee) {
+            document.querySelectorAll('.payment-card').forEach(el => el.classList.remove('border-purple-500', 'bg-purple-900/30'));
+            event.currentTarget.classList.add('border-purple-500', 'bg-purple-900/30');
+
+            currentSelectedPayment = { key, name, fee };
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const itemText = currentSelectedNominal ? currentSelectedNominal.name : '-';
+            const payText = currentSelectedPayment ? currentSelectedPayment.name : '-';
+
+            let basePrice = currentSelectedNominal ? currentSelectedNominal.price : 0;
+            let fee = currentSelectedPayment ? currentSelectedPayment.fee : 0;
+            let total = Math.max(0, basePrice + fee - currentDiscount);
+
+            document.getElementById('summaryItem').innerText = itemText;
+            document.getElementById('summaryPayment').innerText = payText;
+            document.getElementById('summaryDiscount').innerText = `Rp ${currentDiscount.toLocaleString('id-ID')}`;
+            document.getElementById('summaryTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        function resetSummary() {
+            currentSelectedNominal = null;
+            currentSelectedPayment = null;
+            currentDiscount = 0;
+            updateSummary();
+        }
+
+        function checkNickname() {
+            const userId = document.getElementById('inputUserId').value;
+            const nicknameResult = document.getElementById('nicknameResult');
+
+            if(!userId) {
+                Swal.fire('Perhatian', 'Harap isi User ID terlebih dahulu!', 'warning');
+                return;
+            }
+
+            nicknameResult.innerText = "Checking...";
+            setTimeout(() => {
+                nicknameResult.innerText = "✓ Nickname: ProGamer_NEXUS (ID Valid)";
+            }, 800);
+        }
+
+        function applyPromo() {
+            const code = document.getElementById('inputPromo').value.trim().toUpperCase();
+            const promoStatus = document.getElementById('promoStatus');
+
+            if(code === 'DISPAD' || code === 'NEXUS10') {
+                currentDiscount = 5000;
+                promoStatus.className = "text-[11px] block mt-1 text-emerald-400 font-bold";
+                promoStatus.innerText = "✓ Kode promo berhasil dipakai (Diskon Rp 5.000)";
+                updateSummary();
+            } else {
+                promoStatus.className = "text-[11px] block mt-1 text-rose-400 font-bold";
+                promoStatus.innerText = "✕ Kode promo tidak valid atau kadaluarsa";
+            }
+        }
+
+        function processOrder() {
+            const userId = document.getElementById('inputUserId').value;
+            const wa = document.getElementById('inputWhatsapp').value;
+
+            if(!userId) {
+                Swal.fire('Gagal', 'Silakan masukkan User ID akun kamu!', 'error');
+                return;
+            }
+            if(!currentSelectedNominal) {
+                Swal.fire('Gagal', 'Silakan pilih nominal top up!', 'error');
+                return;
+            }
+            if(!currentSelectedPayment) {
+                Swal.fire('Gagal', 'Silakan pilih metode pembayaran!', 'error');
+                return;
+            }
+            if(!wa) {
+                Swal.fire('Gagal', 'Silakan masukkan nomor WhatsApp!', 'error');
+                return;
+            }
+
+            const invId = 'INV-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + Math.floor(1000 + Math.random() * 9000);
+            let total = currentSelectedNominal.price + currentSelectedPayment.fee - currentDiscount;
+
+            document.getElementById('invModalId').innerText = invId;
+            document.getElementById('invModalItem').innerText = `${currentSelectedGame.title} - ${currentSelectedNominal.name}`;
+            document.getElementById('invModalTarget').innerText = userId;
+            document.getElementById('invModalMethod').innerText = currentSelectedPayment.name;
+            document.getElementById('invModalTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+
+            document.getElementById('invoiceModal').classList.remove('hidden');
+            startTimer(15 * 60);
+        }
+
+        function closeInvoiceModal() {
+            document.getElementById('invoiceModal').classList.add('hidden');
+            clearInterval(countdownInterval);
+        }
+
+        function startTimer(duration) {
+            let timer = duration, minutes, seconds;
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                document.getElementById('invoiceTimer').innerText = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('invoiceTimer').innerText = "EXPIRED";
+                }
+            }, 1000);
+        }
+
+        function simulatePaymentSuccess() {
+            closeInvoiceModal();
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            Swal.fire({
+                title: 'Pembayaran Berhasil!',
+                text: 'Sistem sedang memproses top up item ke akun game Anda secara otomatis.',
+                icon: 'success',
+                confirmButtonText: 'Lihat Status Transaksi'
+            }).then(() => {
+                showPage('tracking');
+                document.getElementById('trackingResult').classList.remove('hidden');
+            });
+        }
+
+        function searchOrder() {
+            const trackInput = document.getElementById('trackInput').value;
+            if(!trackInput) {
+                Swal.fire('Peringatan', 'Masukkan No Invoice atau WhatsApp', 'warning');
+                return;
+            }
+            document.getElementById('trackingResult').classList.remove('hidden');
+        }
+
+        function renderPricelistTable() {
+            const tbody = document.getElementById('pricelistTableBody');
+            tbody.innerHTML = '';
+
+            gamesData.forEach(game => {
+                game.items.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-900/50 transition";
+                    tr.innerHTML = `
+                        <td class="py-3 px-4 font-bold text-purple-400">${game.title}</td>
+                        <td class="py-3 px-4">${item.name}</td>
+                        <td class="py-3 px-4 text-slate-400 line-through">Rp ${(item.price + 3000).toLocaleString('id-ID')}</td>
+                        <td class="py-3 px-4 font-bold text-emerald-400">Rp ${item.price.toLocaleString('id-ID')}</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">AVAILABLE</span></td>
+                    `;
+                    tbody.appendChild(tr);
                 });
+            });
+        }
 
-                posts.sort((a, b) => b['waktu'].compareTo(a['waktu']));
+        function calcWR() {
+            const total = parseFloat(document.getElementById('wrTotalMatches').value);
+            const currentWr = parseFloat(document.getElementById('wrCurrentWr').value);
+            const targetWr = parseFloat(document.getElementById('wrTargetWr').value);
 
-                if (posts.isEmpty) return Center(child: Text("Anda belum membuat postingan."));
+            if(!total || !currentWr || !targetWr || targetWr >= 100 || targetWr <= currentWr) {
+                document.getElementById('wrResult').innerText = "Masukkan angka match & WR target yang valid!";
+                return;
+            }
 
-                return ListView.builder(
-                  itemCount: posts.length,
-                  itemBuilder: (context, index) {
-                    var post = posts[index];
-                    return Card(
-                      margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Postingan Anda", style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold, fontSize: 13)),
-                                IconButton(
-                                  icon: Icon(Icons.delete_outline, color: Colors.red, size: 20),
-                                  onPressed: () => _konfirmasiHapus(post['id']),
-                                  padding: EdgeInsets.zero,
-                                  constraints: BoxConstraints(),
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 8),
-                            if (post['teks'] != "") Text(post['teks'], style: TextStyle(fontSize: 15)),
-                            if (post['gambar'] != null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 12.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Image.network(post['gambar'], height: 150, width: double.infinity, fit: BoxFit.cover),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+            const currentWins = total * (currentWr / 100);
+            const requiredWins = Math.ceil((targetWr * total - 100 * currentWins) / (100 - targetWr));
+            document.getElementById('wrResult').innerHTML = `Kamu butuh <span class="text-emerald-400 font-extrabold">${requiredWins} kemenangan beruntun (Win tanpa kalah)</span> untuk mencapai WR ${targetWr}%`;
+        }
+
+        function calcMagicWheel() {
+            const points = parseInt(document.getElementById('mwPoints').value) || 0;
+            if(points >= 200) {
+                document.getElementById('mwResult').innerText = "Magic Points sudah mencapai 200 (Siap Klaim Legend Skin)!";
+                return;
+            }
+            const remainingPoints = 200 - points;
+            const estimatedDiamonds = remainingPoints * 60;
+            document.getElementById('mwResult').innerHTML = `Dibutuhkan sisa ±<span class="text-amber-400 font-extrabold">${remainingPoints} points</span> (~<span class="text-cyan-400 font-extrabold">${estimatedDiamonds} Diamonds</span>)`;
+        }
+
+        function openAdminModal() {
+            document.getElementById('adminModal').classList.remove('hidden');
+        }
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
