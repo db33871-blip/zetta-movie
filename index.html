@@ -107,7 +107,7 @@
         </div>
     </div>
 
-    <!-- NAVBAR (TOMBOL ADMIN TELAH DIHAPUS) -->
+    <!-- NAVBAR -->
     <nav class="sticky top-0 z-40 glass-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
@@ -876,7 +876,7 @@
     </div>
 
 
-    <!-- MODAL ADMIN PANEL (TETAP ADA DI KODE, HANYA BISA DIBUKA VIA CONSOLE / AKSES RAHASIA) -->
+    <!-- MODAL ADMIN PANEL -->
     <div id="adminModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
         <div class="glass-card max-w-2xl w-full rounded-3xl border border-slate-800 p-6 space-y-6 relative my-8">
             <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white text-xl">
@@ -970,7 +970,7 @@
     </footer>
 
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT LOGIC DENGAN NOMINAL ITEM LENGKAP (MURAH -> MAHAL) -->
     <script>
         const gamesData = [
             // --- MOBILE GAMES ---
@@ -983,12 +983,29 @@
                 image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80',
                 hasZone: true,
                 items: [
+                    { id: 'ml_3', name: '3 Diamonds', price: 1500, memberPrice: 1200 },
+                    { id: 'ml_5', name: '5 Diamonds', price: 2000, memberPrice: 1600 },
+                    { id: 'ml_12', name: '12 Diamonds', price: 4000, memberPrice: 3500 },
+                    { id: 'ml_19', name: '19 Diamonds', price: 6000, memberPrice: 5300 },
+                    { id: 'ml_28', name: '28 Diamonds', price: 9000, memberPrice: 8000 },
+                    { id: 'ml_44', name: '44 Diamonds', price: 13000, memberPrice: 11800 },
+                    { id: 'ml_59', name: '59 Diamonds', price: 16000, memberPrice: 14500 },
                     { id: 'ml_86', name: '86 Diamonds', price: 20000, memberPrice: 19000, badge: 'FLASH SALE' },
                     { id: 'ml_172', name: '172 Diamonds', price: 40000, memberPrice: 38000 },
                     { id: 'ml_257', name: '257 Diamonds', price: 60000, memberPrice: 57000, badge: 'BEST SELLER' },
+                    { id: 'ml_344', name: '344 Diamonds', price: 80000, memberPrice: 76000 },
+                    { id: 'ml_429', name: '429 Diamonds', price: 100000, memberPrice: 95000 },
+                    { id: 'ml_514', name: '514 Diamonds', price: 120000, memberPrice: 114000 },
                     { id: 'ml_706', name: '706 Diamonds', price: 160000, memberPrice: 152000 },
+                    { id: 'ml_878', name: '878 Diamonds', price: 200000, memberPrice: 190000 },
+                    { id: 'ml_1412', name: '1412 Diamonds', price: 320000, memberPrice: 304000 },
+                    { id: 'ml_2195', name: '2195 Diamonds', price: 500000, memberPrice: 475000 },
+                    { id: 'ml_3688', name: '3688 Diamonds', price: 820000, memberPrice: 780000 },
+                    { id: 'ml_5532', name: '5532 Diamonds', price: 1250000, memberPrice: 1180000 },
+                    { id: 'ml_9288', name: '9288 Diamonds', price: 2100000, memberPrice: 1990000, badge: 'SULTAN PACK' },
                     { id: 'ml_pass', name: 'Weekly Diamond Pass', price: 28000, memberPrice: 26500, badge: 'HEMAT' },
-                    { id: 'ml_starlight', name: 'Starlight Member Card', price: 135000, memberPrice: 128000 }
+                    { id: 'ml_starlight', name: 'Starlight Member Card', price: 135000, memberPrice: 128000 },
+                    { id: 'ml_twilight', name: 'Twilight Pass', price: 150000, memberPrice: 142000 }
                 ]
             },
             {
@@ -1000,11 +1017,18 @@
                 image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'hok_16', name: '16 Tokens', price: 3500, memberPrice: 3000 },
                     { id: 'hok_80', name: '80 Tokens', price: 14800, memberPrice: 14000, badge: 'PROMO' },
                     { id: 'hok_240', name: '240 Tokens', price: 44000, memberPrice: 42000 },
                     { id: 'hok_400', name: '400 Tokens', price: 73000, memberPrice: 69500 },
+                    { id: 'hok_560', name: '560 Tokens', price: 102000, memberPrice: 97000 },
                     { id: 'hok_800', name: '800 Tokens', price: 146000, memberPrice: 139000 },
-                    { id: 'hok_card', name: 'Weekly Card Plus', price: 45000, memberPrice: 42500 }
+                    { id: 'hok_1200', name: '1200 Tokens', price: 215000, memberPrice: 204000 },
+                    { id: 'hok_2400', name: '2400 Tokens', price: 430000, memberPrice: 410000 },
+                    { id: 'hok_4000', name: '4000 Tokens', price: 710000, memberPrice: 675000 },
+                    { id: 'hok_8000', name: '8000 Tokens', price: 1400000, memberPrice: 1330000, badge: 'SULTAN' },
+                    { id: 'hok_card_mgg', name: 'Weekly Card', price: 16000, memberPrice: 15000 },
+                    { id: 'hok_card_plus', name: 'Weekly Card Plus', price: 45000, memberPrice: 42500 }
                 ]
             },
             {
@@ -1016,11 +1040,20 @@
                 image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'ff_5', name: '5 Diamonds', price: 1000, memberPrice: 800 },
+                    { id: 'ff_12', name: '12 Diamonds', price: 2500, memberPrice: 2000 },
+                    { id: 'ff_50', name: '50 Diamonds', price: 8000, memberPrice: 7200 },
+                    { id: 'ff_70', name: '70 Diamonds', price: 10000, memberPrice: 9200 },
                     { id: 'ff_140', name: '140 Diamonds', price: 19000, memberPrice: 18000 },
+                    { id: 'ff_210', name: '210 Diamonds', price: 29000, memberPrice: 27500 },
                     { id: 'ff_355', name: '355 Diamonds', price: 48500, memberPrice: 46000, badge: 'BEST SELLER' },
                     { id: 'ff_720', name: '720 Diamonds', price: 96000, memberPrice: 91000 },
                     { id: 'ff_1450', name: '1450 Diamonds', price: 190000, memberPrice: 180000 },
-                    { id: 'ff_mem_mgg', name: 'Membership Mingguan', price: 30000, memberPrice: 28500 }
+                    { id: 'ff_2180', name: '2180 Diamonds', price: 280000, memberPrice: 266000 },
+                    { id: 'ff_3640', name: '3640 Diamonds', price: 465000, memberPrice: 442000 },
+                    { id: 'ff_7290', name: '7290 Diamonds', price: 920000, memberPrice: 875000, badge: 'SULTAN' },
+                    { id: 'ff_mem_mgg', name: 'Membership Mingguan', price: 30000, memberPrice: 28500 },
+                    { id: 'ff_mem_bln', name: 'Membership Bulanan', price: 120000, memberPrice: 114000 }
                 ]
             },
             {
@@ -1032,10 +1065,13 @@
                 image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'pubg_30', name: '30 UC', price: 7500, memberPrice: 6800 },
                     { id: 'pubg_60', name: '60 UC', price: 14500, memberPrice: 13500 },
                     { id: 'pubg_325', name: '325 UC', price: 72000, memberPrice: 68500, badge: 'PROMO' },
                     { id: 'pubg_660', name: '660 UC', price: 142000, memberPrice: 135000 },
-                    { id: 'pubg_1800', name: '1800 UC', price: 360000, memberPrice: 345000 }
+                    { id: 'pubg_1800', name: '1800 UC', price: 360000, memberPrice: 345000 },
+                    { id: 'pubg_3850', name: '3850 UC', price: 730000, memberPrice: 695000 },
+                    { id: 'pubg_8100', name: '8100 UC', price: 1450000, memberPrice: 1380000, badge: 'ULTIMATE' }
                 ]
             },
             {
@@ -1047,10 +1083,13 @@
                 image: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=400&auto=format&fit=crop&q=80',
                 hasZone: true,
                 items: [
-                    { id: 'gi_welkin', name: 'Blessing of Welkin Moon', price: 64000, memberPrice: 61000, badge: 'BEST SELLER' },
+                    { id: 'gi_60', name: '60 Genesis Crystal', price: 15000, memberPrice: 14000 },
                     { id: 'gi_300', name: '300 Genesis Crystal', price: 64000, memberPrice: 61000 },
                     { id: 'gi_980', name: '980 Genesis Crystal', price: 205000, memberPrice: 195000 },
-                    { id: 'gi_1980', name: '1980 Genesis Crystal', price: 410000, memberPrice: 390000 }
+                    { id: 'gi_1980', name: '1980 Genesis Crystal', price: 410000, memberPrice: 390000 },
+                    { id: 'gi_3280', name: '3280 Genesis Crystal', price: 680000, memberPrice: 648000 },
+                    { id: 'gi_6480', name: '6480 Genesis Crystal', price: 1350000, memberPrice: 1285000, badge: 'WHALE PACK' },
+                    { id: 'gi_welkin', name: 'Blessing of Welkin Moon', price: 64000, memberPrice: 61000, badge: 'BEST SELLER' }
                 ]
             },
             {
@@ -1062,9 +1101,13 @@
                 image: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=400&auto=format&fit=crop&q=80',
                 hasZone: true,
                 items: [
-                    { id: 'hsr_express', name: 'Express Supply Pass', price: 64000, memberPrice: 61000, badge: 'BEST SELLER' },
+                    { id: 'hsr_60', name: '60 Oneiric Shard', price: 15000, memberPrice: 14000 },
                     { id: 'hsr_300', name: '300 Oneiric Shard', price: 64000, memberPrice: 61000 },
-                    { id: 'hsr_980', name: '980 Oneiric Shard', price: 205000, memberPrice: 195000 }
+                    { id: 'hsr_980', name: '980 Oneiric Shard', price: 205000, memberPrice: 195000 },
+                    { id: 'hsr_1980', name: '1980 Oneiric Shard', price: 410000, memberPrice: 390000 },
+                    { id: 'hsr_3280', name: '3280 Oneiric Shard', price: 680000, memberPrice: 648000 },
+                    { id: 'hsr_6480', name: '6480 Oneiric Shard', price: 1350000, memberPrice: 1285000, badge: 'WHALE PACK' },
+                    { id: 'hsr_express', name: 'Express Supply Pass', price: 64000, memberPrice: 61000, badge: 'BEST SELLER' }
                 ]
             },
             {
@@ -1076,9 +1119,13 @@
                 image: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=400&auto=format&fit=crop&q=80',
                 hasZone: true,
                 items: [
-                    { id: 'zzz_interknot', name: 'Inter-Knot Membership', price: 65000, memberPrice: 61500 },
+                    { id: 'zzz_60', name: '60 Monochromes', price: 15000, memberPrice: 14000 },
                     { id: 'zzz_300', name: '300 Monochromes', price: 65000, memberPrice: 61500 },
-                    { id: 'zzz_980', name: '980 Monochromes', price: 205000, memberPrice: 195000 }
+                    { id: 'zzz_980', name: '980 Monochromes', price: 205000, memberPrice: 195000 },
+                    { id: 'zzz_1980', name: '1980 Monochromes', price: 410000, memberPrice: 390000 },
+                    { id: 'zzz_3280', name: '3280 Monochromes', price: 680000, memberPrice: 648000 },
+                    { id: 'zzz_6480', name: '6480 Monochromes', price: 1350000, memberPrice: 1285000, badge: 'WHALE PACK' },
+                    { id: 'zzz_interknot', name: 'Inter-Knot Membership', price: 65000, memberPrice: 61500 }
                 ]
             },
             {
@@ -1091,9 +1138,14 @@
                 hasZone: false,
                 items: [
                     { id: 'codm_31', name: '31 CP', price: 5000, memberPrice: 4700 },
+                    { id: 'codm_62', name: '62 CP', price: 10000, memberPrice: 9400 },
                     { id: 'codm_127', name: '127 CP', price: 20000, memberPrice: 19000 },
                     { id: 'codm_320', name: '320 CP', price: 50000, memberPrice: 47500 },
-                    { id: 'codm_645', name: '645 CP', price: 100000, memberPrice: 95000 }
+                    { id: 'codm_645', name: '645 CP', price: 100000, memberPrice: 95000 },
+                    { id: 'codm_1373', name: '1373 CP', price: 200000, memberPrice: 190000 },
+                    { id: 'codm_2060', name: '2060 CP', price: 300000, memberPrice: 285000 },
+                    { id: 'codm_3564', name: '3564 CP', price: 500000, memberPrice: 475000 },
+                    { id: 'codm_7650', name: '7650 CP', price: 1000000, memberPrice: 950000, badge: 'SULTAN' }
                 ]
             },
             {
@@ -1105,9 +1157,13 @@
                 image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'fc_40', name: '40 FC Points', price: 6000, memberPrice: 5500 },
                     { id: 'fc_100', name: '100 FC Points', price: 16000, memberPrice: 15000 },
                     { id: 'fc_520', name: '520 FC Points', price: 79000, memberPrice: 75000 },
-                    { id: 'fc_1070', name: '1070 FC Points', price: 159000, memberPrice: 152000 }
+                    { id: 'fc_1070', name: '1070 FC Points', price: 159000, memberPrice: 152000 },
+                    { id: 'fc_2200', name: '2200 FC Points', price: 315000, memberPrice: 299000 },
+                    { id: 'fc_5700', name: '5700 FC Points', price: 790000, memberPrice: 750000 },
+                    { id: 'fc_12000', name: '12000 FC Points', price: 1550000, memberPrice: 1470000, badge: 'MAX PACK' }
                 ]
             },
             {
@@ -1121,7 +1177,11 @@
                 items: [
                     { id: 'ef_130', name: '130 eFootball Coins', price: 16000, memberPrice: 15000 },
                     { id: 'ef_550', name: '550 eFootball Coins', price: 65000, memberPrice: 61500 },
-                    { id: 'ef_1040', name: '1040 eFootball Coins', price: 125000, memberPrice: 119000 }
+                    { id: 'ef_1040', name: '1040 eFootball Coins', price: 125000, memberPrice: 119000 },
+                    { id: 'ef_2130', name: '2130 eFootball Coins', price: 250000, memberPrice: 238000 },
+                    { id: 'ef_3250', name: '3250 eFootball Coins', price: 380000, memberPrice: 361000 },
+                    { id: 'ef_5700', name: '5700 eFootball Coins', price: 650000, memberPrice: 618000 },
+                    { id: 'ef_12800', name: '12800 eFootball Coins', price: 1400000, memberPrice: 1330000, badge: 'SULTAN' }
                 ]
             },
             {
@@ -1135,7 +1195,10 @@
                 items: [
                     { id: 'aov_40', name: '40 Voucher', price: 10000, memberPrice: 9500 },
                     { id: 'aov_90', name: '90 Voucher', price: 20000, memberPrice: 19000 },
-                    { id: 'aov_230', name: '230 Voucher', price: 50000, memberPrice: 47500 }
+                    { id: 'aov_230', name: '230 Voucher', price: 50000, memberPrice: 47500 },
+                    { id: 'aov_470', name: '470 Voucher', price: 100000, memberPrice: 95000 },
+                    { id: 'aov_950', name: '950 Voucher', price: 200000, memberPrice: 190000 },
+                    { id: 'aov_2400', name: '2400 Voucher', price: 500000, memberPrice: 475000 }
                 ]
             },
 
@@ -1149,9 +1212,13 @@
                 image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
-                    { id: 'val_475', name: '475 Valorant Points', price: 55000, memberPrice: 52000 },
+                    { id: 'val_125', name: '125 Valorant Points', price: 15000, memberPrice: 14000 },
+                    { id: 'val_425', name: '425 Valorant Points', price: 50000, memberPrice: 47000 },
                     { id: 'val_1000', name: '1000 Valorant Points', price: 110000, memberPrice: 104000, badge: 'POPULER' },
-                    { id: 'val_2050', name: '2050 Valorant Points', price: 215000, memberPrice: 205000 }
+                    { id: 'val_2050', name: '2050 Valorant Points', price: 215000, memberPrice: 205000 },
+                    { id: 'val_3650', name: '3650 Valorant Points', price: 375000, memberPrice: 355000 },
+                    { id: 'val_5350', name: '5350 Valorant Points', price: 540000, memberPrice: 510000 },
+                    { id: 'val_11000', name: '11000 Valorant Points', price: 1080000, memberPrice: 1020000, badge: 'ULTIMATE' }
                 ]
             },
             {
@@ -1165,7 +1232,10 @@
                 items: [
                     { id: 'rbx_80', name: '80 Robux', price: 18000, memberPrice: 17000 },
                     { id: 'rbx_400', name: '400 Robux', price: 79000, memberPrice: 75000 },
-                    { id: 'rbx_800', name: '800 Robux', price: 155000, memberPrice: 148000 }
+                    { id: 'rbx_800', name: '800 Robux', price: 155000, memberPrice: 148000 },
+                    { id: 'rbx_1700', name: '1700 Robux', price: 320000, memberPrice: 304000 },
+                    { id: 'rbx_4500', name: '4500 Robux', price: 820000, memberPrice: 779000 },
+                    { id: 'rbx_10000', name: '10000 Robux', price: 1750000, memberPrice: 1660000, badge: 'MEGA PACK' }
                 ]
             },
             {
@@ -1179,7 +1249,11 @@
                 items: [
                     { id: 'st_12k', name: 'Steam Wallet Rp 12.000', price: 14000, memberPrice: 13200 },
                     { id: 'st_45k', name: 'Steam Wallet Rp 45.000', price: 49000, memberPrice: 47000 },
-                    { id: 'st_90k', name: 'Steam Wallet Rp 90.000', price: 98000, memberPrice: 94000 }
+                    { id: 'st_90k', name: 'Steam Wallet Rp 90.000', price: 98000, memberPrice: 94000 },
+                    { id: 'st_120k', name: 'Steam Wallet Rp 120.000', price: 132000, memberPrice: 126000 },
+                    { id: 'st_250k', name: 'Steam Wallet Rp 250.000', price: 275000, memberPrice: 262000 },
+                    { id: 'st_400k', name: 'Steam Wallet Rp 400.000', price: 435000, memberPrice: 415000 },
+                    { id: 'st_600k', name: 'Steam Wallet Rp 600.000', price: 650000, memberPrice: 620000 }
                 ]
             },
             {
@@ -1192,8 +1266,12 @@
                 hasZone: false,
                 items: [
                     { id: 'pb_1000', name: '1.000 PB Cash', price: 10500, memberPrice: 10000 },
+                    { id: 'pb_2000', name: '2.000 PB Cash', price: 20500, memberPrice: 19500 },
                     { id: 'pb_3000', name: '3.000 PB Cash', price: 30500, memberPrice: 29500 },
-                    { id: 'pb_5000', name: '5.000 PB Cash', price: 50500, memberPrice: 48500 }
+                    { id: 'pb_5000', name: '5.000 PB Cash', price: 50500, memberPrice: 48500 },
+                    { id: 'pb_10000', name: '10.000 PB Cash', price: 100500, memberPrice: 96000 },
+                    { id: 'pb_20000', name: '20.000 PB Cash', price: 200500, memberPrice: 191000 },
+                    { id: 'pb_60000', name: '60.000 PB Cash', price: 600500, memberPrice: 570000 }
                 ]
             },
 
@@ -1207,9 +1285,17 @@
                 image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'dana_10', name: 'Saldo Rp 10.000', price: 10500, memberPrice: 10100 },
                     { id: 'dana_20', name: 'Saldo Rp 20.000', price: 20500, memberPrice: 20100 },
+                    { id: 'dana_25', name: 'Saldo Rp 25.000', price: 25500, memberPrice: 25100 },
                     { id: 'dana_50', name: 'Saldo Rp 50.000', price: 50500, memberPrice: 50100 },
-                    { id: 'dana_100', name: 'Saldo Rp 100.000', price: 100500, memberPrice: 100100 }
+                    { id: 'dana_75', name: 'Saldo Rp 75.000', price: 75500, memberPrice: 75100 },
+                    { id: 'dana_100', name: 'Saldo Rp 100.000', price: 100500, memberPrice: 100100 },
+                    { id: 'dana_150', name: 'Saldo Rp 150.000', price: 150500, memberPrice: 150100 },
+                    { id: 'dana_200', name: 'Saldo Rp 200.000', price: 200500, memberPrice: 200100 },
+                    { id: 'dana_300', name: 'Saldo Rp 300.000', price: 300500, memberPrice: 300100 },
+                    { id: 'dana_500', name: 'Saldo Rp 500.000', price: 500500, memberPrice: 500100 },
+                    { id: 'dana_1m', name: 'Saldo Rp 1.000.000', price: 1000500, memberPrice: 1000100 }
                 ]
             },
             {
@@ -1221,9 +1307,14 @@
                 image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'gp_10', name: 'Saldo Rp 10.000', price: 10600, memberPrice: 10200 },
                     { id: 'gp_20', name: 'Saldo Rp 20.000', price: 20600, memberPrice: 20200 },
+                    { id: 'gp_25', name: 'Saldo Rp 25.000', price: 25600, memberPrice: 25200 },
                     { id: 'gp_50', name: 'Saldo Rp 50.000', price: 50600, memberPrice: 50200 },
-                    { id: 'gp_100', name: 'Saldo Rp 100.000', price: 100600, memberPrice: 100200 }
+                    { id: 'gp_100', name: 'Saldo Rp 100.000', price: 100600, memberPrice: 100200 },
+                    { id: 'gp_200', name: 'Saldo Rp 200.000', price: 200600, memberPrice: 200200 },
+                    { id: 'gp_500', name: 'Saldo Rp 500.000', price: 500600, memberPrice: 500200 },
+                    { id: 'gp_1m', name: 'Saldo Rp 1.000.000', price: 1000600, memberPrice: 1000200 }
                 ]
             },
             {
@@ -1235,9 +1326,13 @@
                 image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'ovo_10', name: 'Saldo Rp 10.000', price: 10700, memberPrice: 10300 },
                     { id: 'ovo_20', name: 'Saldo Rp 20.000', price: 20700, memberPrice: 20300 },
                     { id: 'ovo_50', name: 'Saldo Rp 50.000', price: 50700, memberPrice: 50300 },
-                    { id: 'ovo_100', name: 'Saldo Rp 100.000', price: 100700, memberPrice: 100300 }
+                    { id: 'ovo_100', name: 'Saldo Rp 100.000', price: 100700, memberPrice: 100300 },
+                    { id: 'ovo_200', name: 'Saldo Rp 200.000', price: 200700, memberPrice: 200300 },
+                    { id: 'ovo_500', name: 'Saldo Rp 500.000', price: 500700, memberPrice: 500300 },
+                    { id: 'ovo_1m', name: 'Saldo Rp 1.000.000', price: 1000700, memberPrice: 1000300 }
                 ]
             },
             {
@@ -1249,9 +1344,13 @@
                 image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'sp_10', name: 'Saldo Rp 10.000', price: 10500, memberPrice: 10100 },
                     { id: 'sp_20', name: 'Saldo Rp 20.000', price: 20500, memberPrice: 20100 },
                     { id: 'sp_50', name: 'Saldo Rp 50.000', price: 50500, memberPrice: 50100 },
-                    { id: 'sp_100', name: 'Saldo Rp 100.000', price: 100500, memberPrice: 100100 }
+                    { id: 'sp_100', name: 'Saldo Rp 100.000', price: 100500, memberPrice: 100100 },
+                    { id: 'sp_200', name: 'Saldo Rp 200.000', price: 200500, memberPrice: 200100 },
+                    { id: 'sp_500', name: 'Saldo Rp 500.000', price: 500500, memberPrice: 500100 },
+                    { id: 'sp_1m', name: 'Saldo Rp 1.000.000', price: 1000500, memberPrice: 1000100 }
                 ]
             },
             {
@@ -1263,10 +1362,18 @@
                 image: 'https://images.unsplash.com/photo-1556742049-0a670f4a4591?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'tsel_5', name: 'Pulsa Telkomsel 5.000', price: 6000, memberPrice: 5600 },
                     { id: 'tsel_10', name: 'Pulsa Telkomsel 10.000', price: 10800, memberPrice: 10400 },
+                    { id: 'tsel_15', name: 'Pulsa Telkomsel 15.000', price: 15800, memberPrice: 15400 },
                     { id: 'tsel_20', name: 'Pulsa Telkomsel 20.000', price: 20800, memberPrice: 20400 },
+                    { id: 'tsel_25', name: 'Pulsa Telkomsel 25.000', price: 25800, memberPrice: 25400 },
+                    { id: 'tsel_30', name: 'Pulsa Telkomsel 30.000', price: 30800, memberPrice: 30400 },
                     { id: 'tsel_50', name: 'Pulsa Telkomsel 50.000', price: 50800, memberPrice: 50200 },
-                    { id: 'tsel_100', name: 'Pulsa Telkomsel 100.000', price: 100800, memberPrice: 100100 }
+                    { id: 'tsel_100', name: 'Pulsa Telkomsel 100.000', price: 100800, memberPrice: 100100 },
+                    { id: 'tsel_150', name: 'Pulsa Telkomsel 150.000', price: 150800, memberPrice: 150100 },
+                    { id: 'tsel_200', name: 'Pulsa Telkomsel 200.000', price: 200800, memberPrice: 200100 },
+                    { id: 'tsel_300', name: 'Pulsa Telkomsel 300.000', price: 300800, memberPrice: 300100 },
+                    { id: 'tsel_500', name: 'Pulsa Telkomsel 500.000', price: 500800, memberPrice: 500100 }
                 ]
             },
             {
@@ -1278,10 +1385,13 @@
                 image: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'isat_5', name: 'Pulsa Indosat 5.000', price: 5900, memberPrice: 5500 },
                     { id: 'isat_10', name: 'Pulsa Indosat 10.000', price: 10700, memberPrice: 10300 },
                     { id: 'isat_25', name: 'Pulsa Indosat 25.000', price: 25700, memberPrice: 25200 },
                     { id: 'isat_50', name: 'Pulsa Indosat 50.000', price: 50700, memberPrice: 50100 },
-                    { id: 'isat_100', name: 'Pulsa Indosat 100.000', price: 100700, memberPrice: 100100 }
+                    { id: 'isat_100', name: 'Pulsa Indosat 100.000', price: 100700, memberPrice: 100100 },
+                    { id: 'isat_150', name: 'Pulsa Indosat 150.000', price: 150700, memberPrice: 150100 },
+                    { id: 'isat_200', name: 'Pulsa Indosat 200.000', price: 200700, memberPrice: 200100 }
                 ]
             },
             {
@@ -1293,9 +1403,12 @@
                 image: 'https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'xl_5', name: 'Pulsa XL/Axis 5.000', price: 5950, memberPrice: 5550 },
                     { id: 'xl_10', name: 'Pulsa XL/Axis 10.000', price: 10750, memberPrice: 10350 },
                     { id: 'xl_25', name: 'Pulsa XL/Axis 25.000', price: 25750, memberPrice: 25250 },
-                    { id: 'xl_50', name: 'Pulsa XL/Axis 50.000', price: 50750, memberPrice: 50150 }
+                    { id: 'xl_50', name: 'Pulsa XL/Axis 50.000', price: 50750, memberPrice: 50150 },
+                    { id: 'xl_100', name: 'Pulsa XL/Axis 100.000', price: 100750, memberPrice: 100150 },
+                    { id: 'xl_200', name: 'Pulsa XL/Axis 200.000', price: 200750, memberPrice: 200150 }
                 ]
             },
             {
@@ -1307,9 +1420,11 @@
                 image: 'https://images.unsplash.com/photo-1523206489230-c012c64b2b48?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'tri_5', name: 'Pulsa Tri 5.000', price: 5800, memberPrice: 5400 },
                     { id: 'tri_10', name: 'Pulsa Tri 10.000', price: 10500, memberPrice: 10200 },
                     { id: 'tri_20', name: 'Pulsa Tri 20.000', price: 20500, memberPrice: 20200 },
-                    { id: 'tri_50', name: 'Pulsa Tri 50.000', price: 50500, memberPrice: 50100 }
+                    { id: 'tri_50', name: 'Pulsa Tri 50.000', price: 50500, memberPrice: 50100 },
+                    { id: 'tri_100', name: 'Pulsa Tri 100.000', price: 100500, memberPrice: 100100 }
                 ]
             },
 
@@ -1323,9 +1438,14 @@
                 image: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'gp_5k', name: 'Google Play Kode Rp 5.000', price: 6000, memberPrice: 5500 },
+                    { id: 'gp_10k', name: 'Google Play Kode Rp 10.000', price: 11500, memberPrice: 10800 },
                     { id: 'gp_20k', name: 'Google Play Kode Rp 20.000', price: 22000, memberPrice: 21000 },
                     { id: 'gp_50k', name: 'Google Play Kode Rp 50.000', price: 54000, memberPrice: 52000 },
-                    { id: 'gp_100k', name: 'Google Play Kode Rp 100.000', price: 107000, memberPrice: 103000 }
+                    { id: 'gp_100k', name: 'Google Play Kode Rp 100.000', price: 107000, memberPrice: 103000 },
+                    { id: 'gp_150k', name: 'Google Play Kode Rp 150.000', price: 160000, memberPrice: 153000 },
+                    { id: 'gp_300k', name: 'Google Play Kode Rp 300.000', price: 320000, memberPrice: 306000 },
+                    { id: 'gp_500k', name: 'Google Play Kode Rp 500.000', price: 530000, memberPrice: 509000 }
                 ]
             }
         ];
@@ -1771,7 +1891,7 @@
             Swal.fire('Sukses', 'Saldo akun berhasil ditambahkan Rp 50.000!', 'success');
         }
 
-        // AKSER RAHASIA ADMIN PANEL
+        // AKSES RAHASIA ADMIN PANEL
         function openAdminModal() {
             const passwordRahasia = "bentar19";
 
