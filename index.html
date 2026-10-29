@@ -107,7 +107,7 @@
         </div>
     </div>
 
-    <!-- NAVBAR -->
+    <!-- NAVBAR (TOMBOL ADMIN TELAH DIHAPUS) -->
     <nav class="sticky top-0 z-40 glass-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
@@ -141,7 +141,7 @@
                     </button>
                 </div>
 
-                <!-- Right Actions (Member Login & Saldo) -->
+                <!-- Right Actions -->
                 <div class="hidden md:flex items-center gap-3">
                     <div id="userMemberArea" class="flex items-center gap-2">
                         <button onclick="openMemberModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-200 border border-slate-700 hover:border-purple-500 hover:text-white transition flex items-center gap-2 bg-slate-900/80">
@@ -150,9 +150,6 @@
                         </button>
                     </div>
 
-                    <button onclick="openAdminModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-300 border border-slate-700 hover:border-purple-500 hover:text-purple-400 transition flex items-center gap-2 bg-slate-900/50">
-                        <i class="fa-solid fa-shield-halved"></i> Admin
-                    </button>
                     <a href="https://wa.me/6281234567890" target="_blank" class="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 shadow-md shadow-emerald-900/30 transition flex items-center gap-2">
                         <i class="fa-brands fa-whatsapp text-sm"></i> CS WA
                     </a>
@@ -185,9 +182,6 @@
             <div class="pt-2 border-t border-slate-800 flex flex-col gap-2">
                 <button onclick="openMemberModal(); toggleMobileMenu()" class="w-full py-2.5 rounded-lg text-xs font-bold text-purple-300 border border-purple-500/40 text-center">
                     <i class="fa-solid fa-user-gear mr-1"></i> Area Member & Saldo
-                </button>
-                <button onclick="openAdminModal(); toggleMobileMenu()" class="w-full py-2.5 rounded-lg text-xs font-bold text-slate-300 border border-slate-700 text-center">
-                    <i class="fa-solid fa-shield-halved mr-1"></i> Admin Panel
                 </button>
                 <a href="https://wa.me/6281234567890" target="_blank" class="w-full py-2.5 rounded-lg text-xs font-bold text-white bg-emerald-600 text-center flex items-center justify-center gap-2">
                     <i class="fa-brands fa-whatsapp"></i> Hubungi Customer Service
@@ -882,7 +876,7 @@
     </div>
 
 
-    <!-- MODAL ADMIN PANEL -->
+    <!-- MODAL ADMIN PANEL (TETAP ADA DI KODE, HANYA BISA DIBUKA VIA CONSOLE / AKSES RAHASIA) -->
     <div id="adminModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
         <div class="glass-card max-w-2xl w-full rounded-3xl border border-slate-800 p-6 space-y-6 relative my-8">
             <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white text-xl">
@@ -968,8 +962,10 @@
                 <p class="text-slate-500">Jam Operasional: 24 Jam Non-Stop</p>
             </div>
         </div>
+        
+        <!-- TEKS COPYRIGHT DIGUNAKAN SEBAGAI TOMBOL RAHASIA UNTUK DIBUKA ADMIN -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-900 mt-8 pt-6 text-center text-slate-600">
-            © 2026 NEXUS TOPUP. All Rights Reserved. Built for Speed & Automation.
+            <span onclick="openAdminModal()" class="cursor-pointer hover:text-slate-500 select-none">© 2026 NEXUS TOPUP. All Rights Reserved. Built for Speed & Automation.</span>
         </div>
     </footer>
 
@@ -1775,9 +1771,52 @@
             Swal.fire('Sukses', 'Saldo akun berhasil ditambahkan Rp 50.000!', 'success');
         }
 
+        // AKSER RAHASIA ADMIN PANEL
         function openAdminModal() {
-            document.getElementById('adminModal').classList.remove('hidden');
+            const passwordRahasia = "bentar19";
+
+            Swal.fire({
+                title: 'Login Admin Panel',
+                text: 'Masukkan password untuk mengakses Admin Dashboard',
+                input: 'password',
+                inputPlaceholder: 'Password...',
+                inputAttributes: {
+                    autocapitalize: 'off',
+                    autocorrect: 'off'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Masuk',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#7c3aed',
+                background: '#0f172a',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (result.value === passwordRahasia) {
+                        document.getElementById('adminModal').classList.remove('hidden');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Akses Diterima',
+                            text: 'Selamat datang di Admin Dashboard!',
+                            timer: 1500,
+                            showConfirmButton: false,
+                            background: '#0f172a',
+                            color: '#fff'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Akses Ditolak',
+                            text: 'Password yang Anda masukkan salah!',
+                            background: '#0f172a',
+                            color: '#fff',
+                            confirmButtonColor: '#7c3aed'
+                        });
+                    }
+                }
+            });
         }
+
         function closeAdminModal() {
             document.getElementById('adminModal').classList.add('hidden');
         }
