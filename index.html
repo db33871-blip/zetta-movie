@@ -970,7 +970,7 @@
     </footer>
 
 
-    <!-- JAVASCRIPT LOGIC DENGAN NOMINAL ITEM LENGKAP (MURAH -> MAHAL) -->
+    <!-- JAVASCRIPT LOGIC DENGAN HISTORY API (PERBAIKAN TOMBOL BACK HP) -->
     <script>
         const gamesData = [
             // --- MOBILE GAMES ---
@@ -1462,11 +1462,23 @@
         let memberSaldo = 150000;
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Daftarkan beranda sebagai titik awal riwayat browser HP
+            history.replaceState({ page: 'home' }, '', '#home');
+
             renderGameGrid(gamesData);
             renderPricelistTable();
             startFlashSaleTimer();
             loadMyHistory();
             updateMemberUI();
+        });
+
+        // DETEKSI TOMBOL KEMBALI (BACK) HP
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.page) {
+                showPage(event.state.page, false);
+            } else {
+                showPage('home', false);
+            }
         });
 
         function renderGameGrid(data) {
@@ -1513,10 +1525,18 @@
             renderGameGrid(filtered);
         }
 
-        function showPage(pageId) {
+        // FUNGSI SHOWPAGE TERHUBUNG DENGAN BROWSER HISTORY
+        function showPage(pageId, pushToHistory = true) {
             document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
-            document.getElementById('page-' + pageId).classList.remove('hidden');
+            const targetPage = document.getElementById('page-' + pageId);
+            if(targetPage) {
+                targetPage.classList.remove('hidden');
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (pushToHistory && history.state?.page !== pageId) {
+                history.pushState({ page: pageId }, '', '#' + pageId);
+            }
         }
 
         function selectGameForOrder(gameId) {
