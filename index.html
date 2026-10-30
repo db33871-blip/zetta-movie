@@ -140,6 +140,12 @@
 
                 <!-- Right Actions -->
                 <div class="hidden md:flex items-center gap-3">
+                    <!-- Tombol Keranjang Belanja -->
+                    <button onclick="openCartModal()" class="relative p-2.5 rounded-xl text-slate-200 border border-slate-700 hover:border-purple-500 hover:text-white transition bg-slate-900/80">
+                        <i class="fa-solid fa-cart-shopping text-cyan-400"></i>
+                        <span id="cartBadgeCount" class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                    </button>
+
                     <button onclick="openMemberModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-200 border border-slate-700 hover:border-purple-500 hover:text-white transition flex items-center gap-2 bg-slate-900/80">
                         <i class="fa-solid fa-user-gear text-purple-400"></i>
                         <span id="memberNavText">Login / Daftar</span>
@@ -175,6 +181,9 @@
                 <i class="fa-solid fa-trophy text-yellow-400"></i> Top Sultan / Leaderboard
             </button>
             <div class="pt-2 border-t border-slate-800 flex flex-col gap-2">
+                <button onclick="openCartModal(); toggleMobileMenu()" class="w-full py-2.5 rounded-lg text-xs font-bold text-cyan-300 border border-cyan-500/40 text-center">
+                    <i class="fa-solid fa-cart-shopping mr-1"></i> Keranjang Belanja
+                </button>
                 <button onclick="openMemberModal(); toggleMobileMenu()" class="w-full py-2.5 rounded-lg text-xs font-bold text-purple-300 border border-purple-500/40 text-center">
                     <i class="fa-solid fa-user-gear mr-1"></i> Area Member & Akun
                 </button>
@@ -374,7 +383,7 @@
                                 <li>Pilih nominal paket / item yang diinginkan.</li>
                                 <li>Pilih metode pembayaran (QRIS / Saldo Member / VA).</li>
                                 <li>Masukkan nomor WhatsApp aktif Anda.</li>
-                                <li>Klik <b>Beli Sekarang</b> & lakukan pembayaran.</li>
+                                <li>Klik <b>Beli Sekarang</b> atau <b>+ Keranjang</b>.</li>
                             </ol>
                         </div>
                     </div>
@@ -446,9 +455,14 @@
                     <div class="glass-card p-6 rounded-3xl border border-purple-500/30 bg-purple-950/20 space-y-3">
                         <div class="flex justify-between text-xs text-slate-300"><span>Item:</span><span id="summaryItem" class="font-bold text-white">-</span></div>
                         <div class="flex justify-between text-xs text-slate-300"><span>Diskon Promo:</span><span id="summaryDiscount" class="font-bold text-emerald-400">Rp 0</span></div>
-                        <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
+                        <div class="pt-2 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3">
                             <div><span class="text-xs text-slate-400 block">Total</span><span id="summaryTotal" class="text-xl font-black text-white">Rp 0</span></div>
-                            <button onclick="processOrder()" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-black text-sm shadow-xl transition">Beli Sekarang</button>
+                            <div class="flex gap-2 w-full sm:w-auto">
+                                <button onclick="addToCartFromOrder()" class="flex-1 sm:flex-none px-4 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-xs border border-cyan-500/40 transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> + Keranjang
+                                </button>
+                                <button onclick="processOrder()" class="flex-1 sm:flex-none px-6 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-black text-xs sm:text-sm shadow-xl transition">Beli Sekarang</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -567,9 +581,9 @@
         </div>
     </div>
 
-    <!-- MODAL 2: MEMBER LOGIN, REGISTER & AKUN PENGGUNA -->
+    <!-- MODAL 2: MEMBER LOGIN, REGISTER & AKUN PENGGUNA (DENGAN TAB RIWAYAT & POIN) -->
     <div id="memberModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-3xl border border-purple-500/30 p-6 space-y-5 relative max-h-[90vh] overflow-y-auto">
+        <div class="glass-card max-w-lg w-full rounded-3xl border border-purple-500/30 p-6 space-y-5 relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeMemberModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             
             <!-- VIEW 1: DASHBOARD / HALAMAN AKUN MEMBER -->
@@ -588,24 +602,36 @@
                     </div>
                 </div>
 
-                <!-- Informasi Saldo & Top Up Saldo -->
-                <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-3 text-center">
-                    <span class="text-xs text-slate-400 block font-semibold">Saldo Akun Anda</span>
-                    <span id="accountSaldoDisplay" class="text-2xl font-black text-emerald-400">Rp 50.000</span>
-                    <div class="pt-2 flex gap-2">
-                        <button onclick="openTopUpSaldoModal()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 font-bold text-xs text-white shadow-md transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-wallet"></i> Top Up Saldo
-                        </button>
+                <!-- Grid Saldo & Poin Cashback (Loyalty Program) -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 text-center space-y-1">
+                        <span class="text-[10px] text-slate-400 block font-semibold">Saldo Akun</span>
+                        <span id="accountSaldoDisplay" class="text-lg font-black text-emerald-400">Rp 50.000</span>
+                        <button onclick="openTopUpSaldoModal()" class="mt-2 w-full py-1.5 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white font-bold text-[10px] transition">+ Top Up</button>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 text-center space-y-1">
+                        <span class="text-[10px] text-slate-400 block font-semibold">Poin SULTAN</span>
+                        <span id="accountPointsDisplay" class="text-lg font-black text-amber-400">120 Poin</span>
+                        <button onclick="claimPointsReward()" class="mt-2 w-full py-1.5 rounded-lg bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-slate-950 font-bold text-[10px] transition">Tukar Saldo</button>
                     </div>
                 </div>
 
-                <!-- Menu Aksi Akun: Ganti Password & Logout -->
-                <div class="space-y-2 pt-2">
-                    <button onclick="openChangePasswordModal()" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 font-bold text-xs text-purple-300 transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-key"></i> Ganti Password Akun
+                <!-- Tab Riwayat Personal & Pengaturan Akun -->
+                <div class="space-y-3 pt-2">
+                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i> Riwayat Transaksi Akun Anda
+                    </h4>
+                    <div id="memberPersonalHistory" class="max-h-40 overflow-y-auto space-y-2 pr-1 text-xs">
+                        <!-- Data riwayat personal dimasukkan via JS -->
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
+                    <button onclick="openChangePasswordModal()" class="py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 font-bold text-xs text-purple-300 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-key"></i> Ganti Password
                     </button>
-                    <button onclick="logoutMember()" class="w-full py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 font-bold text-xs text-rose-400 transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-right-from-bracket"></i> Keluar (Logout)
+                    <button onclick="logoutMember()" class="py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 font-bold text-xs text-rose-400 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
                     </button>
                 </div>
             </div>
@@ -658,6 +684,26 @@
         </div>
     </div>
 
+    <!-- MODAL 3: KERANJANG BELANJA (SHOPPING CART) -->
+    <div id="cartModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card max-w-lg w-full rounded-3xl border border-cyan-500/40 p-6 space-y-4 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeCartModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-lg font-black text-white flex items-center gap-2">
+                <i class="fa-solid fa-cart-shopping text-cyan-400"></i> Keranjang Belanja Anda
+            </h3>
+            <div id="cartItemsContainer" class="space-y-3 max-h-60 overflow-y-auto pr-1">
+                <!-- Item keranjang dimasukkan via JS -->
+            </div>
+            <div class="pt-2 border-t border-slate-800 space-y-3">
+                <div class="flex justify-between items-center text-sm font-bold text-white">
+                    <span>Total Keseluruhan:</span>
+                    <span id="cartTotalPrice" class="text-cyan-400 text-base font-black">Rp 0</span>
+                </div>
+                <button onclick="checkoutCart()" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-black text-xs shadow-lg transition">Checkout Semua Pesanan</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL 4: TOP UP SALDO AKUN -->
     <div id="topUpSaldoModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
         <div class="glass-card max-w-sm w-full rounded-3xl border border-emerald-500/40 p-6 space-y-4 relative">
@@ -688,7 +734,34 @@
         </div>
     </div>
 
-    <!-- MODAL 3: ADMIN DASHBOARD (FULL SCREEN) -->
+    <!-- MODAL 6: LIVE CHAT / TIKET BANTUAN -->
+    <div id="liveChatModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full rounded-3xl border border-emerald-500/40 p-6 space-y-4 relative">
+            <button onclick="closeLiveChatModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-headset text-emerald-400"></i> Bantuan & Tiket CS 24/7
+            </h3>
+            <div id="chatMessagesContainer" class="bg-slate-900/90 p-3 rounded-2xl h-48 overflow-y-auto space-y-2 text-xs border border-slate-800">
+                <div class="p-2.5 bg-slate-800 rounded-xl text-slate-200">
+                    <b>Admin VALYX:</b> Halo! Ada kendala transaksi atau pertanyaan seputar top up? Silakan ketik pesan Anda di bawah.
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <input type="text" id="chatInputText" placeholder="Ketik pesan kendala..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-emerald-500">
+                <button onclick="sendChatMessage()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition">Kirim</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- WIDGET FLOATING LIVE CHAT BUTTON -->
+    <button onclick="openLiveChatModal()" class="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-emerald-500 to-teal-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl hover:scale-110 transition glow-effect">
+        <i class="fa-solid fa-headset"></i>
+    </button>
+
+    <!-- REAL-TIME TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-6 left-6 z-40 space-y-2 pointer-events-none"></div>
+
+    <!-- MODAL 7: ADMIN DASHBOARD (FULL SCREEN) -->
     <div id="adminModal" class="fixed inset-0 z-50 hidden bg-slate-950/95 backdrop-blur-xl w-full h-full overflow-y-auto p-2 sm:p-6">
         <div class="glass-card w-full max-w-4xl mx-auto min-h-full rounded-2xl sm:rounded-3xl border border-slate-800 p-4 sm:p-8 space-y-6 relative flex flex-col justify-start">
             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
@@ -1271,7 +1344,10 @@
         let memberName = localStorage.getItem('valyx_member_name') || 'Member VIP';
         let memberPhone = localStorage.getItem('valyx_member_phone') || '08123456789';
         let memberSaldo = parseInt(localStorage.getItem('valyx_member_saldo')) || 50000;
+        let memberPoints = parseInt(localStorage.getItem('valyx_member_points')) || 120;
         let memberProfilePic = localStorage.getItem('valyx_member_pic') || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80';
+        
+        let shoppingCart = JSON.parse(localStorage.getItem('valyx_shopping_cart') || '[]');
 
         let promoList = JSON.parse(localStorage.getItem('valyx_promo_list')) || {
             'VALYX10': 5000,
@@ -1295,7 +1371,9 @@
             startFlashSaleTimer();
             loadMyHistory();
             updateMemberUI();
+            updateCartBadge();
             renderAdminPromoList();
+            startRealtimeToastSimulator();
 
             const currentHash = window.location.hash.replace('#', '');
             if (currentHash) {
@@ -1507,6 +1585,175 @@
             } else {
                 Swal.fire('Tidak Valid', 'Kode promo tidak ditemukan!', 'error');
             }
+        }
+
+        // --- SISTEM KERANJANG BELANJA (SHOPPING CART) ---
+        function addToCartFromOrder() {
+            const userId = document.getElementById('inputUserId').value.trim();
+            if (!userId || !currentSelectedNominal) {
+                Swal.fire('Peringatan', 'Masukkan User ID dan pilih nominal item terlebih dahulu!', 'warning');
+                return;
+            }
+            let price = isMemberLoggedIn ? currentSelectedNominal.memberPrice : currentSelectedNominal.price;
+            shoppingCart.push({
+                game: currentSelectedGame.title,
+                item: currentSelectedNominal.name,
+                target: userId,
+                price: price
+            });
+            localStorage.setItem('valyx_shopping_cart', JSON.stringify(shoppingCart));
+            updateCartBadge();
+            Swal.fire('Berhasil', 'Item berhasil ditambahkan ke keranjang belanja!', 'success');
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cartBadgeCount');
+            if (!badge) return;
+            if (shoppingCart.length > 0) {
+                badge.innerText = shoppingCart.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function openCartModal() {
+            const container = document.getElementById('cartItemsContainer');
+            const totalEl = document.getElementById('cartTotalPrice');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (shoppingCart.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-6">Keranjang belanja Anda masih kosong.</p>';
+                totalEl.innerText = 'Rp 0';
+                document.getElementById('cartModal').classList.remove('hidden');
+                return;
+            }
+
+            let grandTotal = 0;
+            shoppingCart.forEach((cartItem, idx) => {
+                grandTotal += cartItem.price;
+                const div = document.createElement('div');
+                div.className = "bg-slate-900 border border-slate-800 p-3 rounded-2xl flex justify-between items-center text-xs";
+                div.innerHTML = `
+                    <div>
+                        <span class="font-bold text-white block">${cartItem.game} - ${cartItem.item}</span>
+                        <span class="text-[10px] text-slate-400">Target: ${cartItem.target}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-cyan-400">Rp ${cartItem.price.toLocaleString('id-ID')}</span>
+                        <button onclick="removeCartItem(${idx})" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            totalEl.innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+            document.getElementById('cartModal').classList.remove('hidden');
+        }
+
+        function closeCartModal() {
+            document.getElementById('cartModal').classList.add('hidden');
+        }
+
+        function removeCartItem(index) {
+            shoppingCart.splice(index, 1);
+            localStorage.setItem('valyx_shopping_cart', JSON.stringify(shoppingCart));
+            updateCartBadge();
+            openCartModal();
+        }
+
+        function checkoutCart() {
+            if (shoppingCart.length === 0) return;
+            let grandTotal = shoppingCart.reduce((acc, curr) => acc + curr.price, 0);
+            const invId = 'INV-CART-' + Math.floor(100000 + Math.random() * 900000);
+
+            shoppingCart.forEach(cartItem => {
+                saveToHistory({
+                    invId: invId,
+                    game: cartItem.game,
+                    item: cartItem.item,
+                    target: cartItem.target,
+                    price: cartItem.price,
+                    date: new Date().toLocaleDateString('id-ID')
+                });
+            });
+
+            shoppingCart = [];
+            localStorage.setItem('valyx_shopping_cart', JSON.stringify(shoppingCart));
+            updateCartBadge();
+            closeCartModal();
+
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            Swal.fire('Checkout Berhasil!', `Semua pesanan keranjang berhasil diproses dengan No Invoice: ${invId}`, 'success');
+            showPage('tracking');
+        }
+
+        // --- LIVE CHAT / WIDGET TIKET BANTUAN ---
+        function openLiveChatModal() {
+            document.getElementById('liveChatModal').classList.remove('hidden');
+        }
+        function closeLiveChatModal() {
+            document.getElementById('liveChatModal').classList.add('hidden');
+        }
+        function sendChatMessage() {
+            const input = document.getElementById('chatInputText');
+            const container = document.getElementById('chatMessagesContainer');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const userDiv = document.createElement('div');
+            userDiv.className = "p-2.5 bg-purple-950/40 rounded-xl text-purple-200 text-right";
+            userDiv.innerHTML = `<b>Anda:</b> ${msg}`;
+            container.appendChild(userDiv);
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+
+            setTimeout(() => {
+                const adminDiv = document.createElement('div');
+                adminDiv.className = "p-2.5 bg-slate-800 rounded-xl text-slate-200";
+                adminDiv.innerHTML = `<b>Admin VALYX:</b> Pesan Anda telah diterima oleh sistem bantuan. Tim CS kami akan segera merespons melalui WhatsApp Anda.`;
+                container.appendChild(adminDiv);
+                container.scrollTop = container.scrollHeight;
+            }, 1000);
+        }
+
+        // --- REAL-TIME TOAST NOTIFICATION SIMULATOR ---
+        function startRealtimeToastSimulator() {
+            const gamesList = ['Mobile Legends', 'Free Fire', 'Honor of Kings', 'Genshin Impact', 'Roblox', 'Pulsa Telkomsel'];
+            const itemsList = ['86 Diamonds', '355 Diamonds', '80 Tokens', '300 Genesis', '400 Robux', 'Rp 50.000'];
+            const phoneList = ['0812***3452', '0857***9811', '0821***4432', '0895***7789'];
+
+            setInterval(() => {
+                const rGame = gamesList[Math.floor(Math.random() * gamesList.length)];
+                const rItem = itemsList[Math.floor(Math.random() * itemsList.length)];
+                const rPhone = phoneList[Math.floor(Math.random() * phoneList.length)];
+
+                showToastNotification(`User <b>${rPhone}</b> sukses top up <b>${rItem} ${rGame}</b>`);
+            }, 12000);
+        }
+
+        function showToastNotification(htmlText) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = "pointer-events-auto glass-card border border-purple-500/40 px-4 py-3 rounded-2xl text-xs text-slate-200 shadow-2xl flex items-center gap-3 animate-fade-in";
+            toast.innerHTML = `
+                <div class="w-8 h-8 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] text-purple-400 font-bold block">TRANSAKSI REAL-TIME</span>
+                    <span>${htmlText}</span>
+                </div>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
         }
 
         function runAiCommand() {
@@ -1819,6 +2066,13 @@
             lastOrderData = { invId, game: currentSelectedGame.title, item: currentSelectedNominal.name, target: userId, price: total, date: new Date().toLocaleDateString('id-ID') };
             saveToHistory(lastOrderData);
 
+            // Tambah Poin Loyalitas Member (Loyalty Program: +10 Poin per transaksi)
+            if (isMemberLoggedIn) {
+                memberPoints += 10;
+                localStorage.setItem('valyx_member_points', memberPoints);
+                updateMemberUI();
+            }
+
             document.getElementById('invModalId').innerText = invId;
             document.getElementById('invModalItem').innerText = `${currentSelectedGame.title} - ${currentSelectedNominal.name}`;
             document.getElementById('invModalTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
@@ -1844,14 +2098,27 @@
         function loadMyHistory() {
             let history = JSON.parse(localStorage.getItem('valyx_topup_history') || '[]');
             const container = document.getElementById('myHistoryContainer');
-            if(!container) return;
-            container.innerHTML = history.length ? '' : '<p class="text-xs text-slate-500 italic">Belum ada riwayat.</p>';
-            history.forEach(h => {
-                const div = document.createElement('div');
-                div.className = "bg-slate-900 border border-slate-800 p-3 rounded-2xl flex justify-between text-xs";
-                div.innerHTML = `<div><span class="font-bold text-cyan-400 block">${h.invId}</span><span class="text-white">${h.game} - ${h.item}</span></div><span class="font-bold text-purple-400">Rp ${h.price.toLocaleString('id-ID')}</span>`;
-                container.appendChild(div);
-            });
+            const personalContainer = document.getElementById('memberPersonalHistory');
+            
+            if(container) {
+                container.innerHTML = history.length ? '' : '<p class="text-xs text-slate-500 italic">Belum ada riwayat.</p>';
+                history.forEach(h => {
+                    const div = document.createElement('div');
+                    div.className = "bg-slate-900 border border-slate-800 p-3 rounded-2xl flex justify-between text-xs";
+                    div.innerHTML = `<div><span class="font-bold text-cyan-400 block">${h.invId}</span><span class="text-white">${h.game} - ${h.item}</span></div><span class="font-bold text-purple-400">Rp ${h.price.toLocaleString('id-ID')}</span>`;
+                    container.appendChild(div);
+                });
+            }
+
+            if(personalContainer) {
+                personalContainer.innerHTML = history.length ? '' : '<p class="text-xs text-slate-500 italic">Belum ada riwayat transaksi akun ini.</p>';
+                history.forEach(h => {
+                    const div = document.createElement('div');
+                    div.className = "bg-slate-950 border border-slate-800 p-2.5 rounded-xl flex justify-between text-xs";
+                    div.innerHTML = `<div><span class="font-bold text-cyan-400 block">${h.invId} (${h.date})</span><span class="text-slate-300">${h.game} - ${h.item}</span></div><span class="font-bold text-purple-400">Rp ${h.price.toLocaleString('id-ID')}</span>`;
+                    personalContainer.appendChild(div);
+                });
+            }
         }
 
         function searchOrder() {
@@ -1927,6 +2194,7 @@
             document.getElementById('memberModal').classList.remove('hidden');
             if (isMemberLoggedIn) {
                 switchMemberView('dashboard');
+                loadMyHistory();
             } else {
                 switchMemberView('login');
             }
@@ -1943,6 +2211,7 @@
 
             if (view === 'dashboard') {
                 document.getElementById('memberDashboardView').classList.remove('hidden');
+                loadMyHistory();
             } else if (view === 'register') {
                 document.getElementById('memberRegisterView').classList.remove('hidden');
             } else if (view === 'login') {
@@ -1965,11 +2234,13 @@
             localStorage.setItem('valyx_member_pass', password);
             localStorage.setItem('valyx_logged_member', 'true');
             localStorage.setItem('valyx_member_saldo', '50000');
+            localStorage.setItem('valyx_member_points', '100');
 
             isMemberLoggedIn = true;
             memberName = name;
             memberPhone = phone;
             memberSaldo = 50000;
+            memberPoints = 100;
 
             updateMemberUI();
             switchMemberView('dashboard');
@@ -2001,12 +2272,14 @@
 
         function updateMemberUI() {
             const saldoEl = document.getElementById('accountSaldoDisplay');
+            const pointsEl = document.getElementById('accountPointsDisplay');
             const paySaldoEl = document.getElementById('paymentSaldoText');
             const nameEl = document.getElementById('accountNameDisplay');
             const phoneEl = document.getElementById('accountPhoneDisplay');
             const profileImgEl = document.getElementById('accountProfileImg');
 
             if(saldoEl) saldoEl.innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
+            if(pointsEl) pointsEl.innerText = `${memberPoints} Poin`;
             if(paySaldoEl) paySaldoEl.innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
             if(nameEl) nameEl.innerText = memberName;
             if(phoneEl) phoneEl.innerText = memberPhone;
@@ -2041,6 +2314,22 @@
             closeTopUpSaldoModal();
             confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } });
             Swal.fire('Top Up Berhasil!', `Saldo akun bertambah sebesar Rp ${amount.toLocaleString('id-ID')}`, 'success');
+        }
+
+        // Tukar Poin Menjadi Saldo (Loyalty Program)
+        function claimPointsReward() {
+            if (memberPoints < 50) {
+                Swal.fire('Poin Belum Cukup', 'Minimal 50 Poin SULTAN untuk ditukar dengan saldo!', 'warning');
+                return;
+            }
+            let rewardSaldo = memberPoints * 100; // 1 Poin = Rp 100
+            memberSaldo += rewardSaldo;
+            memberPoints = 0;
+            localStorage.setItem('valyx_member_saldo', memberSaldo);
+            localStorage.setItem('valyx_member_points', memberPoints);
+            updateMemberUI();
+            confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
+            Swal.fire('Berhasil Menukar Poin!', `Poin ditukar menjadi saldo sebesar Rp ${rewardSaldo.toLocaleString('id-ID')}`, 'success');
         }
 
         // Fitur Ganti Password Akun
