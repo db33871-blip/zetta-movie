@@ -1027,7 +1027,7 @@
             });
         }
 
-        // FITUR ANTI RESET REFRESH & PERSISTENT ADMIN MODAL
+        // FITUR ANTI RESET REFRESH TERMASUK DATA GAME DAN POSTER
         document.addEventListener('DOMContentLoaded', () => {
             applyCustomPosters();
             renderGameGrid(gamesData);
@@ -1040,7 +1040,7 @@
 
             // Membaca Hash URL saat direfresh
             const currentHash = window.location.hash.replace('#', '');
-            if (currentHash && document.getElementById('page-' + currentHash)) {
+            if (currentHash) {
                 showPage(currentHash);
             } else {
                 showPage('home');
@@ -1057,17 +1057,67 @@
         // Deteksi jika user menekan tombol Back/Forward browser
         window.addEventListener('hashchange', () => {
             const currentHash = window.location.hash.replace('#', '');
-            if (currentHash && document.getElementById('page-' + currentHash)) {
+            if (currentHash) {
                 showPage(currentHash);
             }
         });
 
+        function loadGameOrderUI(game) {
+            currentSelectedGame = game;
+            document.getElementById('orderGameImg').src = game.image;
+            document.getElementById('orderGameTitle').innerText = game.title;
+            document.getElementById('orderGamePublisher').innerText = game.publisher;
+            document.getElementById('selectedGameSlug').innerText = 'order-' + game.id;
+
+            if(game.hasZone) {
+                document.getElementById('zoneIdContainer').classList.remove('hidden');
+            } else {
+                document.getElementById('zoneIdContainer').classList.add('hidden');
+            }
+
+            const grid = document.getElementById('nominalGrid');
+            grid.innerHTML = '';
+            game.items.forEach(item => {
+                const el = document.createElement('div');
+                el.className = "border border-slate-800 bg-slate-900 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition text-xs";
+                el.onclick = () => {
+                    document.querySelectorAll('#nominalGrid > div').forEach(d => d.classList.remove('border-purple-500', 'bg-purple-900/30'));
+                    el.classList.add('border-purple-500', 'bg-purple-900/30');
+                    currentSelectedNominal = item;
+                    updateSummary();
+                };
+                el.innerHTML = `
+                    <span class="font-bold text-white block">${item.name}</span>
+                    <span class="text-purple-400 font-extrabold mt-1 block">Rp ${(isMemberLoggedIn ? item.memberPrice : item.price).toLocaleString('id-ID')}</span>`;
+                grid.appendChild(el);
+            });
+        }
+
         function showPage(pageId) {
+            let targetPageId = pageId;
+
+            // Jika hash mengarah ke halaman order spesifik, cth: order-mlbb
+            if (pageId.startsWith('order-')) {
+                const gameId = pageId.replace('order-', '');
+                const game = gamesData.find(g => g.id === gameId);
+                if (game) {
+                    if (!currentSelectedGame || currentSelectedGame.id !== gameId) {
+                        loadGameOrderUI(game);
+                    }
+                    targetPageId = 'order';
+                }
+            } else if (pageId === 'order') {
+                if (!currentSelectedGame) {
+                    targetPageId = 'home';
+                    pageId = 'home';
+                }
+            }
+
             document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
-            const target = document.getElementById('page-' + pageId);
+            const target = document.getElementById('page-' + targetPageId);
             if(target) target.classList.remove('hidden');
 
-            // Simpan status halaman ke URL Hash
+            // Simpan posisi halaman & game terpilih ke Hash URL
             window.location.hash = pageId;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1147,37 +1197,10 @@
         }
 
         function selectGameForOrder(gameId) {
-            currentSelectedGame = gamesData.find(g => g.id === gameId);
-            if(!currentSelectedGame) return;
-
-            document.getElementById('orderGameImg').src = currentSelectedGame.image;
-            document.getElementById('orderGameTitle').innerText = currentSelectedGame.title;
-            document.getElementById('orderGamePublisher').innerText = currentSelectedGame.publisher;
-
-            if(currentSelectedGame.hasZone) {
-                document.getElementById('zoneIdContainer').classList.remove('hidden');
-            } else {
-                document.getElementById('zoneIdContainer').classList.add('hidden');
-            }
-
-            const grid = document.getElementById('nominalGrid');
-            grid.innerHTML = '';
-            currentSelectedGame.items.forEach(item => {
-                const el = document.createElement('div');
-                el.className = "border border-slate-800 bg-slate-900 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition text-xs";
-                el.onclick = () => {
-                    document.querySelectorAll('#nominalGrid > div').forEach(d => d.classList.remove('border-purple-500', 'bg-purple-900/30'));
-                    el.classList.add('border-purple-500', 'bg-purple-900/30');
-                    currentSelectedNominal = item;
-                    updateSummary();
-                };
-                el.innerHTML = `
-                    <span class="font-bold text-white block">${item.name}</span>
-                    <span class="text-purple-400 font-extrabold mt-1 block">Rp ${(isMemberLoggedIn ? item.memberPrice : item.price).toLocaleString('id-ID')}</span>`;
-                grid.appendChild(el);
-            });
-
-            showPage('order');
+            const game = gamesData.find(g => g.id === gameId);
+            if(!game) return;
+            loadGameOrderUI(game);
+            showPage('order-' + gameId);
         }
 
         function selectPayment(key, name, fee) {
