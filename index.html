@@ -452,7 +452,7 @@
                             <div>
                                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">QRIS & E-Wallet (Proses Otomatis)</span>
                                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                    <div onclick="selectPayment('qris', 'QRIS All Payment', 0)" class="payment-card border border-slate-800 bg-slate-900/90 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition relative">
+                                    <div onclick="selectPayment('qris', 'QRIS Instant', 0)" class="payment-card border border-slate-800 bg-slate-900/90 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition relative">
                                         <div class="flex justify-between items-center">
                                             <span class="font-bold text-xs text-white">QRIS Instant</span>
                                             <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">Bebas Admin</span>
@@ -525,7 +525,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kode Promo (Opsional)</label>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kode Promo (Opsional / Sekali Pakai)</label>
                                 <div class="flex gap-2">
                                     <input type="text" id="inputPromo" placeholder="Masukkan kode promo (misal: DISPAD)" class="uppercase w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
                                     <button type="button" onclick="applyPromo()" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-400 font-bold text-xs border border-purple-500/30 transition">Gunakan</button>
@@ -878,7 +878,7 @@
     </div>
 
 
-    <!-- MODAL ADMIN PANEL (DILENGKAPI KELOLA KODE PROMO) -->
+    <!-- MODAL ADMIN PANEL (DILENGKAPI UBAH POSTER & KELOLA PROMO) -->
     <div id="adminModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
         <div class="glass-card max-w-2xl w-full rounded-3xl border border-slate-800 p-6 space-y-6 relative my-8">
             <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white text-xl">
@@ -891,7 +891,7 @@
                 </div>
                 <div>
                     <h3 class="text-lg font-bold text-white">Admin Dashboard & Config</h3>
-                    <p class="text-xs text-slate-400">Konfigurasi Gateway Payment & Kelola Kode Promo</p>
+                    <p class="text-xs text-slate-400">Konfigurasi Gateway Payment, Kelola Promo & Poster Game</p>
                 </div>
             </div>
 
@@ -907,6 +907,31 @@
                 <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 text-center">
                     <span class="text-[10px] text-slate-400 block">Status API Provider</span>
                     <span class="text-xs font-bold text-emerald-400">ONLINE 100%</span>
+                </div>
+            </div>
+
+            <!-- FITUR UBAH POSTER GAME (HANYA ADMIN -> GALERI HP) -->
+            <div class="border-t border-slate-800 pt-4 space-y-3">
+                <h4 class="font-bold text-white text-xs uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-image text-cyan-400"></i> Kelola Gambar Poster Game
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center bg-slate-900/60 p-3.5 rounded-2xl border border-slate-800">
+                    <div class="sm:col-span-5">
+                        <label class="block text-[11px] text-slate-400 mb-1">Pilih Game:</label>
+                        <select id="adminSelectGamePoster" onchange="onAdminGamePosterSelect()" class="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-cyan-500">
+                        </select>
+                    </div>
+                    <div class="sm:col-span-3 flex items-center gap-2">
+                        <img id="adminPosterPreview" src="" alt="Preview" class="w-12 h-12 rounded-xl object-cover border border-slate-700 bg-slate-950 shadow">
+                        <span class="text-[10px] text-slate-400 leading-tight">Preview Gambar</span>
+                    </div>
+                    <div class="sm:col-span-4">
+                        <!-- INPUT FILE TERSEMBUNYI UNTUK MEMBUKA GALERI HP -->
+                        <input type="file" id="posterFileInput" accept="image/*" class="hidden" onchange="handlePosterFileSelect(event)">
+                        <button type="button" onclick="triggerPosterUpload()" class="w-full px-4 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow">
+                            <i class="fa-solid fa-folder-open"></i> Ubah dari Galeri HP
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -990,7 +1015,7 @@
     </footer>
 
 
-    <!-- JAVASCRIPT LOGIC DENGAN STATUS TRANSAKSI DINAMIS -->
+    <!-- JAVASCRIPT LOGIC LENGKAP -->
     <script>
         const gamesData = [
             // --- MOBILE GAMES ---
@@ -1475,6 +1500,7 @@
         let currentSelectedNominal = null;
         let currentSelectedPayment = null;
         let currentDiscount = 0;
+        let appliedPromoCode = null;
         let countdownInterval = null;
         let lastOrderData = null;
         
@@ -1489,8 +1515,29 @@
             'HEMAT2000': 2000
         };
 
+        // MUAT GAMBAR POSTER CUSTOM JIKA ADA DI LOCALSTORAGE
+        function applyCustomPosters() {
+            let customPosters = JSON.parse(localStorage.getItem('nexus_custom_posters') || '{}');
+            gamesData.forEach(game => {
+                if (customPosters[game.id]) {
+                    game.image = customPosters[game.id];
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            history.replaceState({ page: 'home' }, '', '#home');
+            // Terapkan poster custom dari galeri jika ada
+            applyCustomPosters();
+
+            // Navigasi URL Hash saat refresh
+            const currentHash = window.location.hash.replace('#', '');
+            const validPages = ['home', 'order', 'tracking', 'pricelist', 'calc', 'leaderboard'];
+
+            if (validPages.includes(currentHash)) {
+                showPage(currentHash, false);
+            } else {
+                showPage('home', false);
+            }
 
             renderGameGrid(gamesData);
             renderPricelistTable();
@@ -1643,6 +1690,13 @@
             currentSelectedNominal = null;
             currentSelectedPayment = null;
             currentDiscount = 0;
+            appliedPromoCode = null;
+            if (document.getElementById('inputPromo')) {
+                document.getElementById('inputPromo').value = '';
+            }
+            if (document.getElementById('promoStatus')) {
+                document.getElementById('promoStatus').innerText = '';
+            }
             updateSummary();
         }
 
@@ -1679,6 +1733,7 @@
             }
         }
 
+        // KODE PROMO SEKALI PAKAI LOGIC
         function applyPromo() {
             const code = document.getElementById('inputPromo').value.trim().toUpperCase();
             const promoStatus = document.getElementById('promoStatus');
@@ -1689,13 +1744,25 @@
                 return;
             }
 
+            let usedPromos = JSON.parse(localStorage.getItem('nexus_used_promos') || '[]');
+            if (usedPromos.includes(code)) {
+                currentDiscount = 0;
+                appliedPromoCode = null;
+                promoStatus.className = "text-[11px] block mt-1 text-rose-400 font-bold";
+                promoStatus.innerText = "✕ Kode promo ini sudah pernah Anda gunakan (Sekali Pakai)!";
+                updateSummary();
+                return;
+            }
+
             if (promoList.hasOwnProperty(code)) {
                 currentDiscount = promoList[code];
+                appliedPromoCode = code;
                 promoStatus.className = "text-[11px] block mt-1 text-emerald-400 font-bold";
                 promoStatus.innerText = `✓ Kode promo berhasil dipakai (Diskon Rp ${currentDiscount.toLocaleString('id-ID')})`;
                 updateSummary();
             } else {
                 currentDiscount = 0;
+                appliedPromoCode = null;
                 promoStatus.className = "text-[11px] block mt-1 text-rose-400 font-bold";
                 promoStatus.innerText = "✕ Kode promo tidak valid atau kadaluarsa";
                 updateSummary();
@@ -1768,6 +1835,85 @@
             }
         }
 
+        // LOGIC KELOLA POSTER GAME (HANYA ADMIN)
+        function populateAdminGameSelect() {
+            const select = document.getElementById('adminSelectGamePoster');
+            if(!select) return;
+            select.innerHTML = '';
+            gamesData.forEach(game => {
+                const opt = document.createElement('option');
+                opt.value = game.id;
+                opt.textContent = game.title;
+                select.appendChild(opt);
+            });
+            onAdminGamePosterSelect();
+        }
+
+        function onAdminGamePosterSelect() {
+            const select = document.getElementById('adminSelectGamePoster');
+            if(!select) return;
+            const selectedId = select.value;
+            const game = gamesData.find(g => g.id === selectedId);
+            const preview = document.getElementById('adminPosterPreview');
+            if (game && preview) {
+                preview.src = game.image;
+            }
+        }
+
+        function triggerPosterUpload() {
+            const fileInput = document.getElementById('posterFileInput');
+            if (fileInput) {
+                fileInput.click(); // Langsung membuka galeri HP / file picker
+            }
+        }
+
+        function handlePosterFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                Swal.fire('Gagal', 'Harap pilih file gambar dari galeri Anda!', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const newBase64Image = e.target.result;
+                const select = document.getElementById('adminSelectGamePoster');
+                const selectedId = select ? select.value : null;
+
+                if (!selectedId) return;
+
+                // 1. Update data di memori JavaScript
+                const game = gamesData.find(g => g.id === selectedId);
+                if (game) {
+                    game.image = newBase64Image;
+                }
+
+                // 2. Simpan gambar ke LocalStorage agar tersimpan permanen
+                let customPosters = JSON.parse(localStorage.getItem('nexus_custom_posters') || '{}');
+                customPosters[selectedId] = newBase64Image;
+                localStorage.setItem('nexus_custom_posters', JSON.stringify(customPosters));
+
+                // 3. Perbarui tampilan secara real-time
+                document.getElementById('adminPosterPreview').src = newBase64Image;
+                renderGameGrid(gamesData);
+                renderPricelistTable();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Poster Berhasil Diubah!',
+                    text: `Gambar poster ${game ? game.title : ''} berhasil diperbarui dari galeri HP.`,
+                    timer: 1800,
+                    showConfirmButton: false,
+                    background: '#0f172a',
+                    color: '#fff'
+                });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = ''; // Reset input file
+        }
+
         function processOrder() {
             const userId = document.getElementById('inputUserId').value;
             const zoneId = document.getElementById('inputZoneId').value;
@@ -1800,6 +1946,18 @@
                 }
                 memberSaldo -= total;
                 updateMemberUI();
+            }
+
+            if (appliedPromoCode) {
+                let usedPromos = JSON.parse(localStorage.getItem('nexus_used_promos') || '[]');
+                if (!usedPromos.includes(appliedPromoCode)) {
+                    usedPromos.push(appliedPromoCode);
+                    localStorage.setItem('nexus_used_promos', JSON.stringify(usedPromos));
+                }
+                appliedPromoCode = null;
+                currentDiscount = 0;
+                document.getElementById('inputPromo').value = '';
+                document.getElementById('promoStatus').innerText = '';
             }
 
             const invId = 'INV-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + Math.floor(1000 + Math.random() * 9000);
@@ -1998,9 +2156,9 @@
             });
         }
 
-        // FITUR HAPUS RIWAYAT HANYA ADMIN
+        // FITUR HAPUS RIWAYAT HANYA ADMIN (PASSWORD: bentar19)
         function clearMyHistory() {
-            const passwordRahasia = "admin123";
+            const passwordRahasia = "bentar19";
 
             Swal.fire({
                 title: 'Verifikasi Admin Required',
@@ -2078,8 +2236,9 @@
             Swal.fire('Sukses', 'Saldo akun berhasil ditambahkan Rp 50.000!', 'success');
         }
 
+        // BUKA ADMIN MODAL (PASSWORD: bentar19)
         function openAdminModal() {
-            const passwordRahasia = "admin123";
+            const passwordRahasia = "bentar19";
 
             Swal.fire({
                 title: 'Login Admin Panel',
@@ -2095,6 +2254,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     if (result.value === passwordRahasia) {
+                        populateAdminGameSelect();
                         renderAdminPromoList();
                         document.getElementById('adminModal').classList.remove('hidden');
                         Swal.fire({
