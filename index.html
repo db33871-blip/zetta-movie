@@ -649,7 +649,7 @@
         <p onclick="openAdminModal()" class="cursor-pointer hover:text-slate-400 select-none">© 2026 VALYX TOPUP. All Rights Reserved. Built for Speed & Automation.</p>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC LENGKAP -->
+    <!-- JAVASCRIPT LOGIC LENGKAP WITH ANTI-RESET ROUTING & PERSISTENT ADMIN MODAL -->
     <script>
         // DATA SEMUA GAME & DIGITAL TOP UP
         const gamesData = [
@@ -1027,6 +1027,7 @@
             });
         }
 
+        // FITUR ANTI RESET REFRESH & PERSISTENT ADMIN MODAL
         document.addEventListener('DOMContentLoaded', () => {
             applyCustomPosters();
             renderGameGrid(gamesData);
@@ -1036,7 +1037,40 @@
             loadMyHistory();
             updateMemberUI();
             renderAdminPromoList();
+
+            // Membaca Hash URL saat direfresh
+            const currentHash = window.location.hash.replace('#', '');
+            if (currentHash && document.getElementById('page-' + currentHash)) {
+                showPage(currentHash);
+            } else {
+                showPage('home');
+            }
+
+            // Membuka modal admin jika sesi admin masih aktif saat direfresh
+            if (localStorage.getItem('valyx_admin_session') === 'true') {
+                populateAdminGameSelect();
+                renderAdminPromoList();
+                document.getElementById('adminModal').classList.remove('hidden');
+            }
         });
+
+        // Deteksi jika user menekan tombol Back/Forward browser
+        window.addEventListener('hashchange', () => {
+            const currentHash = window.location.hash.replace('#', '');
+            if (currentHash && document.getElementById('page-' + currentHash)) {
+                showPage(currentHash);
+            }
+        });
+
+        function showPage(pageId) {
+            document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
+            const target = document.getElementById('page-' + pageId);
+            if(target) target.classList.remove('hidden');
+
+            // Simpan status halaman ke URL Hash
+            window.location.hash = pageId;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         function renderFlashSale() {
             const setImg = (id, elId) => {
@@ -1110,13 +1144,6 @@
             } else {
                 renderGameGrid(gamesData.filter(g => g.category === cat));
             }
-        }
-
-        function showPage(pageId) {
-            document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
-            const target = document.getElementById('page-' + pageId);
-            if(target) target.classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function selectGameForOrder(gameId) {
@@ -1445,12 +1472,20 @@
         }
 
         function openAdminModal() {
+            if (localStorage.getItem('valyx_admin_session') === 'true') {
+                populateAdminGameSelect();
+                renderAdminPromoList();
+                document.getElementById('adminModal').classList.remove('hidden');
+                return;
+            }
+
             Swal.fire({
                 title: 'Password Admin',
                 input: 'password',
                 showCancelButton: true
             }).then((res) => {
                 if(res.isConfirmed && res.value === 'bentar19') {
+                    localStorage.setItem('valyx_admin_session', 'true');
                     populateAdminGameSelect();
                     renderAdminPromoList();
                     document.getElementById('adminModal').classList.remove('hidden');
@@ -1458,7 +1493,11 @@
             });
         }
 
-        function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
+        function closeAdminModal() { 
+            localStorage.removeItem('valyx_admin_session');
+            document.getElementById('adminModal').classList.add('hidden'); 
+        }
+
         function openMemberModal() { document.getElementById('memberModal').classList.remove('hidden'); }
         function closeMemberModal() { document.getElementById('memberModal').classList.add('hidden'); }
         function updateMemberUI() {
