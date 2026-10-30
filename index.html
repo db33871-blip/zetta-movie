@@ -359,7 +359,7 @@
                 <button onclick="showPage('home')" class="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-2 bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 transition">
                     <i class="fa-solid fa-arrow-left"></i> Kembali ke Katalog
                 </button>
-                <span class="text-xs text-slate-500 font-mono" id="selectedGameSlug">mlbb-indonesia</span>
+                <span class="text-xs text-slate-500 font-mono" id="selectedGameSlug">valyx-order</span>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -527,7 +527,7 @@
                             <div>
                                 <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kode Promo (Opsional / Sekali Pakai)</label>
                                 <div class="flex gap-2">
-                                    <input type="text" id="inputPromo" placeholder="Masukkan kode promo (misal: VALYX10)" class="uppercase w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
+                                    <input type="text" id="inputPromo" placeholder="Masukkan kode promo (misal: DISPAD)" class="uppercase w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
                                     <button type="button" onclick="applyPromo()" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-400 font-bold text-xs border border-purple-500/30 transition">Gunakan</button>
                                 </div>
                                 <span id="promoStatus" class="text-[11px] block mt-1"></span>
@@ -827,7 +827,7 @@
 
             <div id="paymentDisplayArea" class="text-center p-4 bg-white rounded-2xl space-y-3">
                 <p class="text-xs font-bold text-slate-900">Scan QRIS Di Bawah Ini Menggunakan Aplikasi E-Wallet / Mobile Banking</p>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=VALYX_SIMULATION_QRIS_PAYMENT" alt="QRIS Code" class="w-48 h-48 mx-auto border-2 border-slate-200 rounded-xl">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=VALYXTOPUP_SIMULATION_QRIS_PAYMENT" alt="QRIS Code" class="w-48 h-48 mx-auto border-2 border-slate-200 rounded-xl">
                 <p class="text-[10px] text-slate-500 font-medium">Auto detect callback mutasi server 24/7</p>
             </div>
 
@@ -946,7 +946,7 @@
                     <i class="fa-solid fa-tags text-purple-400"></i> Kelola Kode Promo / Voucher
                 </h4>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <input type="text" id="adminPromoCode" placeholder="Kode (cth: VALYX10)" class="px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white font-mono uppercase text-xs focus:outline-none focus:border-purple-500">
+                    <input type="text" id="adminPromoCode" placeholder="Kode (cth: DISPAD)" class="px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white font-mono uppercase text-xs focus:outline-none focus:border-purple-500">
                     <input type="number" id="adminPromoDiscount" placeholder="Diskon (cth: 5000)" class="px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:border-purple-500">
                     <button onclick="addPromoCode()" class="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow">
                         <i class="fa-solid fa-plus"></i> Tambah Promo
@@ -987,7 +987,7 @@
                     <div class="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white font-bold">
                         <i class="fa-solid fa-bolt"></i>
                     </div>
-                    <span class="text-base font-extrabold text-white tracking-wider">VALYX TOPUP</span>
+                    <span class="text-base font-extrabold text-white tracking-wider">VALYXTOPUP</span>
                 </div>
                 <p class="text-slate-500 leading-relaxed">
                     Platform penyedia top up game murah, pulsa HP, terpercaya, dan serba otomatis 24/7 di Indonesia.
@@ -1538,3 +1538,803 @@
         let memberSaldo = 150000;
 
         // PROMO STATE (TERSIMPAN DI LOCALSTORAGE)
+        let promoList = JSON.parse(localStorage.getItem('valyx_promo_list')) || {
+            'VALYX10': 5000,
+            'DISPAD': 5000,
+            'HEMAT2000': 2000
+        };
+
+        // MUAT GAMBAR POSTER CUSTOM JIKA ADA DI LOCALSTORAGE
+        function applyCustomPosters() {
+            let customPosters = JSON.parse(localStorage.getItem('valyx_custom_posters') || '{}');
+            gamesData.forEach(game => {
+                if (customPosters[game.id]) {
+                    game.image = customPosters[game.id];
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyCustomPosters();
+
+            const currentHash = window.location.hash.replace('#', '');
+            const validPages = ['home', 'order', 'tracking', 'pricelist', 'calc', 'leaderboard'];
+
+            if (validPages.includes(currentHash)) {
+                showPage(currentHash, false);
+            } else {
+                showPage('home', false);
+            }
+
+            renderGameGrid(gamesData);
+            renderPricelistTable();
+            startFlashSaleTimer();
+            loadMyHistory();
+            updateMemberUI();
+            renderAdminPromoList();
+        });
+
+        // DETEKSI TOMBOL KEMBALI (BACK) HP
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.page) {
+                showPage(event.state.page, false);
+            } else {
+                showPage('home', false);
+            }
+        });
+
+        function renderGameGrid(data) {
+            const container = document.getElementById('gameGrid');
+            container.innerHTML = '';
+            
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-10 space-y-2">
+                        <i class="fa-solid fa-magnifying-glass text-3xl text-slate-600"></i>
+                        <p class="text-sm font-bold text-slate-400">Game atau Produk tidak ditemukan</p>
+                        <p class="text-xs text-slate-600">Coba ketik kata kunci atau singkatan lain seperti ML, FF, HOK, DANA.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            data.forEach(game => {
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-2xl p-3 border border-slate-800 hover:border-purple-500/80 transition cursor-pointer group flex flex-col justify-between space-y-3 hover:scale-[1.02]";
+                card.onclick = () => selectGameForOrder(game.id);
+
+                card.innerHTML = `
+                    <div class="relative rounded-xl overflow-hidden aspect-square">
+                        <img src="${game.image}" alt="${game.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+                        <span class="absolute top-2 right-2 px-2 py-0.5 rounded-md text-[9px] font-black bg-purple-600 text-white shadow">${game.badge}</span>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-xs text-white group-hover:text-purple-400 transition line-clamp-1">${game.title}</h3>
+                        <p class="text-[10px] text-slate-400">${game.publisher}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function setCategory(cat) {
+            document.querySelectorAll('.cat-tab').forEach(btn => {
+                btn.classList.remove('active', 'border-purple-500', 'bg-purple-600/20', 'text-purple-300');
+                btn.classList.add('border-slate-800', 'bg-slate-900', 'text-slate-300');
+            });
+            event.currentTarget.classList.add('active', 'border-purple-500', 'bg-purple-600/20', 'text-purple-300');
+
+            if(cat === 'all') {
+                renderGameGrid(gamesData);
+            } else {
+                const filtered = gamesData.filter(g => g.category === cat);
+                renderGameGrid(filtered);
+            }
+        }
+
+        // FUNGSI PENCARIAN TERPERBARUI DENGAN KEYWORDS & SINGKATAN
+        function filterGames() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (!query) {
+                renderGameGrid(gamesData);
+                return;
+            }
+
+            const filtered = gamesData.filter(g => {
+                const titleMatch = g.title.toLowerCase().includes(query);
+                const publisherMatch = g.publisher.toLowerCase().includes(query);
+                const idMatch = g.id.toLowerCase().includes(query);
+                const keywordMatch = g.keywords && g.keywords.some(k => k.toLowerCase().includes(query));
+
+                return titleMatch || publisherMatch || idMatch || keywordMatch;
+            });
+
+            renderGameGrid(filtered);
+        }
+
+        function showPage(pageId, pushToHistory = true) {
+            document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
+            const targetPage = document.getElementById('page-' + pageId);
+            if(targetPage) {
+                targetPage.classList.remove('hidden');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (pushToHistory && history.state?.page !== pageId) {
+                history.pushState({ page: pageId }, '', '#' + pageId);
+            }
+        }
+
+        function selectGameForOrder(gameId) {
+            currentSelectedGame = gamesData.find(g => g.id === gameId);
+            if(!currentSelectedGame) return;
+
+            document.getElementById('selectedGameSlug').innerText = currentSelectedGame.id + '-id';
+            document.getElementById('orderGameImg').src = currentSelectedGame.image;
+            document.getElementById('orderGameTitle').innerText = currentSelectedGame.title;
+            document.getElementById('orderGamePublisher').innerText = currentSelectedGame.publisher;
+
+            if(currentSelectedGame.hasZone) {
+                document.getElementById('zoneIdContainer').classList.remove('hidden');
+            } else {
+                document.getElementById('zoneIdContainer').classList.add('hidden');
+            }
+
+            const nominalGrid = document.getElementById('nominalGrid');
+            nominalGrid.innerHTML = '';
+            currentSelectedNominal = null;
+
+            currentSelectedGame.items.forEach(item => {
+                const priceToDisplay = isMemberLoggedIn ? item.memberPrice : item.price;
+                const nCard = document.createElement('div');
+                nCard.className = "nominal-card border border-slate-800 bg-slate-900/80 p-3 rounded-2xl cursor-pointer hover:border-purple-500 transition relative flex flex-col justify-between";
+                nCard.onclick = () => selectNominal(item, nCard);
+
+                nCard.innerHTML = `
+                    ${item.badge ? `<span class="absolute -top-2 right-2 px-1.5 py-0.5 rounded text-[8px] font-black bg-cyan-500 text-slate-950">${item.badge}</span>` : ''}
+                    <span class="font-bold text-xs text-white block">${item.name}</span>
+                    <div class="mt-2">
+                        ${isMemberLoggedIn ? `<span class="text-[9px] text-slate-500 line-through block">Rp ${item.price.toLocaleString('id-ID')}</span>` : ''}
+                        <span class="text-xs font-extrabold text-purple-400 block">Rp ${priceToDisplay.toLocaleString('id-ID')}</span>
+                    </div>
+                `;
+                nominalGrid.appendChild(nCard);
+            });
+
+            resetSummary();
+            showPage('order');
+        }
+
+        function selectNominal(item, element) {
+            document.querySelectorAll('.nominal-card').forEach(el => el.classList.remove('border-purple-500', 'bg-purple-900/30', 'glow-effect'));
+            element.classList.add('border-purple-500', 'bg-purple-900/30', 'glow-effect');
+
+            currentSelectedNominal = item;
+            updateSummary();
+        }
+
+        function selectPayment(key, name, fee) {
+            document.querySelectorAll('.payment-card').forEach(el => el.classList.remove('border-purple-500', 'bg-purple-900/30'));
+            event.currentTarget.classList.add('border-purple-500', 'bg-purple-900/30');
+
+            currentSelectedPayment = { key, name, fee };
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const itemText = currentSelectedNominal ? currentSelectedNominal.name : '-';
+            const payText = currentSelectedPayment ? currentSelectedPayment.name : '-';
+
+            let basePrice = 0;
+            if (currentSelectedNominal) {
+                basePrice = isMemberLoggedIn ? currentSelectedNominal.memberPrice : currentSelectedNominal.price;
+            }
+            let fee = currentSelectedPayment ? currentSelectedPayment.fee : 0;
+            let total = Math.max(0, basePrice + fee - currentDiscount);
+
+            document.getElementById('summaryItem').innerText = itemText;
+            document.getElementById('summaryPayment').innerText = payText;
+            document.getElementById('summaryDiscount').innerText = `Rp ${currentDiscount.toLocaleString('id-ID')}`;
+            document.getElementById('summaryTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        function resetSummary() {
+            currentSelectedNominal = null;
+            currentSelectedPayment = null;
+            currentDiscount = 0;
+            appliedPromoCode = null;
+            if (document.getElementById('inputPromo')) {
+                document.getElementById('inputPromo').value = '';
+            }
+            if (document.getElementById('promoStatus')) {
+                document.getElementById('promoStatus').innerText = '';
+            }
+            updateSummary();
+        }
+
+        async function checkNickname() {
+            const userId = document.getElementById('inputUserId').value;
+            const zoneId = document.getElementById('inputZoneId').value;
+            const nicknameResult = document.getElementById('nicknameResult');
+
+            if (!userId) {
+                Swal.fire('Perhatian', 'Harap isi ID / Nomor HP terlebih dahulu!', 'warning');
+                return;
+            }
+
+            nicknameResult.className = "text-xs font-bold text-amber-400";
+            nicknameResult.innerText = "⏳ Memeriksa ID/Nomor...";
+
+            try {
+                const response = await fetch(`https://api.isan.eu.org/nickname/ml?id=${userId}&zone=${zoneId || ''}`);
+                if (!response.ok) throw new Error("Gagal terhubung");
+                
+                const data = await response.json();
+                if (data && data.name) {
+                    let rawName = data.name;
+                    let nickname = decodeURIComponent(rawName).replace(/\+/g, ' ');
+                    nicknameResult.className = "text-xs font-bold text-emerald-400";
+                    nicknameResult.innerText = `✓ Status: ${nickname} (Valid)`;
+                } else {
+                    nicknameResult.className = "text-xs font-bold text-rose-400";
+                    nicknameResult.innerText = "✕ ID / Server tidak ditemukan";
+                }
+            } catch (error) {
+                nicknameResult.className = "text-xs font-bold text-emerald-400";
+                nicknameResult.innerText = `✓ Target: ${userId} (Terverifikasi)`;
+            }
+        }
+
+        function applyPromo() {
+            const code = document.getElementById('inputPromo').value.trim().toUpperCase();
+            const promoStatus = document.getElementById('promoStatus');
+
+            if (!code) {
+                promoStatus.className = "text-[11px] block mt-1 text-rose-400 font-bold";
+                promoStatus.innerText = "✕ Harap masukkan kode promo terlebih dahulu";
+                return;
+            }
+
+            let usedPromos = JSON.parse(localStorage.getItem('valyx_used_promos') || '[]');
+            if (usedPromos.includes(code)) {
+                currentDiscount = 0;
+                appliedPromoCode = null;
+                promoStatus.className = "text-[11px] block mt-1 text-rose-400 font-bold";
+                promoStatus.innerText = "✕ Kode promo ini sudah pernah Anda gunakan (Sekali Pakai)!";
+                updateSummary();
+                return;
+            }
+
+            if (promoList.hasOwnProperty(code)) {
+                currentDiscount = promoList[code];
+                appliedPromoCode = code;
+                promoStatus.className = "text-[11px] block mt-1 text-emerald-400 font-bold";
+                promoStatus.innerText = `✓ Kode promo berhasil dipakai (Diskon Rp ${currentDiscount.toLocaleString('id-ID')})`;
+                updateSummary();
+            } else {
+                currentDiscount = 0;
+                appliedPromoCode = null;
+                promoStatus.className = "text-[11px] block mt-1 text-rose-400 font-bold";
+                promoStatus.innerText = "✕ Kode promo tidak valid atau kadaluarsa";
+                updateSummary();
+            }
+        }
+
+        function savePromoList() {
+            localStorage.setItem('valyx_promo_list', JSON.stringify(promoList));
+            renderAdminPromoList();
+        }
+
+        function renderAdminPromoList() {
+            const container = document.getElementById('adminPromoListContainer');
+            if(!container) return;
+            container.innerHTML = '';
+
+            const keys = Object.keys(promoList);
+            if(keys.length === 0) {
+                container.innerHTML = `<p class="text-[11px] text-slate-500 italic">Belum ada kode promo aktif.</p>`;
+                return;
+            }
+
+            keys.forEach(code => {
+                const discount = promoList[code];
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-xs";
+                item.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-purple-400 font-mono tracking-wider">${code}</span>
+                        <span class="text-emerald-400 text-[11px] font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Diskon Rp ${discount.toLocaleString('id-ID')}</span>
+                    </div>
+                    <button onclick="deletePromoCode('${code}')" class="text-rose-400 hover:text-rose-300 font-bold px-2 py-1 text-[11px] flex items-center gap-1 transition">
+                        <i class="fa-solid fa-trash-can"></i> Hapus
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function addPromoCode() {
+            const codeInput = document.getElementById('adminPromoCode');
+            const discountInput = document.getElementById('adminPromoDiscount');
+
+            const code = codeInput.value.trim().toUpperCase();
+            const discount = parseInt(discountInput.value, 10);
+
+            if(!code) {
+                Swal.fire('Gagal', 'Masukkan kode promo terlebih dahulu!', 'warning');
+                return;
+            }
+            if(!discount || discount <= 0) {
+                Swal.fire('Gagal', 'Masukkan nominal diskon yang valid!', 'warning');
+                return;
+            }
+
+            promoList[code] = discount;
+            savePromoList();
+
+            codeInput.value = '';
+            discountInput.value = '';
+
+            Swal.fire('Sukses', `Kode promo <b>${code}</b> (Diskon Rp ${discount.toLocaleString('id-ID')}) berhasil dibuat!`, 'success');
+        }
+
+        function deletePromoCode(code) {
+            if(promoList[code]) {
+                delete promoList[code];
+                savePromoList();
+                Swal.fire('Terhapus', `Kode promo ${code} berhasil dihapus!`, 'success');
+            }
+        }
+
+        function populateAdminGameSelect() {
+            const select = document.getElementById('adminSelectGamePoster');
+            if(!select) return;
+            select.innerHTML = '';
+            gamesData.forEach(game => {
+                const opt = document.createElement('option');
+                opt.value = game.id;
+                opt.textContent = game.title;
+                select.appendChild(opt);
+            });
+            onAdminGamePosterSelect();
+        }
+
+        function onAdminGamePosterSelect() {
+            const select = document.getElementById('adminSelectGamePoster');
+            if(!select) return;
+            const selectedId = select.value;
+            const game = gamesData.find(g => g.id === selectedId);
+            const preview = document.getElementById('adminPosterPreview');
+            if (game && preview) {
+                preview.src = game.image;
+            }
+        }
+
+        function triggerPosterUpload() {
+            const fileInput = document.getElementById('posterFileInput');
+            if (fileInput) {
+                fileInput.click();
+            }
+        }
+
+        function handlePosterFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                Swal.fire('Gagal', 'Harap pilih file gambar dari galeri Anda!', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const newBase64Image = e.target.result;
+                const select = document.getElementById('adminSelectGamePoster');
+                const selectedId = select ? select.value : null;
+
+                if (!selectedId) return;
+
+                const game = gamesData.find(g => g.id === selectedId);
+                if (game) {
+                    game.image = newBase64Image;
+                }
+
+                let customPosters = JSON.parse(localStorage.getItem('valyx_custom_posters') || '{}');
+                customPosters[selectedId] = newBase64Image;
+                localStorage.setItem('valyx_custom_posters', JSON.stringify(customPosters));
+
+                document.getElementById('adminPosterPreview').src = newBase64Image;
+                renderGameGrid(gamesData);
+                renderPricelistTable();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Poster Berhasil Diubah!',
+                    text: `Gambar poster ${game ? game.title : ''} berhasil diperbarui dari galeri HP.`,
+                    timer: 1800,
+                    showConfirmButton: false,
+                    background: '#0f172a',
+                    color: '#fff'
+                });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function processOrder() {
+            const userId = document.getElementById('inputUserId').value;
+            const zoneId = document.getElementById('inputZoneId').value;
+            const wa = document.getElementById('inputWhatsapp').value;
+
+            if(!userId) {
+                Swal.fire('Gagal', 'Silakan masukkan User ID / Nomor HP Tujuan!', 'error');
+                return;
+            }
+            if(!currentSelectedNominal) {
+                Swal.fire('Gagal', 'Silakan pilih nominal top up / item!', 'error');
+                return;
+            }
+            if(!currentSelectedPayment) {
+                Swal.fire('Gagal', 'Silakan pilih metode pembayaran!', 'error');
+                return;
+            }
+            if(!wa) {
+                Swal.fire('Gagal', 'Silakan masukkan nomor WhatsApp!', 'error');
+                return;
+            }
+
+            const basePrice = isMemberLoggedIn ? currentSelectedNominal.memberPrice : currentSelectedNominal.price;
+            let total = basePrice + currentSelectedPayment.fee - currentDiscount;
+
+            if(currentSelectedPayment.key === 'saldo') {
+                if(memberSaldo < total) {
+                    Swal.fire('Saldo Tidak Cukup', `Saldo akun Anda (Rp ${memberSaldo.toLocaleString('id-ID')}) tidak mencukupi untuk transaksi ini!`, 'error');
+                    return;
+                }
+                memberSaldo -= total;
+                updateMemberUI();
+            }
+
+            if (appliedPromoCode) {
+                let usedPromos = JSON.parse(localStorage.getItem('valyx_used_promos') || '[]');
+                if (!usedPromos.includes(appliedPromoCode)) {
+                    usedPromos.push(appliedPromoCode);
+                    localStorage.setItem('valyx_used_promos', JSON.stringify(usedPromos));
+                }
+                appliedPromoCode = null;
+                currentDiscount = 0;
+                document.getElementById('inputPromo').value = '';
+                document.getElementById('promoStatus').innerText = '';
+            }
+
+            const invId = 'INV-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + Math.floor(1000 + Math.random() * 9000);
+            const targetFull = userId + (currentSelectedGame.hasZone && zoneId ? ` (${zoneId})` : '');
+
+            lastOrderData = {
+                invId: invId,
+                game: currentSelectedGame.title,
+                item: currentSelectedNominal.name,
+                target: targetFull,
+                price: total,
+                date: new Date().toLocaleDateString('id-ID')
+            };
+
+            saveToHistory(lastOrderData);
+
+            document.getElementById('invModalId').innerText = invId;
+            document.getElementById('invModalItem').innerText = `${currentSelectedGame.title} - ${currentSelectedNominal.name}`;
+            document.getElementById('invModalTarget').innerText = targetFull;
+            document.getElementById('invModalMethod').innerText = currentSelectedPayment.name;
+            document.getElementById('invModalTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+
+            const waText = encodeURIComponent(`Halo Admin VALYXTOPUP, saya mau konfirmasi pembayaran:\n\n*No Invoice:* ${invId}\n*Layanan:* ${currentSelectedGame.title} - ${currentSelectedNominal.name}\n*Target ID/HP:* ${targetFull}\n*Total:* Rp ${total.toLocaleString('id-ID')}\n\nMohon dicek, terima kasih!`);
+            document.getElementById('modalWaBtn').href = `https://wa.me/6281234567890?text=${waText}`;
+            document.getElementById('waDirectBtn').href = `https://wa.me/6281234567890?text=${waText}`;
+
+            document.getElementById('invoiceModal').classList.remove('hidden');
+            startTimer(15 * 60);
+        }
+
+        function closeInvoiceModal() {
+            document.getElementById('invoiceModal').classList.add('hidden');
+            clearInterval(countdownInterval);
+        }
+
+        function startTimer(duration) {
+            let timer = duration, minutes, seconds;
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                document.getElementById('invoiceTimer').innerText = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('invoiceTimer').innerText = "EXPIRED";
+                }
+            }, 1000);
+        }
+
+        function simulatePaymentSuccess() {
+            closeInvoiceModal();
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            if (lastOrderData) {
+                document.getElementById('trackInvoiceId').innerText = lastOrderData.invId;
+                document.getElementById('trackGame').innerText = lastOrderData.game;
+                document.getElementById('trackItem').innerText = lastOrderData.item;
+                document.getElementById('trackTarget').innerText = lastOrderData.target;
+                document.getElementById('trackPrice').innerText = `Rp ${lastOrderData.price.toLocaleString('id-ID')}`;
+            }
+
+            Swal.fire({
+                title: 'Pembayaran Berhasil!',
+                text: 'Sistem sedang memproses item / pulsa ke target Anda secara otomatis.',
+                icon: 'success',
+                confirmButtonText: 'Lihat Status Transaksi'
+            }).then(() => {
+                showPage('tracking');
+                document.getElementById('trackingResult').classList.remove('hidden');
+            });
+        }
+
+        function searchOrder() {
+            const trackInput = document.getElementById('trackInput').value.trim();
+            if(!trackInput) {
+                Swal.fire('Peringatan', 'Masukkan No Invoice atau Target ID/HP', 'warning');
+                return;
+            }
+
+            let history = JSON.parse(localStorage.getItem('valyx_topup_history') || '[]');
+            let found = history.find(h => h.invId.toLowerCase() === trackInput.toLowerCase() || h.target.includes(trackInput));
+
+            if (found) {
+                document.getElementById('trackInvoiceId').innerText = found.invId;
+                document.getElementById('trackGame').innerText = found.game;
+                document.getElementById('trackItem').innerText = found.item;
+                document.getElementById('trackTarget').innerText = found.target;
+                document.getElementById('trackPrice').innerText = `Rp ${found.price.toLocaleString('id-ID')}`;
+            } else if (lastOrderData) {
+                document.getElementById('trackInvoiceId').innerText = lastOrderData.invId;
+                document.getElementById('trackGame').innerText = lastOrderData.game;
+                document.getElementById('trackItem').innerText = lastOrderData.item;
+                document.getElementById('trackTarget').innerText = lastOrderData.target;
+                document.getElementById('trackPrice').innerText = `Rp ${lastOrderData.price.toLocaleString('id-ID')}`;
+            }
+
+            document.getElementById('trackingResult').classList.remove('hidden');
+        }
+
+        function renderPricelistTable() {
+            const tbody = document.getElementById('pricelistTableBody');
+            tbody.innerHTML = '';
+
+            gamesData.forEach(game => {
+                game.items.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-900/50 transition";
+                    tr.innerHTML = `
+                        <td class="py-3 px-4 font-bold text-purple-400">${game.title}</td>
+                        <td class="py-3 px-4">${item.name}</td>
+                        <td class="py-3 px-4 text-slate-400">Rp ${item.price.toLocaleString('id-ID')}</td>
+                        <td class="py-3 px-4 font-bold text-emerald-400">Rp ${item.memberPrice.toLocaleString('id-ID')}</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">AVAILABLE</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        function calcWR() {
+            const total = parseFloat(document.getElementById('wrTotalMatches').value);
+            const currentWr = parseFloat(document.getElementById('wrCurrentWr').value);
+            const targetWr = parseFloat(document.getElementById('wrTargetWr').value);
+
+            if(!total || !currentWr || !targetWr || targetWr >= 100 || targetWr <= currentWr) {
+                document.getElementById('wrResult').innerText = "Masukkan angka match & WR target yang valid!";
+                return;
+            }
+
+            const currentWins = total * (currentWr / 100);
+            const requiredWins = Math.ceil((targetWr * total - 100 * currentWins) / (100 - targetWr));
+            document.getElementById('wrResult').innerHTML = `Kamu butuh <span class="text-emerald-400 font-extrabold">${requiredWins} kemenangan beruntun (Win tanpa kalah)</span> untuk mencapai WR ${targetWr}%`;
+        }
+
+        function calcMagicWheel() {
+            const points = parseInt(document.getElementById('mwPoints').value) || 0;
+            if(points >= 200) {
+                document.getElementById('mwResult').innerText = "Magic Points sudah mencapai 200 (Siap Klaim Legend Skin)!";
+                return;
+            }
+            const remainingPoints = 200 - points;
+            const estimatedDiamonds = remainingPoints * 60;
+            document.getElementById('mwResult').innerHTML = `Dibutuhkan sisa ±<span class="text-amber-400 font-extrabold">${remainingPoints} points</span> (~<span class="text-cyan-400 font-extrabold">${estimatedDiamonds} Diamonds</span>)`;
+        }
+
+        function startFlashSaleTimer() {
+            let totalSeconds = 12290;
+            setInterval(() => {
+                totalSeconds--;
+                if(totalSeconds <= 0) totalSeconds = 12290;
+                let hrs = Math.floor(totalSeconds / 3600);
+                let mins = Math.floor((totalSeconds % 3600) / 60);
+                let secs = totalSeconds % 60;
+                document.getElementById('flashSaleTimer').innerText = 
+                    `${hrs < 10 ? '0'+hrs : hrs} : ${mins < 10 ? '0'+mins : mins} : ${secs < 10 ? '0'+secs : secs}`;
+            }, 1000);
+        }
+
+        function saveToHistory(item) {
+            let history = JSON.parse(localStorage.getItem('valyx_topup_history') || '[]');
+            history.unshift(item);
+            if(history.length > 5) history.pop();
+            localStorage.setItem('valyx_topup_history', JSON.stringify(history));
+            loadMyHistory();
+        }
+
+        function loadMyHistory() {
+            let history = JSON.parse(localStorage.getItem('valyx_topup_history') || '[]');
+            const container = document.getElementById('myHistoryContainer');
+            if(history.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 italic text-center py-2">Belum ada riwayat transaksi di perangkat ini.</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            history.forEach(h => {
+                const div = document.createElement('div');
+                div.className = "bg-slate-900/90 border border-slate-800 p-3 rounded-2xl flex items-center justify-between text-xs";
+                div.innerHTML = `
+                    <div>
+                        <span class="font-bold text-cyan-400 font-mono block">${h.invId}</span>
+                        <span class="text-white">${h.game} - ${h.item}</span>
+                        <span class="text-[10px] text-slate-500 block">Target: ${h.target} (${h.date})</span>
+                    </div>
+                    <span class="font-extrabold text-purple-400">Rp ${h.price.toLocaleString('id-ID')}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // FITUR HAPUS RIWAYAT HANYA ADMIN (PASSWORD: bentar19)
+        function clearMyHistory() {
+            const passwordRahasia = "bentar19";
+
+            Swal.fire({
+                title: 'Verifikasi Admin Required',
+                text: 'Masukkan password admin untuk menghapus riwayat transaksi',
+                input: 'password',
+                inputPlaceholder: 'Password Admin...',
+                inputAttributes: {
+                    autocapitalize: 'off',
+                    autocorrect: 'off'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Hapus Riwayat',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#e11d48',
+                background: '#0f172a',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (result.value === passwordRahasia) {
+                        localStorage.removeItem('valyx_topup_history');
+                        loadMyHistory();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Riwayat transaksi telah dibersihkan oleh Admin.',
+                            timer: 1500,
+                            showConfirmButton: false,
+                            background: '#0f172a',
+                            color: '#fff'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Akses Ditolak',
+                            text: 'Password admin yang Anda masukkan salah!',
+                            background: '#0f172a',
+                            color: '#fff',
+                            confirmButtonColor: '#7c3aed'
+                        });
+                    }
+                }
+            });
+        }
+
+        function openMemberModal() {
+            document.getElementById('memberModal').classList.remove('hidden');
+        }
+        function closeMemberModal() {
+            document.getElementById('memberModal').classList.add('hidden');
+        }
+
+        function updateMemberUI() {
+            document.getElementById('memberModalSaldo').innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
+            document.getElementById('paymentSaldoText').innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
+            
+            if(isMemberLoggedIn) {
+                document.getElementById('memberNavText').innerText = `Member VIP (Rp ${memberSaldo.toLocaleString('id-ID')})`;
+                document.getElementById('loginToggleBtn').innerText = "Logout Akun Member";
+            } else {
+                document.getElementById('memberNavText').innerText = "Login Member";
+                document.getElementById('loginToggleBtn').innerText = "Login Akun Member";
+            }
+        }
+
+        function toggleMemberLoginStatus() {
+            isMemberLoggedIn = !isMemberLoggedIn;
+            updateMemberUI();
+            closeMemberModal();
+            Swal.fire('Informasi', isMemberLoggedIn ? 'Anda sekarang login sebagai Member VIP!' : 'Anda telah logout dari Akun Member.', 'info');
+        }
+
+        function topUpMemberSaldo() {
+            memberSaldo += 50000;
+            updateMemberUI();
+            Swal.fire('Sukses', 'Saldo akun berhasil ditambahkan Rp 50.000!', 'success');
+        }
+
+        // BUKA ADMIN MODAL (PASSWORD: bentar19)
+        function openAdminModal() {
+            const passwordRahasia = "bentar19";
+
+            Swal.fire({
+                title: 'Login Admin Panel',
+                text: 'Masukkan password untuk mengakses Admin Dashboard',
+                input: 'password',
+                inputPlaceholder: 'Password...',
+                showCancelButton: true,
+                confirmButtonText: 'Masuk',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#7c3aed',
+                background: '#0f172a',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (result.value === passwordRahasia) {
+                        populateAdminGameSelect();
+                        renderAdminPromoList();
+                        document.getElementById('adminModal').classList.remove('hidden');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Akses Diterima',
+                            text: 'Selamat datang di Admin Dashboard!',
+                            timer: 1500,
+                            showConfirmButton: false,
+                            background: '#0f172a',
+                            color: '#fff'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Akses Ditolak',
+                            text: 'Password yang Anda masukkan salah!',
+                            background: '#0f172a',
+                            color: '#fff',
+                            confirmButtonColor: '#7c3aed'
+                        });
+                    }
+                }
+            });
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
