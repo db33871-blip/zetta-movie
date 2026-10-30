@@ -393,7 +393,7 @@
                         </div>
                         <div class="flex items-center justify-between pt-1">
                             <button type="button" onclick="checkNickname()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-purple-300 border border-purple-500/30 transition flex items-center gap-2">
-                                <i class="fa-solid fa-user-check"></i> Cek Nickname / Nomor
+                                <i class="fa-solid fa-user-check"></i> Cek Nickname
                             </button>
                             <span id="nicknameResult" class="text-xs font-bold text-emerald-400"></span>
                         </div>
@@ -649,7 +649,7 @@
         <p onclick="openAdminModal()" class="cursor-pointer hover:text-slate-400 select-none">© 2026 VALYX TOPUP. All Rights Reserved. Built for Speed & Automation.</p>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC LENGKAP WITH ANTI-RESET ROUTING & PERSISTENT ADMIN MODAL -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
         // DATA SEMUA GAME & DIGITAL TOP UP
         const gamesData = [
@@ -1204,7 +1204,8 @@
                 Swal.fire('Isi ID', 'Masukkan User ID terlebih dahulu!', 'warning');
                 return;
             }
-            res.innerText = `✓ Target ID: ${userId} (Terverifikasi)`;
+            const gameName = currentSelectedGame ? currentSelectedGame.title : 'Game';
+            res.innerText = `✓ Game: ${gameName}`;
         }
 
         function applyPromo() {
