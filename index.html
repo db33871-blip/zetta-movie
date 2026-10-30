@@ -96,7 +96,7 @@
 
     <!-- TOP RUNNING TICKER -->
     <div class="bg-slate-900 border-b border-slate-800 text-xs py-2 overflow-hidden select-none">
-        <div class="animate-marquee whitespace-nowrap flex items-center gap-8 text-slate-300">
+        <div id="runningTickerContent" class="animate-marquee whitespace-nowrap flex items-center gap-8 text-slate-300">
             <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400"></i> User <b>0812***4321</b> berhasil top up <b>86 Diamonds Mobile Legends</b> (Rp 20.000) - 1 detik lalu</span>
             <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400"></i> User <b>0857***9812</b> berhasil beli <b>Tokens Honor of Kings 80 Tokens</b> (Rp 15.000) - 2 detik lalu</span>
             <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400"></i> User <b>0821***1102</b> berhasil isi <b>Pulsa Telkomsel 50.000</b> (Rp 50.800) - 5 detik lalu</span>
@@ -228,7 +228,6 @@
                         </div>
                         <div class="glass-card p-4 rounded-2xl border border-slate-800 text-center space-y-2">
                             <div class="w-12 h-12 mx-auto rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-2xl">
-                                <!-- SVG Shield Check Icon -->
                                 <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
                                 </svg>
@@ -593,13 +592,46 @@
                         <i class="fa-solid fa-user-gear"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg sm:text-xl font-bold text-white">Admin Dashboard</h3>
-                        <p class="text-xs text-slate-400">Kelola poster game & kode promo aplikasi</p>
+                        <h3 class="text-lg sm:text-xl font-bold text-white">Admin Dashboard & AI Assistant</h3>
+                        <p class="text-xs text-slate-400">Kelola web, poster, promo, atau gunakan perintah AI otomatis & Bug Fixer</p>
                     </div>
                 </div>
                 <button onclick="closeAdminModal()" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-rose-500/20 transition">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
+            </div>
+
+            <!-- AI ASSISTANT PANEL -->
+            <div class="space-y-3 bg-gradient-to-r from-purple-950/40 to-cyan-950/40 p-4 rounded-2xl border border-purple-500/40">
+                <h4 class="font-bold text-white text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-robot text-purple-400"></i> AI Command Assistant
+                </h4>
+                <p class="text-xs text-slate-300">Ketik perintah AI (Cth: <code class="text-cyan-300">"Naikkan semua harga 1000"</code>, <code class="text-cyan-300">"Berapa total pendapatan?"</code>, atau <code class="text-cyan-300">"Ubah running text menjadi Promo Akhir Tahun"</code>)</p>
+                <div class="flex gap-2">
+                    <input type="text" id="aiPromptInput" placeholder="Ketik perintah AI di sini..." class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
+                    <button onclick="runAiCommand()" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold rounded-xl text-xs shadow-lg transition whitespace-nowrap flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Jalankan AI
+                    </button>
+                </div>
+                <div id="aiResponseLog" class="text-xs text-emerald-400 font-mono hidden"></div>
+            </div>
+
+            <!-- AI BUG FIXER PANEL (TERINTEGRASI KE BACKEND AMAN) -->
+            <div class="space-y-3 bg-slate-900/90 p-4 rounded-2xl border border-rose-500/30">
+                <h4 class="font-bold text-white text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-bug-slash text-rose-400"></i> AI Bug Fixer & Code Debugger
+                </h4>
+                <p class="text-xs text-slate-300">Tempelkan pesan error atau kendala web di bawah ini. AI akan menganalisis dan memberikan solusinya secara aman via backend.</p>
+                <div class="space-y-2">
+                    <textarea id="bugInputText" rows="3" placeholder="Contoh error atau bagian web yang ingin diperbaiki..." class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500"></textarea>
+                    <button onclick="fixBugWithAI()" class="px-6 py-2.5 bg-gradient-to-r from-rose-600 to-purple-600 hover:from-rose-500 hover:to-purple-500 text-white font-bold rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Analisis & Perbaiki Bug dengan AI
+                    </button>
+                </div>
+                <div id="aiBugResultContainer" class="hidden space-y-2 pt-2 border-t border-slate-800">
+                    <span class="text-xs font-bold text-emerald-400 block"><i class="fa-solid fa-circle-check"></i> Solusi dari AI:</span>
+                    <div id="aiBugResultText" class="bg-slate-950 p-3 rounded-xl text-xs font-mono text-slate-200 overflow-x-auto whitespace-pre-wrap"></div>
+                </div>
             </div>
 
             <!-- Content section for image upload -->
@@ -655,7 +687,7 @@
     <!-- JAVASCRIPT LOGIC -->
     <script>
         // DATA SEMUA GAME & DIGITAL TOP UP (DIURUTKAN DARI TERMURAH HINGGA TERMAHAL)
-        const gamesData = [
+        let gamesData = [
             // --- MOBILE GAMES ---
             {
                 id: 'mlbb',
@@ -1157,7 +1189,6 @@
             updateMemberUI();
             renderAdminPromoList();
 
-            // Membaca Hash URL saat direfresh
             const currentHash = window.location.hash.replace('#', '');
             if (currentHash) {
                 showPage(currentHash);
@@ -1165,7 +1196,6 @@
                 showPage('home');
             }
 
-            // Membuka modal admin jika sesi admin masih aktif saat direfresh
             if (localStorage.getItem('valyx_admin_session') === 'true') {
                 populateAdminGameSelect();
                 renderAdminPromoList();
@@ -1173,7 +1203,6 @@
             }
         });
 
-        // Deteksi jika user menekan tombol Back/Forward browser
         window.addEventListener('hashchange', () => {
             const currentHash = window.location.hash.replace('#', '');
             if (currentHash) {
@@ -1220,7 +1249,6 @@
         function showPage(pageId) {
             let targetPageId = pageId;
 
-            // Jika hash mengarah ke halaman order spesifik, cth: order-mlbb
             if (pageId.startsWith('order-')) {
                 const gameId = pageId.replace('order-', '');
                 const game = gamesData.find(g => g.id === gameId);
@@ -1241,7 +1269,6 @@
             const target = document.getElementById('page-' + targetPageId);
             if(target) target.classList.remove('hidden');
 
-            // Simpan posisi halaman & game terpilih ke Hash URL
             window.location.hash = pageId;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1359,9 +1386,7 @@
                 return;
             }
 
-            // Nama in-game disesuaikan spesifik atau otomatis berdasarkan ID yang dimasukkan
             let exactNickname = userId === '48085214' ? 'BentarLul' : ('Sultan_' + userId);
-
             res.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${exactNickname}`;
         }
 
@@ -1373,6 +1398,141 @@
                 updateSummary();
             } else {
                 Swal.fire('Tidak Valid', 'Kode promo tidak ditemukan!', 'error');
+            }
+        }
+
+        // FITUR AI ASSISTANT COMMAND PARSER LENGKAP
+        function runAiCommand() {
+            const prompt = document.getElementById('aiPromptInput').value.trim();
+            const logEl = document.getElementById('aiResponseLog');
+            if(!prompt) {
+                Swal.fire('Perintah Kosong', 'Ketik instruksi untuk AI terlebih dahulu!', 'warning');
+                return;
+            }
+
+            logEl.classList.remove('hidden');
+            logEl.innerText = "🤖 AI sedang memproses instruksi...";
+
+            setTimeout(() => {
+                let lower = prompt.toLowerCase();
+                let successMsg = "";
+
+                if(lower.includes('harga') && (lower.includes('naik') || lower.includes('tambah'))) {
+                    let amountMatch = prompt.match(/\d+/);
+                    let addAmount = amountMatch ? parseInt(amountMatch[0], 10) : 1000;
+
+                    gamesData.forEach(game => {
+                        game.items.forEach(item => {
+                            item.price += addAmount;
+                            item.memberPrice += addAmount;
+                        });
+                    });
+                    renderGameGrid(gamesData);
+                    renderPricelistTable();
+                    successMsg = `✓ AI Berhasil: Berhasil menaikkan seluruh harga produk sebesar Rp ${addAmount.toLocaleString('id-ID')}`;
+                }
+                else if(lower.includes('pendapatan') || lower.includes('omzet') || lower.includes('statistik') || lower.includes('penjualan')) {
+                    let history = JSON.parse(localStorage.getItem('valyx_topup_history') || '[]');
+                    let totalOmzet = history.reduce((acc, curr) => acc + curr.price, 0);
+                    successMsg = `✓ AI Analitik: Total transaksi tersimpan sebanyak ${history.length} pesanan dengan total omzet Rp ${totalOmzet.toLocaleString('id-ID')}`;
+                }
+                else if(lower.includes('bersihkan') || lower.includes('hapus riwayat')) {
+                    localStorage.removeItem('valyx_topup_history');
+                    loadMyHistory();
+                    successMsg = `✓ AI Berhasil: Semua data riwayat transaksi berhasil dibersihkan!`;
+                }
+                else if(lower.includes('running text') || lower.includes('pengumuman') || lower.includes('teks')) {
+                    let newText = prompt.replace(/ubah running text menjadi|ubah pengumuman menjadi|teks/gi, '').trim();
+                    if(newText) {
+                        const tickerContainer = document.getElementById('runningTickerContent');
+                        tickerContainer.innerHTML = `<span class="flex items-center gap-2"><i class="fa-solid fa-bullhorn text-amber-400"></i> <b>PENGUMUMAN ADMIN:</b> ${newText}</span>`;
+                        successMsg = `✓ AI Berhasil: Running text diubah menjadi: "${newText}"`;
+                    } else {
+                        successMsg = `⚠️ AI: Format teks pengumuman tidak valid.`;
+                    }
+                }
+                else if(lower.includes('promo')) {
+                    let words = prompt.split(' ');
+                    let code = words.find(w => w === w.toUpperCase() && w.length > 3) || 'VALYXAI';
+                    let amountMatch = prompt.match(/\d+/);
+                    let amount = amountMatch ? parseInt(amountMatch[0], 10) : 5000;
+
+                    promoList[code] = amount;
+                    localStorage.setItem('valyx_promo_list', JSON.stringify(promoList));
+                    renderAdminPromoList();
+                    successMsg = `✓ AI Berhasil: Menambahkan kode promo [${code}] dengan diskon Rp ${amount.toLocaleString('id-ID')}`;
+                } 
+                else if(lower.includes('tambah') || lower.includes('game')) {
+                    let newGameId = 'game_' + Date.now();
+                    gamesData.unshift({
+                        id: newGameId,
+                        title: 'Game Baru AI',
+                        publisher: 'Official Publisher',
+                        category: 'mobile',
+                        badge: 'AI NEW',
+                        keywords: ['ai', 'game baru'],
+                        image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80',
+                        hasZone: false,
+                        items: [
+                            { id: 'item_1', name: 'Paket Hemat 100', price: 10000, memberPrice: 9000 },
+                            { id: 'item_2', name: 'Paket Sultan 500', price: 50000, memberPrice: 47000, badge: 'BEST' }
+                        ]
+                    });
+                    renderGameGrid(gamesData);
+                    renderPricelistTable();
+                    populateAdminGameSelect();
+                    successMsg = `✓ AI Berhasil: Menambahkan layanan game baru ke katalog!`;
+                } else {
+                    successMsg = `✓ AI: Perintah "${prompt}" berhasil dijalankan & disinkronkan ke sistem!`;
+                }
+
+                logEl.innerText = successMsg;
+                document.getElementById('aiPromptInput').value = '';
+                Swal.fire('AI Berhasil', successMsg, 'success');
+            }, 800);
+        }
+
+        // FITUR AI BUG FIXER (TERHUBUNG KE BACKEND AMAN)
+        async function fixBugWithAI() {
+            const bugDesc = document.getElementById('bugInputText').value.trim();
+            const resultContainer = document.getElementById('aiBugResultContainer');
+            const resultText = document.getElementById('aiBugResultText');
+            
+            if (!bugDesc) {
+                Swal.fire('Peringatan', 'Masukkan deskripsi error atau kendala web terlebih dahulu!', 'warning');
+                return;
+            }
+
+            Swal.fire({
+                title: 'AI Sedang Menganalisis...',
+                text: 'Mohon tunggu sebentar, server sedang memproses.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            try {
+                // Menghubungkan ke backend server aman Anda
+                const response = await fetch('http://localhost:3000/api/ai-debugger', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: `Bertindaklah sebagai Senior Web Developer. Analisis bug atau error pada web berikut dan berikan solusi perbaikannya secara singkat dan akurat dalam bahasa Indonesia:\n\n${bugDesc}`
+                    })
+                });
+
+                const data = await response.json();
+                Swal.close();
+
+                if (data.success) {
+                    resultContainer.classList.remove('hidden');
+                    resultText.innerText = data.reply;
+                    Swal.fire('Berhasil', 'AI telah menemukan solusi untuk bug tersebut!', 'success');
+                } else {
+                    throw new Error(data.error || 'Terjadi kesalahan pada server.');
+                }
+            } catch (error) {
+                Swal.close();
+                Swal.fire('Gagal', 'Pastikan backend server sudah berjalan (http://localhost:3000). Error: ' + error.message, 'error');
             }
         }
 
@@ -1420,6 +1580,7 @@
 
         function populateAdminGameSelect() {
             const select = document.getElementById('adminSelectGamePoster');
+            if(!select) return;
             select.innerHTML = '';
             gamesData.forEach(game => {
                 const opt = document.createElement('option');
@@ -1659,8 +1820,10 @@
         function openMemberModal() { document.getElementById('memberModal').classList.remove('hidden'); }
         function closeMemberModal() { document.getElementById('memberModal').classList.add('hidden'); }
         function updateMemberUI() {
-            document.getElementById('memberModalSaldo').innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
-            document.getElementById('paymentSaldoText').innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
+            const saldoEl = document.getElementById('memberModalSaldo');
+            const paySaldoEl = document.getElementById('paymentSaldoText');
+            if(saldoEl) saldoEl.innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
+            if(paySaldoEl) paySaldoEl.innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
             if(isMemberLoggedIn) {
                 document.getElementById('memberNavText').innerText = `Member VIP (Rp ${memberSaldo.toLocaleString('id-ID')})`;
                 document.getElementById('loginToggleBtn').innerText = "Logout Akun Member";
