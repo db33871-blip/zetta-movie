@@ -142,7 +142,7 @@
                 <div class="hidden md:flex items-center gap-3">
                     <button onclick="openMemberModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-200 border border-slate-700 hover:border-purple-500 hover:text-white transition flex items-center gap-2 bg-slate-900/80">
                         <i class="fa-solid fa-user-gear text-purple-400"></i>
-                        <span id="memberNavText">Login Member</span>
+                        <span id="memberNavText">Login / Daftar</span>
                     </button>
 
                     <a href="https://wa.me/6281234567890" target="_blank" class="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 shadow-md transition flex items-center gap-2">
@@ -176,7 +176,7 @@
             </button>
             <div class="pt-2 border-t border-slate-800 flex flex-col gap-2">
                 <button onclick="openMemberModal(); toggleMobileMenu()" class="w-full py-2.5 rounded-lg text-xs font-bold text-purple-300 border border-purple-500/40 text-center">
-                    <i class="fa-solid fa-user-gear mr-1"></i> Area Member & Saldo
+                    <i class="fa-solid fa-user-gear mr-1"></i> Area Member & Akun
                 </button>
                 <a href="https://wa.me/6281234567890" target="_blank" class="w-full py-2.5 rounded-lg text-xs font-bold text-white bg-emerald-600 text-center flex items-center justify-center gap-2">
                     <i class="fa-brands fa-whatsapp"></i> Hubungi Customer Service
@@ -567,29 +567,53 @@
         </div>
     </div>
 
-    <!-- MODAL 2: MEMBER LOGIN & REGISTER -->
+    <!-- MODAL 2: MEMBER LOGIN, REGISTER & AKUN PENGGUNA -->
     <div id="memberModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-3xl border border-purple-500/30 p-6 space-y-5 relative">
+        <div class="glass-card max-w-md w-full rounded-3xl border border-purple-500/30 p-6 space-y-5 relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeMemberModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             
-            <!-- Tampilan Jika Sudah Login / Dashboard Member -->
-            <div id="memberDashboardView" class="space-y-4">
-                <h3 class="text-lg font-bold text-white text-center">Area Member VIP</h3>
-                <div class="bg-slate-900 p-4 rounded-2xl text-center space-y-1">
-                    <span id="memberNameDisplay" class="text-xs text-purple-300 font-bold block">Halo, Member VIP</span>
-                    <span class="text-xs text-slate-400 block">Saldo Akun Anda</span>
-                    <span id="memberModalSaldo" class="text-2xl font-black text-emerald-400">Rp 150.000</span>
+            <!-- VIEW 1: DASHBOARD / HALAMAN AKUN MEMBER -->
+            <div id="memberDashboardView" class="space-y-5 hidden">
+                <div class="text-center space-y-3">
+                    <div class="relative w-20 h-20 mx-auto group">
+                        <img id="accountProfileImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80" class="w-20 h-20 rounded-full object-cover border-2 border-purple-500 shadow-lg">
+                        <button onclick="triggerProfilePicUpload()" class="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-500 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs shadow-md" title="Ganti Foto">
+                            <i class="fa-solid fa-camera"></i>
+                        </button>
+                        <input type="file" id="profilePicInput" accept="image/*" class="hidden" onchange="handleProfilePicChange(event)">
+                    </div>
+                    <div>
+                        <h3 id="accountNameDisplay" class="text-base font-extrabold text-white">Nama Member</h3>
+                        <p id="accountPhoneDisplay" class="text-xs text-slate-400 font-mono">08123456789</p>
+                    </div>
                 </div>
-                <div class="space-y-2">
-                    <button onclick="topUpMemberSaldo()" class="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 font-bold text-xs text-white transition">+ Saldo (+Rp 50.000)</button>
-                    <button onclick="toggleMemberLoginStatus()" id="loginToggleBtn" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 font-bold text-xs text-slate-300 transition">Logout Member</button>
+
+                <!-- Informasi Saldo & Top Up Saldo -->
+                <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-3 text-center">
+                    <span class="text-xs text-slate-400 block font-semibold">Saldo Akun Anda</span>
+                    <span id="accountSaldoDisplay" class="text-2xl font-black text-emerald-400">Rp 50.000</span>
+                    <div class="pt-2 flex gap-2">
+                        <button onclick="openTopUpSaldoModal()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 font-bold text-xs text-white shadow-md transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-wallet"></i> Top Up Saldo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Menu Aksi Akun: Ganti Password & Logout -->
+                <div class="space-y-2 pt-2">
+                    <button onclick="openChangePasswordModal()" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 font-bold text-xs text-purple-300 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-key"></i> Ganti Password Akun
+                    </button>
+                    <button onclick="logoutMember()" class="w-full py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 font-bold text-xs text-rose-400 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i> Keluar (Logout)
+                    </button>
                 </div>
             </div>
 
-            <!-- Tampilan Form Pendaftaran (Register) -->
+            <!-- VIEW 2: FORM PENDAFTARAN (REGISTER) -->
             <div id="memberRegisterView" class="hidden space-y-4">
                 <h3 class="text-lg font-bold text-white text-center">Daftar Akun Member Baru</h3>
-                <p class="text-xs text-slate-400 text-center">Dapatkan harga diskon khusus member VIP setiap transaksi!</p>
+                <p class="text-xs text-slate-400 text-center">Dapatkan harga diskon khusus member VIP dan bonus saldo awal!</p>
                 
                 <div class="space-y-3">
                     <div>
@@ -612,7 +636,7 @@
                 </div>
             </div>
 
-            <!-- Tampilan Form Login -->
+            <!-- VIEW 3: FORM LOGIN -->
             <div id="memberLoginView" class="hidden space-y-4">
                 <h3 class="text-lg font-bold text-white text-center">Login Akun Member</h3>
                 <div class="space-y-3">
@@ -631,6 +655,36 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- MODAL 4: TOP UP SALDO AKUN -->
+    <div id="topUpSaldoModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card max-w-sm w-full rounded-3xl border border-emerald-500/40 p-6 space-y-4 relative">
+            <button onclick="closeTopUpSaldoModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-lg font-bold text-white text-center">Top Up Saldo Member</h3>
+            <p class="text-xs text-slate-400 text-center">Pilih nominal top up saldo akun Anda:</p>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="addSaldoAmount(25000)" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 25.000</button>
+                <button onclick="addSaldoAmount(50000)" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 50.000</button>
+                <button onclick="addSaldoAmount(100000)" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 100.000</button>
+                <button onclick="addSaldoAmount(250000)" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 250.000</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: GANTI PASSWORD -->
+    <div id="changePasswordModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card max-w-sm w-full rounded-3xl border border-purple-500/40 p-6 space-y-4 relative">
+            <button onclick="closeChangePasswordModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-lg font-bold text-white text-center">Ganti Password Akun</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Password Baru</label>
+                    <input type="password" id="newPasswordInput" placeholder="Minimal 6 karakter..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-purple-500">
+                </div>
+                <button onclick="saveNewPassword()" class="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 font-extrabold text-xs text-white shadow-lg transition">Simpan Password Baru</button>
+            </div>
         </div>
     </div>
 
@@ -1212,9 +1266,12 @@
         let appliedPromoCode = null;
         let countdownInterval = null;
         let lastOrderData = null;
-        let isMemberLoggedIn = localStorage.getItem('valyx_logged_member') ? true : false;
+
+        let isMemberLoggedIn = localStorage.getItem('valyx_logged_member') === 'true';
         let memberName = localStorage.getItem('valyx_member_name') || 'Member VIP';
-        let memberSaldo = parseInt(localStorage.getItem('valyx_member_saldo')) || 150000;
+        let memberPhone = localStorage.getItem('valyx_member_phone') || '08123456789';
+        let memberSaldo = parseInt(localStorage.getItem('valyx_member_saldo')) || 50000;
+        let memberProfilePic = localStorage.getItem('valyx_member_pic') || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80';
 
         let promoList = JSON.parse(localStorage.getItem('valyx_promo_list')) || {
             'VALYX10': 5000,
@@ -1865,7 +1922,7 @@
             document.getElementById('adminModal').classList.add('hidden'); 
         }
 
-        // --- SISTEM MEMBER & REGISTRASI ---
+        // --- MANAJEMEN AKUN & MEMBER LENGKAP ---
         function openMemberModal() { 
             document.getElementById('memberModal').classList.remove('hidden');
             if (isMemberLoggedIn) {
@@ -1903,21 +1960,21 @@
                 return;
             }
 
-            // Simpan data member ke localStorage
             localStorage.setItem('valyx_member_name', name);
             localStorage.setItem('valyx_member_phone', phone);
             localStorage.setItem('valyx_member_pass', password);
             localStorage.setItem('valyx_logged_member', 'true');
-            localStorage.setItem('valyx_member_saldo', '50000'); // Bonus saldo awal pendaftaran member baru
+            localStorage.setItem('valyx_member_saldo', '50000');
 
             isMemberLoggedIn = true;
             memberName = name;
+            memberPhone = phone;
             memberSaldo = 50000;
 
             updateMemberUI();
             switchMemberView('dashboard');
             confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
-            Swal.fire('Registrasi Berhasil!', 'Selamat akun member VIP Anda aktif. Bonus saldo awal Rp 50.000 telah ditambahkan.', 'success');
+            Swal.fire('Registrasi Berhasil!', 'Akun VIP Anda aktif dan mendapatkan bonus saldo awal Rp 50.000.', 'success');
         }
 
         function processLogin() {
@@ -1936,46 +1993,104 @@
                 localStorage.setItem('valyx_logged_member', 'true');
                 updateMemberUI();
                 switchMemberView('dashboard');
-                Swal.fire('Berhasil Login', 'Selamat datang kembali di area member VIP!', 'success');
+                Swal.fire('Berhasil Login', 'Selamat datang kembali di akun Anda!', 'success');
             } else {
                 Swal.fire('Login Gagal', 'Nomor WhatsApp atau password salah!', 'error');
             }
         }
 
         function updateMemberUI() {
-            const saldoEl = document.getElementById('memberModalSaldo');
+            const saldoEl = document.getElementById('accountSaldoDisplay');
             const paySaldoEl = document.getElementById('paymentSaldoText');
-            const nameEl = document.getElementById('memberNameDisplay');
+            const nameEl = document.getElementById('accountNameDisplay');
+            const phoneEl = document.getElementById('accountPhoneDisplay');
+            const profileImgEl = document.getElementById('accountProfileImg');
 
             if(saldoEl) saldoEl.innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
             if(paySaldoEl) paySaldoEl.innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
-            if(nameEl) nameEl.innerText = `Halo, ${memberName}`;
+            if(nameEl) nameEl.innerText = memberName;
+            if(phoneEl) phoneEl.innerText = memberPhone;
+            if(profileImgEl) profileImgEl.src = memberProfilePic;
 
             if(isMemberLoggedIn) {
                 document.getElementById('memberNavText').innerText = `${memberName} (Rp ${memberSaldo.toLocaleString('id-ID')})`;
-                document.getElementById('loginToggleBtn').innerText = "Logout Akun Member";
             } else {
-                document.getElementById('memberNavText').innerText = "Login / Daftar Member";
+                document.getElementById('memberNavText').innerText = "Login / Daftar";
             }
         }
 
-        function topUpMemberSaldo() { 
-            memberSaldo += 50000; 
+        function logoutMember() {
+            isMemberLoggedIn = false;
+            localStorage.removeItem('valyx_logged_member');
+            updateMemberUI();
+            switchMemberView('login');
+            Swal.fire('Logout', 'Anda telah keluar dari akun.', 'info');
+        }
+
+        // Fitur Top Up Saldo Akun
+        function openTopUpSaldoModal() {
+            document.getElementById('topUpSaldoModal').classList.remove('hidden');
+        }
+        function closeTopUpSaldoModal() {
+            document.getElementById('topUpSaldoModal').classList.add('hidden');
+        }
+        function addSaldoAmount(amount) {
+            memberSaldo += amount;
             localStorage.setItem('valyx_member_saldo', memberSaldo);
-            updateMemberUI(); 
-            Swal.fire('Sukses', 'Saldo berhasil ditambah +Rp 50.000', 'success'); 
+            updateMemberUI();
+            closeTopUpSaldoModal();
+            confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } });
+            Swal.fire('Top Up Berhasil!', `Saldo akun bertambah sebesar Rp ${amount.toLocaleString('id-ID')}`, 'success');
         }
 
-        function toggleMemberLoginStatus() { 
-            if (isMemberLoggedIn) {
-                isMemberLoggedIn = false;
-                localStorage.removeItem('valyx_logged_member');
-                updateMemberUI();
-                switchMemberView('login');
-                Swal.fire('Logout', 'Anda telah keluar dari akun member.', 'info');
-            } else {
-                switchMemberView('login');
+        // Fitur Ganti Password Akun
+        function openChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+        }
+        function closeChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.add('hidden');
+        }
+        function saveNewPassword() {
+            const newPass = document.getElementById('newPasswordInput').value.trim();
+            if (!newPass || newPass.length < 6) {
+                Swal.fire('Peringatan', 'Password baru minimal harus 6 karakter!', 'warning');
+                return;
             }
+            localStorage.setItem('valyx_member_pass', newPass);
+            closeChangePasswordModal();
+            document.getElementById('newPasswordInput').value = '';
+            Swal.fire('Berhasil', 'Password akun Anda berhasil diubah!', 'success');
+        }
+
+        // Fitur Ganti Foto Profil Akun
+        function triggerProfilePicUpload() {
+            document.getElementById('profilePicInput').click();
+        }
+        function handleProfilePicChange(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_SIZE = 250;
+                    canvas.width = MAX_SIZE;
+                    canvas.height = MAX_SIZE;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, MAX_SIZE, MAX_SIZE);
+
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+                    memberProfilePic = compressedBase64;
+                    localStorage.setItem('valyx_member_pic', compressedBase64);
+
+                    document.getElementById('accountProfileImg').src = compressedBase64;
+                    Swal.fire('Berhasil', 'Foto profil akun berhasil diperbarui!', 'success');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
         function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
