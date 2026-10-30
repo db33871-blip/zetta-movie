@@ -785,13 +785,13 @@
 
 
     <!-- MODAL 1: INVOICE SIMULATOR -->
-    <div id="invoiceModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-        <div class="glass-card max-w-lg w-full rounded-3xl border border-purple-500/40 p-6 space-y-6 relative my-8">
+    <div id="invoiceModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="glass-card max-w-lg w-full rounded-3xl border border-purple-500/40 p-5 sm:p-6 space-y-6 relative my-auto max-h-[92vh] overflow-y-auto">
             <button onclick="closeInvoiceModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white text-xl">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="text-center space-y-2">
+            <div class="text-center space-y-2 pt-2 sm:pt-0">
                 <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">MENUNGGU PEMBAYARAN</span>
                 <h3 class="text-xl font-black text-white">Invoice Transaksi Top Up</h3>
                 <p class="text-xs text-slate-400">Selesaikan pembayaran sebelum batas waktu habis</p>
@@ -844,13 +844,13 @@
 
 
     <!-- MODAL MEMBER LOGIN & SALDO DEPOSIT -->
-    <div id="memberModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-        <div class="glass-card max-w-md w-full rounded-3xl border border-purple-500/30 p-6 space-y-6 relative my-8">
+    <div id="memberModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="glass-card max-w-md w-full rounded-3xl border border-purple-500/30 p-5 sm:p-6 space-y-6 relative my-auto max-h-[92vh] overflow-y-auto">
             <button onclick="closeMemberModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white text-xl">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 pt-2 sm:pt-0">
                 <div class="w-10 h-10 rounded-xl bg-purple-600/20 text-purple-400 border border-purple-500/30 flex items-center justify-center font-bold">
                     <i class="fa-solid fa-user-check"></i>
                 </div>
@@ -878,39 +878,45 @@
     </div>
 
 
-    <!-- MODAL ADMIN PANEL (DILENGKAPI UBAH POSTER & KELOLA PROMO) -->
-    <div id="adminModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-        <div class="glass-card max-w-2xl w-full rounded-3xl border border-slate-800 p-6 space-y-6 relative my-8">
-            <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white text-xl">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-purple-600/20 text-purple-400 border border-purple-500/30 flex items-center justify-center font-bold">
-                    <i class="fa-solid fa-sliders"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold text-white">Admin Dashboard & Config</h3>
-                    <p class="text-xs text-slate-400">Konfigurasi Gateway Payment, Kelola Promo & Poster Game</p>
+    <!-- MODAL ADMIN PANEL (DIPERBAIKI: HEADER SELALU TERLIHAT DI HP) -->
+    <div id="adminModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="glass-card max-w-2xl w-full rounded-3xl border border-slate-800 p-5 sm:p-6 space-y-5 sm:space-y-6 relative my-auto max-h-[92vh] overflow-y-auto">
+            
+            <!-- HEADER MODAL & CLOSE BUTTON -->
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 pr-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-600/20 text-purple-400 border border-purple-500/30 flex items-center justify-center font-bold shrink-0">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Admin Dashboard & Config</h3>
+                        <p class="text-xs text-slate-400">Konfigurasi Gateway Payment, Kelola Promo & Poster Game</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-3">
-                <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 text-center">
-                    <span class="text-[10px] text-slate-400 block">Total Omset Hari Ini</span>
-                    <span class="text-sm font-bold text-emerald-400">Rp 1.480.000</span>
+            <!-- BUTTON CLOSE SILANG -->
+            <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white text-xl w-8 h-8 flex items-center justify-center bg-slate-900 rounded-full border border-slate-800">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- RINGKASAN OMSET -->
+            <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                <div class="bg-slate-900 p-2.5 sm:p-3 rounded-2xl border border-slate-800 text-center">
+                    <span class="text-[10px] text-slate-400 block">Total Omset</span>
+                    <span class="text-xs sm:text-sm font-bold text-emerald-400">Rp 1.480.000</span>
                 </div>
-                <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 text-center">
-                    <span class="text-[10px] text-slate-400 block">Total Transaksi</span>
-                    <span class="text-sm font-bold text-cyan-400">74 Sukses</span>
+                <div class="bg-slate-900 p-2.5 sm:p-3 rounded-2xl border border-slate-800 text-center">
+                    <span class="text-[10px] text-slate-400 block">Transaksi</span>
+                    <span class="text-xs sm:text-sm font-bold text-cyan-400">74 Sukses</span>
                 </div>
-                <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 text-center">
-                    <span class="text-[10px] text-slate-400 block">Status API Provider</span>
+                <div class="bg-slate-900 p-2.5 sm:p-3 rounded-2xl border border-slate-800 text-center">
+                    <span class="text-[10px] text-slate-400 block">Status API</span>
                     <span class="text-xs font-bold text-emerald-400">ONLINE 100%</span>
                 </div>
             </div>
 
-            <!-- FITUR UBAH POSTER GAME (HANYA ADMIN -> GALERI HP) -->
+            <!-- FITUR UBAH POSTER GAME (GALERI HP) -->
             <div class="border-t border-slate-800 pt-4 space-y-3">
                 <h4 class="font-bold text-white text-xs uppercase tracking-wider flex items-center gap-2">
                     <i class="fa-solid fa-image text-cyan-400"></i> Kelola Gambar Poster Game
@@ -926,7 +932,6 @@
                         <span class="text-[10px] text-slate-400 leading-tight">Preview Gambar</span>
                     </div>
                     <div class="sm:col-span-4">
-                        <!-- INPUT FILE TERSEMBUNYI UNTUK MEMBUKA GALERI HP -->
                         <input type="file" id="posterFileInput" accept="image/*" class="hidden" onchange="handlePosterFileSelect(event)">
                         <button type="button" onclick="triggerPosterUpload()" class="w-full px-4 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow">
                             <i class="fa-solid fa-folder-open"></i> Ubah dari Galeri HP
@@ -1526,10 +1531,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Terapkan poster custom dari galeri jika ada
             applyCustomPosters();
 
-            // Navigasi URL Hash saat refresh
             const currentHash = window.location.hash.replace('#', '');
             const validPages = ['home', 'order', 'tracking', 'pricelist', 'calc', 'leaderboard'];
 
@@ -1863,7 +1866,7 @@
         function triggerPosterUpload() {
             const fileInput = document.getElementById('posterFileInput');
             if (fileInput) {
-                fileInput.click(); // Langsung membuka galeri HP / file picker
+                fileInput.click();
             }
         }
 
@@ -1884,18 +1887,15 @@
 
                 if (!selectedId) return;
 
-                // 1. Update data di memori JavaScript
                 const game = gamesData.find(g => g.id === selectedId);
                 if (game) {
                     game.image = newBase64Image;
                 }
 
-                // 2. Simpan gambar ke LocalStorage agar tersimpan permanen
                 let customPosters = JSON.parse(localStorage.getItem('nexus_custom_posters') || '{}');
                 customPosters[selectedId] = newBase64Image;
                 localStorage.setItem('nexus_custom_posters', JSON.stringify(customPosters));
 
-                // 3. Perbarui tampilan secara real-time
                 document.getElementById('adminPosterPreview').src = newBase64Image;
                 renderGameGrid(gamesData);
                 renderPricelistTable();
@@ -1911,7 +1911,7 @@
                 });
             };
             reader.readAsDataURL(file);
-            event.target.value = ''; // Reset input file
+            event.target.value = '';
         }
 
         function processOrder() {
