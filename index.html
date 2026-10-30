@@ -251,7 +251,7 @@
                 </div>
             </div>
 
-            <!-- FLASH SALE BANNER (SINKRON OTOMATIS) -->
+            <!-- FLASH SALE BANNER -->
             <div class="glass-card p-6 rounded-3xl border border-amber-500/30 bg-gradient-to-r from-amber-950/20 via-purple-950/30 to-slate-900 space-y-4">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-amber-500/20 pb-4">
                     <div class="flex items-center gap-3">
@@ -492,10 +492,11 @@
                 <table class="w-full text-left text-xs">
                     <thead>
                         <tr class="border-b border-slate-800 text-slate-400">
-                            <th class="py-3 px-4">Game</th>
+                            <th class="py-3 px-4">Game / Produk</th>
                             <th class="py-3 px-4">Item</th>
                             <th class="py-3 px-4">Harga Publik</th>
                             <th class="py-3 px-4">Harga Member</th>
+                            <th class="py-3 px-4">Status</th>
                         </tr>
                     </thead>
                     <tbody id="pricelistTableBody" class="divide-y divide-slate-800/60"></tbody>
@@ -535,6 +536,10 @@
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 flex justify-between items-center">
                     <span class="font-bold text-white text-sm"><span class="w-6 h-6 rounded-full bg-slate-300 text-black font-black inline-flex items-center justify-center mr-2">2</span> ProPro_0857***</span>
                     <span class="font-bold text-cyan-400 text-sm">Rp 2.890.000</span>
+                </div>
+                <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 flex justify-between items-center">
+                    <span class="font-bold text-white text-sm"><span class="w-6 h-6 rounded-full bg-amber-700 text-white font-black inline-flex items-center justify-center mr-2">3</span> GamerJatim_0821***</span>
+                    <span class="font-bold text-purple-400 text-sm">Rp 1.620.000</span>
                 </div>
             </div>
         </div>
@@ -603,7 +608,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <input type="text" id="adminPromoCode" placeholder="Kode (cth: DISPAD)" class="px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white font-mono uppercase text-xs">
                     <input type="number" id="adminPromoDiscount" placeholder="Diskon (cth: 5000)" class="px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs">
-                    <button onclick="addPromoCode()" class="px-4 py-2.5 bg-purple-600 text-white font-bold rounded-xl text-xs">+ Tambah</button>
+                    <button onclick="addPromoCode()" class="px-4 py-2.5 bg-purple-600 text-white font-bold rounded-xl text-xs">+ Tambah Promo</button>
                 </div>
                 <div id="adminPromoListContainer" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
             </div>
@@ -615,22 +620,33 @@
         <p onclick="openAdminModal()" class="cursor-pointer hover:text-slate-400 select-none">© 2026 VALYX TOPUP. All Rights Reserved. Built for Speed & Automation.</p>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT LOGIC LENGKAP -->
     <script>
+        // DATA SEMUA GAME & DIGITAL TOP UP
         const gamesData = [
+            // --- MOBILE GAMES ---
             {
                 id: 'mlbb',
                 title: 'Mobile Legends',
                 publisher: 'Moonton',
                 category: 'mobile',
                 badge: 'POPULER',
-                keywords: ['ml', 'mlbb', 'mobile legend', 'mobile legends', 'dm ml'],
+                keywords: ['ml', 'mlbb', 'mobile legend', 'mobile legends', 'dm ml', 'layla', 'diamond ml'],
                 image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80',
                 hasZone: true,
                 items: [
                     { id: 'ml_3', name: '3 Diamonds', price: 1500, memberPrice: 1200 },
+                    { id: 'ml_5', name: '5 Diamonds', price: 2000, memberPrice: 1600 },
+                    { id: 'ml_12', name: '12 Diamonds', price: 4000, memberPrice: 3500 },
+                    { id: 'ml_19', name: '19 Diamonds', price: 6000, memberPrice: 5300 },
+                    { id: 'ml_28', name: '28 Diamonds', price: 9000, memberPrice: 8000 },
+                    { id: 'ml_44', name: '44 Diamonds', price: 13000, memberPrice: 11800 },
+                    { id: 'ml_59', name: '59 Diamonds', price: 16000, memberPrice: 14500 },
                     { id: 'ml_86', name: '86 Diamonds', price: 20000, memberPrice: 19000, badge: 'FLASH SALE' },
-                    { id: 'ml_257', name: '257 Diamonds', price: 60000, memberPrice: 57000, badge: 'BEST SELLER' }
+                    { id: 'ml_172', name: '172 Diamonds', price: 40000, memberPrice: 38000 },
+                    { id: 'ml_257', name: '257 Diamonds', price: 60000, memberPrice: 57000, badge: 'BEST SELLER' },
+                    { id: 'ml_706', name: '706 Diamonds', price: 160000, memberPrice: 152000 },
+                    { id: 'ml_pass', name: 'Weekly Diamond Pass', price: 28000, memberPrice: 26500, badge: 'HEMAT' }
                 ]
             },
             {
@@ -639,12 +655,15 @@
                 publisher: 'Level Infinite',
                 category: 'mobile',
                 badge: 'NEW / HOT',
-                keywords: ['hok', 'honor of king', 'token hok'],
+                keywords: ['hok', 'honor of king', 'honor of kings', 'kings', 'token hok'],
                 image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'hok_16', name: '16 Tokens', price: 3500, memberPrice: 3000 },
                     { id: 'hok_80', name: '80 Tokens', price: 14800, memberPrice: 14000, badge: 'PROMO' },
-                    { id: 'hok_240', name: '240 Tokens', price: 44000, memberPrice: 42000 }
+                    { id: 'hok_240', name: '240 Tokens', price: 44000, memberPrice: 42000 },
+                    { id: 'hok_400', name: '400 Tokens', price: 73000, memberPrice: 69500 },
+                    { id: 'hok_800', name: '800 Tokens', price: 146000, memberPrice: 139000 }
                 ]
             },
             {
@@ -653,12 +672,59 @@
                 publisher: 'Garena',
                 category: 'mobile',
                 badge: 'HOT',
-                keywords: ['ff', 'epep', 'free fire', 'dm ff'],
+                keywords: ['ff', 'epep', 'free fire', 'freefire', 'dm ff'],
                 image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&auto=format&fit=crop&q=80',
                 hasZone: false,
                 items: [
+                    { id: 'ff_50', name: '50 Diamonds', price: 8000, memberPrice: 7200 },
                     { id: 'ff_140', name: '140 Diamonds', price: 19000, memberPrice: 18000 },
-                    { id: 'ff_355', name: '355 Diamonds', price: 48500, memberPrice: 46000, badge: 'BEST SELLER' }
+                    { id: 'ff_355', name: '355 Diamonds', price: 48500, memberPrice: 46000, badge: 'BEST SELLER' },
+                    { id: 'ff_720', name: '720 Diamonds', price: 96000, memberPrice: 91000 }
+                ]
+            },
+            {
+                id: 'pubg',
+                title: 'PUBG Mobile',
+                publisher: 'Tencent',
+                category: 'mobile',
+                badge: 'POPULER',
+                keywords: ['pubg', 'pubgm', 'pabji', 'uc pubg'],
+                image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'pubg_60', name: '60 UC', price: 14500, memberPrice: 13500 },
+                    { id: 'pubg_325', name: '325 UC', price: 72000, memberPrice: 68500, badge: 'PROMO' },
+                    { id: 'pubg_660', name: '660 UC', price: 142000, memberPrice: 135000 }
+                ]
+            },
+            {
+                id: 'genshin',
+                title: 'Genshin Impact',
+                publisher: 'HoYoverse',
+                category: 'mobile',
+                badge: 'OFFICIAL',
+                keywords: ['gi', 'genshin', 'gensin', 'genshin impact', 'crystal'],
+                image: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=400&auto=format&fit=crop&q=80',
+                hasZone: true,
+                items: [
+                    { id: 'gi_60', name: '60 Genesis Crystal', price: 15000, memberPrice: 14000 },
+                    { id: 'gi_300', name: '300 Genesis Crystal', price: 64000, memberPrice: 61000 },
+                    { id: 'gi_welkin', name: 'Blessing of Welkin Moon', price: 64000, memberPrice: 61000, badge: 'BEST SELLER' }
+                ]
+            },
+            {
+                id: 'hsr',
+                title: 'Honkai: Star Rail',
+                publisher: 'HoYoverse',
+                category: 'mobile',
+                badge: 'POPULER',
+                keywords: ['hsr', 'star rail', 'honkai'],
+                image: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=400&auto=format&fit=crop&q=80',
+                hasZone: true,
+                items: [
+                    { id: 'hsr_60', name: '60 Oneiric Shard', price: 15000, memberPrice: 14000 },
+                    { id: 'hsr_300', name: '300 Oneiric Shard', price: 64000, memberPrice: 61000 },
+                    { id: 'hsr_express', name: 'Express Supply Pass', price: 64000, memberPrice: 61000 }
                 ]
             },
             {
@@ -671,9 +737,112 @@
                 image: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=400&auto=format&fit=crop&q=80',
                 hasZone: true,
                 items: [
+                    { id: 'zzz_60', name: '60 Monochromes', price: 15000, memberPrice: 14000 },
                     { id: 'zzz_300', name: '300 Monochromes', price: 65000, memberPrice: 61500 }
                 ]
             },
+            {
+                id: 'codm',
+                title: 'Call of Duty Mobile',
+                publisher: 'Garena',
+                category: 'mobile',
+                badge: 'INSTAN',
+                keywords: ['codm', 'cod', 'call of duty', 'cp codm'],
+                image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'codm_62', name: '62 CP', price: 10000, memberPrice: 9400 },
+                    { id: 'codm_320', name: '320 CP', price: 50000, memberPrice: 47500 }
+                ]
+            },
+            {
+                id: 'fcmobile',
+                title: 'EA SPORTS FC Mobile',
+                publisher: 'EA Sports',
+                category: 'mobile',
+                badge: 'INSTAN',
+                keywords: ['fc', 'fc mobile', 'fifa', 'ea fc'],
+                image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'fc_100', name: '100 FC Points', price: 16000, memberPrice: 15000 },
+                    { id: 'fc_520', name: '520 FC Points', price: 79000, memberPrice: 75000 }
+                ]
+            },
+            {
+                id: 'efootball',
+                title: 'eFootball 2026',
+                publisher: 'Konami',
+                category: 'mobile',
+                badge: 'POPULER',
+                keywords: ['ef', 'pes', 'efootball', 'konami'],
+                image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'ef_130', name: '130 eFootball Coins', price: 16000, memberPrice: 15000 },
+                    { id: 'ef_550', name: '550 eFootball Coins', price: 65000, memberPrice: 61500 }
+                ]
+            },
+
+            // --- PC & CONSOLE ---
+            {
+                id: 'valorant',
+                title: 'Valorant Points',
+                publisher: 'Riot Games',
+                category: 'pc',
+                badge: 'HOT',
+                keywords: ['val', 'valo', 'valorant', 'vp'],
+                image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'val_425', name: '425 VP', price: 50000, memberPrice: 47000 },
+                    { id: 'val_1000', name: '1000 VP', price: 110000, memberPrice: 104000, badge: 'POPULER' }
+                ]
+            },
+            {
+                id: 'roblox',
+                title: 'Roblox (Robux)',
+                publisher: 'Roblox Corp',
+                category: 'pc',
+                badge: 'POPULER',
+                keywords: ['rbx', 'robux', 'roblox'],
+                image: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'rbx_80', name: '80 Robux', price: 18000, memberPrice: 17000 },
+                    { id: 'rbx_400', name: '400 Robux', price: 79000, memberPrice: 75000 }
+                ]
+            },
+            {
+                id: 'steam',
+                title: 'Steam Wallet IDR',
+                publisher: 'Valve',
+                category: 'pc',
+                badge: 'OFFICIAL',
+                keywords: ['steam', 'sw', 'wallet'],
+                image: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'st_45k', name: 'Steam Wallet Rp 45.000', price: 49000, memberPrice: 47000 },
+                    { id: 'st_90k', name: 'Steam Wallet Rp 90.000', price: 98000, memberPrice: 94000 }
+                ]
+            },
+            {
+                id: 'pb',
+                title: 'Point Blank Cash',
+                publisher: 'Zepetto',
+                category: 'pc',
+                badge: 'INSTAN',
+                keywords: ['pb', 'point blank', 'cash pb'],
+                image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'pb_1000', name: '1.000 PB Cash', price: 10500, memberPrice: 10000 },
+                    { id: 'pb_5000', name: '5.000 PB Cash', price: 50500, memberPrice: 48500 }
+                ]
+            },
+
+            // --- PULSA & E-WALLET ---
             {
                 id: 'dana',
                 title: 'Saldo DANA',
@@ -685,7 +854,122 @@
                 hasZone: false,
                 items: [
                     { id: 'dana_20', name: 'Saldo Rp 20.000', price: 20500, memberPrice: 20100 },
-                    { id: 'dana_50', name: 'Saldo Rp 50.000', price: 50500, memberPrice: 50100 }
+                    { id: 'dana_50', name: 'Saldo Rp 50.000', price: 50500, memberPrice: 50100 },
+                    { id: 'dana_100', name: 'Saldo Rp 100.000', price: 100500, memberPrice: 100100 }
+                ]
+            },
+            {
+                id: 'gopay',
+                title: 'Saldo GoPay',
+                publisher: 'E-Wallet',
+                category: 'ewallet',
+                badge: 'INSTAN',
+                keywords: ['gopay', 'gojek', 'saldo gopay'],
+                image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'gp_20', name: 'Saldo Rp 20.000', price: 20600, memberPrice: 20200 },
+                    { id: 'gp_50', name: 'Saldo Rp 50.000', price: 50600, memberPrice: 50200 }
+                ]
+            },
+            {
+                id: 'ovo',
+                title: 'Saldo OVO',
+                publisher: 'E-Wallet',
+                category: 'ewallet',
+                badge: 'INSTAN',
+                keywords: ['ovo', 'saldo ovo'],
+                image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'ovo_20', name: 'Saldo Rp 20.000', price: 20700, memberPrice: 20300 },
+                    { id: 'ovo_50', name: 'Saldo Rp 50.000', price: 50700, memberPrice: 50300 }
+                ]
+            },
+            {
+                id: 'shopeepay',
+                title: 'Saldo ShopeePay',
+                publisher: 'E-Wallet',
+                category: 'ewallet',
+                badge: 'INSTAN',
+                keywords: ['spay', 'shopee', 'shopeepay'],
+                image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'sp_20', name: 'Saldo Rp 20.000', price: 20500, memberPrice: 20100 },
+                    { id: 'sp_50', name: 'Saldo Rp 50.000', price: 50500, memberPrice: 50100 }
+                ]
+            },
+            {
+                id: 'pulsa-telkomsel',
+                title: 'Pulsa Telkomsel',
+                publisher: 'Telkomsel',
+                category: 'ewallet',
+                badge: 'INSTAN',
+                keywords: ['tsel', 'telkomsel', 'simpati', 'as'],
+                image: 'https://images.unsplash.com/photo-1556742049-0a670f4a4591?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'tsel_10', name: 'Pulsa Telkomsel 10.000', price: 10800, memberPrice: 10400 },
+                    { id: 'tsel_50', name: 'Pulsa Telkomsel 50.000', price: 50800, memberPrice: 50200 }
+                ]
+            },
+            {
+                id: 'pulsa-indosat',
+                title: 'Pulsa Indosat IM3',
+                publisher: 'Indosat Ooredoo',
+                category: 'ewallet',
+                badge: 'PROMO',
+                keywords: ['isat', 'indosat', 'im3'],
+                image: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'isat_10', name: 'Pulsa Indosat 10.000', price: 10700, memberPrice: 10300 },
+                    { id: 'isat_50', name: 'Pulsa Indosat 50.000', price: 50700, memberPrice: 50100 }
+                ]
+            },
+            {
+                id: 'pulsa-xl',
+                title: 'Pulsa XL / Axis',
+                publisher: 'XL Axiata',
+                category: 'ewallet',
+                badge: 'INSTAN',
+                keywords: ['xl', 'axis'],
+                image: 'https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'xl_10', name: 'Pulsa XL/Axis 10.000', price: 10750, memberPrice: 10350 },
+                    { id: 'xl_50', name: 'Pulsa XL/Axis 50.000', price: 50750, memberPrice: 50150 }
+                ]
+            },
+            {
+                id: 'pulsa-tri',
+                title: 'Pulsa Tri (3)',
+                publisher: 'Three Indonesia',
+                category: 'ewallet',
+                badge: 'INSTAN',
+                keywords: ['three', 'tri', '3'],
+                image: 'https://images.unsplash.com/photo-1523206489230-c012c64b2b48?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'tri_10', name: 'Pulsa Tri 10.000', price: 10500, memberPrice: 10200 },
+                    { id: 'tri_50', name: 'Pulsa Tri 50.000', price: 50500, memberPrice: 50100 }
+                ]
+            },
+
+            // --- VOUCHER ---
+            {
+                id: 'googleplay',
+                title: 'Google Play Gift Card',
+                publisher: 'Google',
+                category: 'voucher',
+                badge: 'OFFICIAL',
+                keywords: ['gp', 'google play', 'voucher google'],
+                image: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&auto=format&fit=crop&q=80',
+                hasZone: false,
+                items: [
+                    { id: 'gp_20k', name: 'Google Play Kode Rp 20.000', price: 22000, memberPrice: 21000 },
+                    { id: 'gp_50k', name: 'Google Play Kode Rp 50.000', price: 54000, memberPrice: 52000 }
                 ]
             }
         ];
@@ -728,7 +1012,10 @@
         function renderFlashSale() {
             const setImg = (id, elId) => {
                 const g = gamesData.find(x => x.id === id);
-                if (g) document.getElementById(elId).src = g.image;
+                if (g) {
+                    const el = document.getElementById(elId);
+                    if(el) el.src = g.image;
+                }
             };
             setImg('hok', 'flashImgHok');
             setImg('mlbb', 'flashImgMlbb');
@@ -741,9 +1028,18 @@
             if(!container) return;
             container.innerHTML = '';
 
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-10 space-y-2">
+                        <i class="fa-solid fa-magnifying-glass text-3xl text-slate-600"></i>
+                        <p class="text-sm font-bold text-slate-400">Game atau Produk tidak ditemukan</p>
+                    </div>`;
+                return;
+            }
+
             data.forEach(game => {
                 const card = document.createElement('div');
-                card.className = "glass-card rounded-2xl p-3 border border-slate-800 hover:border-purple-500 transition cursor-pointer flex flex-col justify-between space-y-2";
+                card.className = "glass-card rounded-2xl p-3 border border-slate-800 hover:border-purple-500 transition cursor-pointer flex flex-col justify-between space-y-2 hover:scale-[1.02]";
                 card.onclick = () => selectGameForOrder(game.id);
 
                 card.innerHTML = `
@@ -774,6 +1070,12 @@
         }
 
         function setCategory(cat) {
+            document.querySelectorAll('.cat-tab').forEach(btn => {
+                btn.classList.remove('border-purple-500', 'bg-purple-600/20', 'text-purple-300');
+                btn.classList.add('border-slate-800', 'bg-slate-900', 'text-slate-300');
+            });
+            event.currentTarget.classList.add('border-purple-500', 'bg-purple-600/20', 'text-purple-300');
+
             if(cat === 'all') {
                 renderGameGrid(gamesData);
             } else {
@@ -860,7 +1162,6 @@
             }
         }
 
-        // AUTO KOMPRESI GAMBAR DARI HP UNTUK MENCEGAH LOCALSTORAGE FULL
         function handlePosterFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -921,6 +1222,107 @@
             if (game) document.getElementById('adminPosterPreview').src = game.image;
         }
 
+        function addPromoCode() {
+            const code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
+            const discount = parseInt(document.getElementById('adminPromoDiscount').value, 10);
+
+            if(!code || !discount) {
+                Swal.fire('Gagal', 'Lengkapi kode dan nominal diskon!', 'warning');
+                return;
+            }
+
+            promoList[code] = discount;
+            localStorage.setItem('valyx_promo_list', JSON.stringify(promoList));
+            renderAdminPromoList();
+
+            document.getElementById('adminPromoCode').value = '';
+            document.getElementById('adminPromoDiscount').value = '';
+            Swal.fire('Sukses', `Kode promo ${code} berhasil ditambahkan!`, 'success');
+        }
+
+        function renderAdminPromoList() {
+            const container = document.getElementById('adminPromoListContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            Object.keys(promoList).forEach(code => {
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center bg-slate-900 p-2 rounded-xl text-xs";
+                item.innerHTML = `
+                    <span class="font-bold text-purple-400 font-mono">${code} (Diskon Rp ${promoList[code].toLocaleString('id-ID')})</span>
+                    <button onclick="deletePromoCode('${code}')" class="text-rose-400 font-bold hover:text-rose-300">Hapus</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function deletePromoCode(code) {
+            delete promoList[code];
+            localStorage.setItem('valyx_promo_list', JSON.stringify(promoList));
+            renderAdminPromoList();
+        }
+
+        function renderPricelistTable() {
+            const tbody = document.getElementById('pricelistTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            gamesData.forEach(game => {
+                game.items.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-900/50 transition";
+                    tr.innerHTML = `
+                        <td class="py-3 px-4 font-bold text-purple-400">${game.title}</td>
+                        <td class="py-3 px-4">${item.name}</td>
+                        <td class="py-3 px-4 text-slate-400">Rp ${item.price.toLocaleString('id-ID')}</td>
+                        <td class="py-3 px-4 font-bold text-emerald-400">Rp ${item.memberPrice.toLocaleString('id-ID')}</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">AVAILABLE</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        function calcWR() {
+            const total = parseFloat(document.getElementById('wrTotalMatches').value);
+            const currentWr = parseFloat(document.getElementById('wrCurrentWr').value);
+            const targetWr = parseFloat(document.getElementById('wrTargetWr').value);
+
+            if(!total || !currentWr || !targetWr || targetWr >= 100 || targetWr <= currentWr) {
+                document.getElementById('wrResult').innerText = "Masukkan angka match & WR target yang valid!";
+                return;
+            }
+
+            const currentWins = total * (currentWr / 100);
+            const requiredWins = Math.ceil((targetWr * total - 100 * currentWins) / (100 - targetWr));
+            document.getElementById('wrResult').innerHTML = `Kamu butuh <span class="text-emerald-400 font-extrabold">${requiredWins} kemenangan beruntun (Win tanpa kalah)</span> untuk mencapai WR ${targetWr}%`;
+        }
+
+        function calcMagicWheel() {
+            const points = parseInt(document.getElementById('mwPoints').value) || 0;
+            if(points >= 200) {
+                document.getElementById('mwResult').innerText = "Magic Points sudah mencapai 200 (Siap Klaim Legend Skin)!";
+                return;
+            }
+            const remainingPoints = 200 - points;
+            const estimatedDiamonds = remainingPoints * 60;
+            document.getElementById('mwResult').innerHTML = `Dibutuhkan sisa ±<span class="text-amber-400 font-extrabold">${remainingPoints} points</span> (~<span class="text-cyan-400 font-extrabold">${estimatedDiamonds} Diamonds</span>)`;
+        }
+
+        function startFlashSaleTimer() {
+            let totalSeconds = 12290;
+            setInterval(() => {
+                totalSeconds--;
+                if(totalSeconds <= 0) totalSeconds = 12290;
+                let hrs = Math.floor(totalSeconds / 3600);
+                let mins = Math.floor((totalSeconds % 3600) / 60);
+                let secs = totalSeconds % 60;
+                const timerEl = document.getElementById('flashSaleTimer');
+                if (timerEl) {
+                    timerEl.innerText = `${hrs < 10 ? '0'+hrs : hrs} : ${mins < 10 ? '0'+mins : mins} : ${secs < 10 ? '0'+secs : secs}`;
+                }
+            }, 1000);
+        }
+
         function processOrder() {
             const userId = document.getElementById('inputUserId').value;
             const wa = document.getElementById('inputWhatsapp').value;
@@ -972,7 +1374,33 @@
             });
         }
 
-        // HAPUS RIWAYAT DENGAN PASSWORD bentar19
+        function searchOrder() {
+            const trackInput = document.getElementById('trackInput').value.trim();
+            if(!trackInput) {
+                Swal.fire('Peringatan', 'Masukkan No Invoice atau Target ID/HP', 'warning');
+                return;
+            }
+
+            let history = JSON.parse(localStorage.getItem('valyx_topup_history') || '[]');
+            let found = history.find(h => h.invId.toLowerCase() === trackInput.toLowerCase() || h.target.includes(trackInput));
+
+            if (found) {
+                document.getElementById('trackInvoiceId').innerText = found.invId;
+                document.getElementById('trackGame').innerText = found.game;
+                document.getElementById('trackItem').innerText = found.item;
+                document.getElementById('trackTarget').innerText = found.target;
+                document.getElementById('trackPrice').innerText = `Rp ${found.price.toLocaleString('id-ID')}`;
+            } else if (lastOrderData) {
+                document.getElementById('trackInvoiceId').innerText = lastOrderData.invId;
+                document.getElementById('trackGame').innerText = lastOrderData.game;
+                document.getElementById('trackItem').innerText = lastOrderData.item;
+                document.getElementById('trackTarget').innerText = lastOrderData.target;
+                document.getElementById('trackPrice').innerText = `Rp ${lastOrderData.price.toLocaleString('id-ID')}`;
+            }
+
+            document.getElementById('trackingResult').classList.remove('hidden');
+        }
+
         function clearMyHistory() {
             Swal.fire({
                 title: 'Password Admin',
@@ -995,6 +1423,7 @@
             }).then((res) => {
                 if(res.isConfirmed && res.value === 'bentar19') {
                     populateAdminGameSelect();
+                    renderAdminPromoList();
                     document.getElementById('adminModal').classList.remove('hidden');
                 }
             });
@@ -1006,14 +1435,16 @@
         function updateMemberUI() {
             document.getElementById('memberModalSaldo').innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
             document.getElementById('paymentSaldoText').innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
+            if(isMemberLoggedIn) {
+                document.getElementById('memberNavText').innerText = `Member VIP (Rp ${memberSaldo.toLocaleString('id-ID')})`;
+                document.getElementById('loginToggleBtn').innerText = "Logout Akun Member";
+            } else {
+                document.getElementById('memberNavText').innerText = "Login Member";
+                document.getElementById('loginToggleBtn').innerText = "Login Akun Member";
+            }
         }
         function topUpMemberSaldo() { memberSaldo += 50000; updateMemberUI(); Swal.fire('Sukses', '+Rp 50.000', 'success'); }
         function toggleMemberLoginStatus() { isMemberLoggedIn = !isMemberLoggedIn; updateMemberUI(); closeMemberModal(); }
-        function renderPricelistTable() {}
-        function renderAdminPromoList() {}
-        function calcWR() {}
-        function calcMagicWheel() {}
-        function startFlashSaleTimer() {}
         function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
     </script>
 </body>
