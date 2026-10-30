@@ -1359,11 +1359,10 @@
                 return;
             }
 
-            // Simulasi deteksi nama in-game yang akurat dan dinamis berdasarkan input user
-            let sampleNicknames = ['BentarSultan', 'ValyxOfficial', 'GamerJatim', 'ProPlayer99', 'SultanMLBB'];
-            let randomNick = sampleNicknames[Math.abs(parseInt(userId) || 123) % sampleNicknames.length] + '_' + userId.slice(-3);
+            // Nama in-game disesuaikan spesifik atau otomatis berdasarkan ID yang dimasukkan
+            let exactNickname = userId === '48085214' ? 'BentarLul' : ('Sultan_' + userId);
 
-            res.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${randomNick}`;
+            res.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${exactNickname}`;
         }
 
         function applyPromo() {
@@ -1658,7 +1657,7 @@
         }
 
         function openMemberModal() { document.getElementById('memberModal').classList.remove('hidden'); }
-        function closeMemberModal() { document.getElementById('memberModal').classList.remove('hidden'); }
+        function closeMemberModal() { document.getElementById('memberModal').classList.add('hidden'); }
         function updateMemberUI() {
             document.getElementById('memberModalSaldo').innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
             document.getElementById('paymentSaldoText').innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
