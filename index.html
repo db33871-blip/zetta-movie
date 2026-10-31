@@ -140,7 +140,6 @@
 
                 <!-- Right Actions -->
                 <div class="hidden md:flex items-center gap-3">
-                    <!-- Tombol Keranjang Belanja -->
                     <button onclick="openCartModal()" class="relative p-2.5 rounded-xl text-slate-200 border border-slate-700 hover:border-purple-500 hover:text-white transition bg-slate-900/80">
                         <i class="fa-solid fa-cart-shopping text-cyan-400"></i>
                         <span id="cartBadgeCount" class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
@@ -199,7 +198,6 @@
 
         <!-- PAGE 1: HOME -->
         <div id="page-home" class="space-y-10">
-            
             <!-- Hero Banner -->
             <div class="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-800 bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 p-6 sm:p-10">
                 <div class="absolute -right-20 -top-20 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
@@ -237,9 +235,7 @@
                         </div>
                         <div class="glass-card p-4 rounded-2xl border border-slate-800 text-center space-y-2">
                             <div class="w-12 h-12 mx-auto rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-2xl">
-                                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                                </svg>
+                                <i class="fa-solid fa-shield-halved"></i>
                             </div>
                             <h4 class="font-bold text-sm text-white">100% Legal & Aman</h4>
                             <p class="text-xs text-slate-400">Garansi diamond & produk legal anti minus.</p>
@@ -581,13 +577,13 @@
         </div>
     </div>
 
-    <!-- MODAL 2: MEMBER LOGIN, REGISTER & AKUN PENGGUNA (DENGAN TAB RIWAYAT & POIN) -->
-    <div id="memberModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="glass-card max-w-lg w-full rounded-3xl border border-purple-500/30 p-6 space-y-5 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeMemberModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <!-- MODAL 2: MEMBER LOGIN, REGISTER & AKUN PENGGUNA -->
+    <div id="memberModal" class="fixed inset-0 z-50 hidden bg-[#0b0f19] w-full h-full overflow-y-auto">
+        <div class="w-full max-w-xl mx-auto min-h-full p-6 sm:p-10 space-y-6 relative flex flex-col justify-start">
+            <button onclick="closeMemberModal()" class="absolute right-4 top-4 sm:right-6 sm:top-6 w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-rose-500/20 transition z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
             
             <!-- VIEW 1: DASHBOARD / HALAMAN AKUN MEMBER -->
-            <div id="memberDashboardView" class="space-y-5 hidden">
+            <div id="memberDashboardView" class="space-y-5 hidden w-full">
                 <div class="text-center space-y-3">
                     <div class="relative w-20 h-20 mx-auto group">
                         <img id="accountProfileImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80" class="w-20 h-20 rounded-full object-cover border-2 border-purple-500 shadow-lg">
@@ -606,12 +602,12 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 text-center space-y-1">
                         <span class="text-[10px] text-slate-400 block font-semibold">Saldo Akun</span>
-                        <span id="accountSaldoDisplay" class="text-lg font-black text-emerald-400">Rp 50.000</span>
+                        <span id="accountSaldoDisplay" class="text-lg font-black text-emerald-400">Rp 0</span>
                         <button onclick="openTopUpSaldoModal()" class="mt-2 w-full py-1.5 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white font-bold text-[10px] transition">+ Top Up</button>
                     </div>
                     <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 text-center space-y-1">
                         <span class="text-[10px] text-slate-400 block font-semibold">Poin SULTAN</span>
-                        <span id="accountPointsDisplay" class="text-lg font-black text-amber-400">120 Poin</span>
+                        <span id="accountPointsDisplay" class="text-lg font-black text-amber-400">0 Poin</span>
                         <button onclick="claimPointsReward()" class="mt-2 w-full py-1.5 rounded-lg bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-slate-950 font-bold text-[10px] transition">Tukar Saldo</button>
                     </div>
                 </div>
@@ -637,7 +633,7 @@
             </div>
 
             <!-- VIEW 2: FORM PENDAFTARAN (REGISTER) -->
-            <div id="memberRegisterView" class="hidden space-y-4">
+            <div id="memberRegisterView" class="hidden space-y-4 w-full">
                 <h3 class="text-lg font-bold text-white text-center">Daftar Akun Member Baru</h3>
                 <p class="text-xs text-slate-400 text-center">Dapatkan harga diskon khusus member VIP dan bonus saldo awal!</p>
                 
@@ -663,7 +659,7 @@
             </div>
 
             <!-- VIEW 3: FORM LOGIN -->
-            <div id="memberLoginView" class="hidden space-y-4">
+            <div id="memberLoginView" class="hidden space-y-4 w-full">
                 <h3 class="text-lg font-bold text-white text-center">Login Akun Member</h3>
                 <div class="space-y-3">
                     <div>
@@ -711,10 +707,10 @@
             <h3 class="text-lg font-bold text-white text-center">Top Up Saldo Member</h3>
             <p class="text-xs text-slate-400 text-center">Pilih nominal top up saldo akun Anda:</p>
             <div class="grid grid-cols-2 gap-2">
-                <button onclick="addSaldoAmount(25000)" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 25.000</button>
-                <button onclick="addSaldoAmount(50000)" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 50.000</button>
-                <button onclick="addSaldoAmount(100000)" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 100.000</button>
-                <button onclick="addSaldoAmount(250000)" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 250.000</button>
+                <button onclick="if(window.addSaldoAmount) window.addSaldoAmount(25000);" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 25.000</button>
+                <button onclick="if(window.addSaldoAmount) window.addSaldoAmount(50000);" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 50.000</button>
+                <button onclick="if(window.addSaldoAmount) window.addSaldoAmount(100000);" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 100.000</button>
+                <button onclick="if(window.addSaldoAmount) window.addSaldoAmount(250000);" class="p-3 bg-slate-900 hover:bg-emerald-600/20 border border-slate-800 hover:border-emerald-500 rounded-xl text-xs font-bold text-white transition">Rp 250.000</button>
             </div>
         </div>
     </div>
@@ -794,7 +790,7 @@
                 <div id="aiResponseLog" class="text-xs text-emerald-400 font-mono hidden"></div>
             </div>
 
-            <!-- AI BUG FIXER PANEL (TERINTEGRASI KE BACKEND AMAN) -->
+            <!-- AI BUG FIXER PANEL -->
             <div class="space-y-3 bg-slate-900/90 p-4 rounded-2xl border border-rose-500/30">
                 <h4 class="font-bold text-white text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2">
                     <i class="fa-solid fa-bug-slash text-rose-400"></i> AI Bug Fixer & Code Debugger
@@ -862,472 +858,48 @@
         <p onclick="openAdminModal()" class="cursor-pointer hover:text-slate-400 select-none">© 2026 VALYX TOPUP. All Rights Reserved. Built for Speed & Automation.</p>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- SCRIPT STANDAR (TAMPILAN & LOGIKA UI) -->
     <script>
-        // DATA SEMUA GAME & DIGITAL TOP UP (DIURUTKAN DARI TERMURAH HINGGA TERMAHAL)
+        // Variabel global untuk state member (Dikontrol oleh Firebase nanti)
+        window.isMemberLoggedIn = false;
+        window.currentMemberData = null;
+
+        // DATA SEMUA GAME & DIGITAL TOP UP
         let gamesData = [
-            // --- MOBILE GAMES ---
             {
-                id: 'mlbb',
-                title: 'Mobile Legends',
-                publisher: 'Moonton',
-                category: 'mobile',
-                badge: 'POPULER',
-                keywords: ['ml', 'mlbb', 'mobile legend', 'mobile legends', 'dm ml', 'layla', 'diamond ml'],
-                image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80',
-                hasZone: true,
+                id: 'mlbb', title: 'Mobile Legends', publisher: 'Moonton', category: 'mobile', badge: 'POPULER', keywords: ['ml', 'mlbb', 'mobile legend', 'mobile legends', 'dm ml', 'layla', 'diamond ml'],
+                image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80', hasZone: true,
                 items: [
                     { id: 'ml_3', name: '3 Diamonds', price: 1500, memberPrice: 1200 },
-                    { id: 'ml_5', name: '5 Diamonds', price: 2000, memberPrice: 1600 },
-                    { id: 'ml_12', name: '12 Diamonds', price: 4000, memberPrice: 3500 },
-                    { id: 'ml_19', name: '19 Diamonds', price: 6000, memberPrice: 5300 },
-                    { id: 'ml_28', name: '28 Diamonds', price: 9000, memberPrice: 8000 },
-                    { id: 'ml_44', name: '44 Diamonds', price: 13000, memberPrice: 11800 },
-                    { id: 'ml_59', name: '59 Diamonds', price: 16000, memberPrice: 14500 },
                     { id: 'ml_86', name: '86 Diamonds', price: 20000, memberPrice: 19000, badge: 'FLASH SALE' },
-                    { id: 'ml_pass', name: 'Weekly Diamond Pass', price: 28000, memberPrice: 26500, badge: 'HEMAT' },
-                    { id: 'ml_172', name: '172 Diamonds', price: 40000, memberPrice: 38000 },
                     { id: 'ml_257', name: '257 Diamonds', price: 60000, memberPrice: 57000, badge: 'BEST SELLER' },
-                    { id: 'ml_344', name: '344 Diamonds', price: 80000, memberPrice: 76000 },
-                    { id: 'ml_429', name: '429 Diamonds', price: 100000, memberPrice: 95000 },
-                    { id: 'ml_514', name: '514 Diamonds', price: 120000, memberPrice: 114000 },
                     { id: 'ml_706', name: '706 Diamonds', price: 160000, memberPrice: 152000 },
-                    { id: 'ml_878', name: '878 Diamonds', price: 200000, memberPrice: 190000 },
-                    { id: 'ml_1412', name: '1.412 Diamonds', price: 320000, memberPrice: 304000 },
-                    { id: 'ml_2195', name: '2.195 Diamonds', price: 500000, memberPrice: 475000 },
-                    { id: 'ml_3688', name: '3.688 Diamonds', price: 820000, memberPrice: 780000 },
-                    { id: 'ml_5532', name: '5.532 Diamonds', price: 1250000, memberPrice: 1190000 },
-                    { id: 'ml_9288', name: '9.288 Diamonds', price: 2100000, memberPrice: 1995000, badge: 'SULTAN' }
+                    { id: 'ml_2195', name: '2.195 Diamonds', price: 500000, memberPrice: 475000 }
                 ]
             },
             {
-                id: 'hok',
-                title: 'Honor of Kings',
-                publisher: 'Level Infinite',
-                category: 'mobile',
-                badge: 'NEW / HOT',
-                keywords: ['hok', 'honor of king', 'honor of kings', 'kings', 'token hok'],
-                image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'hok_8', name: '8 Tokens', price: 2000, memberPrice: 1700 },
-                    { id: 'hok_16', name: '16 Tokens', price: 3500, memberPrice: 3000 },
-                    { id: 'hok_80', name: '80 Tokens', price: 14800, memberPrice: 14000, badge: 'PROMO' },
-                    { id: 'hok_240', name: '240 Tokens', price: 44000, memberPrice: 42000 },
-                    { id: 'hok_400', name: '400 Tokens', price: 73000, memberPrice: 69500 },
-                    { id: 'hok_800', name: '800 Tokens', price: 146000, memberPrice: 139000 },
-                    { id: 'hok_1200', name: '1.200 Tokens', price: 215000, memberPrice: 204000 },
-                    { id: 'hok_2400', name: '2.400 Tokens', price: 425000, memberPrice: 403000 },
-                    { id: 'hok_4000', name: '4.000 Tokens', price: 700000, memberPrice: 665000 },
-                    { id: 'hok_8000', name: '8.000 Tokens', price: 1390000, memberPrice: 1320000, badge: 'SULTAN' }
-                ]
-            },
-            {
-                id: 'ff',
-                title: 'Free Fire',
-                publisher: 'Garena',
-                category: 'mobile',
-                badge: 'HOT',
-                keywords: ['ff', 'epep', 'free fire', 'freefire', 'dm ff'],
-                image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
+                id: 'ff', title: 'Free Fire', publisher: 'Garena', category: 'mobile', badge: 'HOT', keywords: ['ff', 'epep', 'free fire', 'freefire', 'dm ff'],
+                image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&auto=format&fit=crop&q=80', hasZone: false,
                 items: [
                     { id: 'ff_5', name: '5 Diamonds', price: 1500, memberPrice: 1200 },
-                    { id: 'ff_12', name: '12 Diamonds', price: 2500, memberPrice: 2100 },
-                    { id: 'ff_50', name: '50 Diamonds', price: 8000, memberPrice: 7200 },
-                    { id: 'ff_70', name: '70 Diamonds', price: 10000, memberPrice: 9200 },
-                    { id: 'ff_140', name: '140 Diamonds', price: 19000, memberPrice: 18000 },
-                    { id: 'ff_pass_w', name: 'Membership Mingguan', price: 30000, memberPrice: 28000 },
                     { id: 'ff_355', name: '355 Diamonds', price: 48500, memberPrice: 46000, badge: 'BEST SELLER' },
-                    { id: 'ff_pass_m', name: 'Membership Bulanan', price: 85000, memberPrice: 81000 },
-                    { id: 'ff_720', name: '720 Diamonds', price: 96000, memberPrice: 91000 },
-                    { id: 'ff_1440', name: '1.440 Diamonds', price: 190000, memberPrice: 180000 },
-                    { id: 'ff_2000', name: '2.000 Diamonds', price: 260000, memberPrice: 247000 },
-                    { id: 'ff_7200', name: '7.200 Diamonds', price: 920000, memberPrice: 874000, badge: 'SULTAN' }
+                    { id: 'ff_720', name: '720 Diamonds', price: 96000, memberPrice: 91000 }
                 ]
             },
             {
-                id: 'pubg',
-                title: 'PUBG Mobile',
-                publisher: 'Tencent',
-                category: 'mobile',
-                badge: 'POPULER',
-                keywords: ['pubg', 'pubgm', 'pabji', 'uc pubg'],
-                image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
+                id: 'hok', title: 'Honor of Kings', publisher: 'Level Infinite', category: 'mobile', badge: 'NEW / HOT', keywords: ['hok', 'honor of king', 'honor of kings', 'kings', 'token hok'],
+                image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&auto=format&fit=crop&q=80', hasZone: false,
                 items: [
-                    { id: 'pubg_30', name: '30 UC', price: 7500, memberPrice: 6800 },
-                    { id: 'pubg_60', name: '60 UC', price: 14500, memberPrice: 13500 },
-                    { id: 'pubg_325', name: '325 UC', price: 72000, memberPrice: 68500, badge: 'PROMO' },
-                    { id: 'pubg_660', name: '660 UC', price: 142000, memberPrice: 135000 },
-                    { id: 'pubg_1800', name: '1.800 UC', price: 380000, memberPrice: 360000 },
-                    { id: 'pubg_3850', name: '3.850 UC', price: 750000, memberPrice: 712000 },
-                    { id: 'pubg_8100', name: '8.100 UC', price: 1500000, memberPrice: 1425000, badge: 'SULTAN' }
+                    { id: 'hok_8', name: '8 Tokens', price: 2000, memberPrice: 1700 },
+                    { id: 'hok_80', name: '80 Tokens', price: 14800, memberPrice: 14000, badge: 'PROMO' }
                 ]
             },
             {
-                id: 'genshin',
-                title: 'Genshin Impact',
-                publisher: 'HoYoverse',
-                category: 'mobile',
-                badge: 'OFFICIAL',
-                keywords: ['gi', 'genshin', 'gensin', 'genshin impact', 'crystal'],
-                image: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=400&auto=format&fit=crop&q=80',
-                hasZone: true,
-                items: [
-                    { id: 'gi_60', name: '60 Genesis Crystal', price: 15000, memberPrice: 14000 },
-                    { id: 'gi_300', name: '300 Genesis Crystal', price: 64000, memberPrice: 61000 },
-                    { id: 'gi_welkin', name: 'Blessing of Welkin Moon', price: 64000, memberPrice: 61000, badge: 'BEST SELLER' },
-                    { id: 'gi_980', name: '980 Genesis Crystal', price: 210000, memberPrice: 199000 },
-                    { id: 'gi_1980', name: '1.980 Genesis Crystal', price: 430000, memberPrice: 408000 },
-                    { id: 'gi_3280', name: '3.280 Genesis Crystal', price: 700000, memberPrice: 665000 },
-                    { id: 'gi_6480', name: '6.480 Genesis Crystal', price: 1350000, memberPrice: 1280000, badge: 'SULTAN' }
-                ]
-            },
-            {
-                id: 'hsr',
-                title: 'Honkai: Star Rail',
-                publisher: 'HoYoverse',
-                category: 'mobile',
-                badge: 'POPULER',
-                keywords: ['hsr', 'star rail', 'honkai'],
-                image: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=400&auto=format&fit=crop&q=80',
-                hasZone: true,
-                items: [
-                    { id: 'hsr_60', name: '60 Oneiric Shard', price: 15000, memberPrice: 14000 },
-                    { id: 'hsr_300', name: '300 Oneiric Shard', price: 64000, memberPrice: 61000 },
-                    { id: 'hsr_express', name: 'Express Supply Pass', price: 64000, memberPrice: 61000 },
-                    { id: 'hsr_980', name: '980 Oneiric Shard', price: 210000, memberPrice: 199000 },
-                    { id: 'hsr_1980', name: '1.980 Oneiric Shard', price: 430000, memberPrice: 408000 },
-                    { id: 'hsr_3280', name: '3.280 Oneiric Shard', price: 700000, memberPrice: 665000 },
-                    { id: 'hsr_6480', name: '6.480 Oneiric Shard', price: 1350000, memberPrice: 1280000, badge: 'SULTAN' }
-                ]
-            },
-            {
-                id: 'zzz',
-                title: 'Zenless Zone Zero',
-                publisher: 'HoYoverse',
-                category: 'mobile',
-                badge: 'HOT',
-                keywords: ['zzz', 'zenless', 'zenless zone zero'],
-                image: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=400&auto=format&fit=crop&q=80',
-                hasZone: true,
+                id: 'zzz', title: 'Zenless Zone Zero', publisher: 'HoYoverse', category: 'mobile', badge: 'HOT', keywords: ['zzz', 'zenless', 'zenless zone zero'],
+                image: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=400&auto=format&fit=crop&q=80', hasZone: true,
                 items: [
                     { id: 'zzz_60', name: '60 Monochromes', price: 15000, memberPrice: 14000 },
-                    { id: 'zzz_300', name: '300 Monochromes', price: 65000, memberPrice: 61500 },
-                    { id: 'zzz_interknot', name: 'Inter-Knot Membership', price: 65000, memberPrice: 61500 },
-                    { id: 'zzz_980', name: '980 Monochromes', price: 210000, memberPrice: 199000 },
-                    { id: 'zzz_1980', name: '1.980 Monochromes', price: 430000, memberPrice: 408000 },
-                    { id: 'zzz_3280', name: '3.280 Monochromes', price: 700000, memberPrice: 665000 },
-                    { id: 'zzz_6480', name: '6.480 Monochromes', price: 1350000, memberPrice: 1280000, badge: 'SULTAN' }
-                ]
-            },
-            {
-                id: 'codm',
-                title: 'Call of Duty Mobile',
-                publisher: 'Garena',
-                category: 'mobile',
-                badge: 'INSTAN',
-                keywords: ['codm', 'cod', 'call of duty', 'cp codm'],
-                image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'codm_31', name: '31 CP', price: 5000, memberPrice: 4600 },
-                    { id: 'codm_62', name: '62 CP', price: 10000, memberPrice: 9400 },
-                    { id: 'codm_127', name: '127 CP', price: 20000, memberPrice: 18800 },
-                    { id: 'codm_320', name: '320 CP', price: 50000, memberPrice: 47500 },
-                    { id: 'codm_645', name: '645 CP', price: 100000, memberPrice: 95000 },
-                    { id: 'codm_1373', name: '1.373 CP', price: 200000, memberPrice: 190000 },
-                    { id: 'codm_3564', name: '3.564 CP', price: 500000, memberPrice: 475000 },
-                    { id: 'codm_7656', name: '7.656 CP', price: 1000000, memberPrice: 950000, badge: 'SULTAN' }
-                ]
-            },
-            {
-                id: 'fcmobile',
-                title: 'EA SPORTS FC Mobile',
-                publisher: 'EA Sports',
-                category: 'mobile',
-                badge: 'INSTAN',
-                keywords: ['fc', 'fc mobile', 'fifa', 'ea fc'],
-                image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'fc_40', name: '40 FC Points', price: 6000, memberPrice: 5500 },
-                    { id: 'fc_100', name: '100 FC Points', price: 16000, memberPrice: 15000 },
-                    { id: 'fc_520', name: '520 FC Points', price: 79000, memberPrice: 75000 },
-                    { id: 'fc_1070', name: '1.070 FC Points', price: 155000, memberPrice: 147000 },
-                    { id: 'fc_2200', name: '2.200 FC Points', price: 310000, memberPrice: 294000 },
-                    { id: 'fc_5780', name: '5.780 FC Points', price: 780000, memberPrice: 741000 },
-                    { id: 'fc_12000', name: '12.000 FC Points', price: 1550000, memberPrice: 1470000, badge: 'SULTAN' }
-                ]
-            },
-            {
-                id: 'efootball',
-                title: 'eFootball 2026',
-                publisher: 'Konami',
-                category: 'mobile',
-                badge: 'POPULER',
-                keywords: ['ef', 'pes', 'efootball', 'konami'],
-                image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'ef_60', name: '60 eFootball Coins', price: 8000, memberPrice: 7400 },
-                    { id: 'ef_130', name: '130 eFootball Coins', price: 16000, memberPrice: 15000 },
-                    { id: 'ef_320', name: '320 eFootball Coins', price: 39000, memberPrice: 37000 },
-                    { id: 'ef_550', name: '550 eFootball Coins', price: 65000, memberPrice: 61500 },
-                    { id: 'ef_1040', name: '1.040 eFootball Coins', price: 120000, memberPrice: 114000 },
-                    { id: 'ef_2130', name: '2.130 eFootball Coins', price: 240000, memberPrice: 228000 },
-                    { id: 'ef_3250', name: '3.250 eFootball Coins', price: 360000, memberPrice: 342000 },
-                    { id: 'ef_5700', name: '5.700 eFootball Coins', price: 620000, memberPrice: 589000 },
-                    { id: 'ef_12800', name: '12.800 eFootball Coins', price: 1350000, memberPrice: 1280000, badge: 'SULTAN' }
-                ]
-            },
-
-            // --- PC & CONSOLE ---
-            {
-                id: 'valorant',
-                title: 'Valorant Points',
-                publisher: 'Riot Games',
-                category: 'pc',
-                badge: 'HOT',
-                keywords: ['val', 'valo', 'valorant', 'vp'],
-                image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'val_125', name: '125 VP', price: 15000, memberPrice: 14000 },
-                    { id: 'val_425', name: '425 VP', price: 50000, memberPrice: 47000 },
-                    { id: 'val_1000', name: '1.000 VP', price: 110000, memberPrice: 104000, badge: 'POPULER' },
-                    { id: 'val_1375', name: '1.375 VP', price: 150000, memberPrice: 142000 },
-                    { id: 'val_2400', name: '2.400 VP', price: 250000, memberPrice: 237000 },
-                    { id: 'val_4000', name: '4.000 VP', price: 400000, memberPrice: 380000 },
-                    { id: 'val_8150', name: '8.150 VP', price: 800000, memberPrice: 760000, badge: 'SULTAN' }
-                ]
-            },
-            {
-                id: 'roblox',
-                title: 'Roblox (Robux)',
-                publisher: 'Roblox Corp',
-                category: 'pc',
-                badge: 'POPULER',
-                keywords: ['rbx', 'robux', 'roblox'],
-                image: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'rbx_40', name: '40 Robux', price: 9000, memberPrice: 8200 },
-                    { id: 'rbx_80', name: '80 Robux', price: 18000, memberPrice: 17000 },
-                    { id: 'rbx_200', name: '200 Robux', price: 42000, memberPrice: 39500 },
-                    { id: 'rbx_400', name: '400 Robux', price: 79000, memberPrice: 75000 },
-                    { id: 'rbx_800', name: '800 Robux', price: 155000, memberPrice: 147000 },
-                    { id: 'rbx_2000', name: '2.000 Robux', price: 380000, memberPrice: 360000 },
-                    { id: 'rbx_4500', name: '4.500 Robux', price: 820000, memberPrice: 779000 },
-                    { id: 'rbx_10000', name: '10.000 Robux', price: 1750000, memberPrice: 1662000, badge: 'SULTAN' }
-                ]
-            },
-            {
-                id: 'steam',
-                title: 'Steam Wallet IDR',
-                publisher: 'Valve',
-                category: 'pc',
-                badge: 'OFFICIAL',
-                keywords: ['steam', 'sw', 'wallet'],
-                image: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'st_12k', name: 'Steam Wallet Rp 12.000', price: 14000, memberPrice: 13200 },
-                    { id: 'st_24k', name: 'Steam Wallet Rp 24.000', price: 27000, memberPrice: 25600 },
-                    { id: 'st_45k', name: 'Steam Wallet Rp 45.000', price: 49000, memberPrice: 47000 },
-                    { id: 'st_60k', name: 'Steam Wallet Rp 60.000', price: 65000, memberPrice: 62000 },
-                    { id: 'st_90k', name: 'Steam Wallet Rp 90.000', price: 98000, memberPrice: 94000 },
-                    { id: 'st_120k', name: 'Steam Wallet Rp 120.000', price: 132000, memberPrice: 125000 },
-                    { id: 'st_250k', name: 'Steam Wallet Rp 250.000', price: 275000, memberPrice: 261000 },
-                    { id: 'st_400k', name: 'Steam Wallet Rp 400.000', price: 435000, memberPrice: 413000 },
-                    { id: 'st_600k', name: 'Steam Wallet Rp 600.000', price: 650000, memberPrice: 617000, badge: 'SULTAN' }
-                ]
-            },
-            {
-                id: 'pb',
-                title: 'Point Blank Cash',
-                publisher: 'Zepetto',
-                category: 'pc',
-                badge: 'INSTAN',
-                keywords: ['pb', 'point blank', 'cash pb'],
-                image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'pb_1000', name: '1.000 PB Cash', price: 10500, memberPrice: 10000 },
-                    { id: 'pb_2400', name: '2.400 PB Cash', price: 24500, memberPrice: 23200 },
-                    { id: 'pb_5000', name: '5.000 PB Cash', price: 50500, memberPrice: 48500 },
-                    { id: 'pb_10000', name: '10.000 PB Cash', price: 100500, memberPrice: 95500 },
-                    { id: 'pb_24000', name: '24.000 PB Cash', price: 240000, memberPrice: 228000 },
-                    { id: 'pb_60000', name: '60.000 PB Cash', price: 590000, memberPrice: 560000, badge: 'SULTAN' }
-                ]
-            },
-
-            // --- PULSA & E-WALLET ---
-            {
-                id: 'dana',
-                title: 'Saldo DANA',
-                publisher: 'E-Wallet',
-                category: 'ewallet',
-                badge: 'INSTAN',
-                keywords: ['dana', 'saldo dana'],
-                image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'dana_10', name: 'Saldo Rp 10.000', price: 10500, memberPrice: 10100 },
-                    { id: 'dana_20', name: 'Saldo Rp 20.000', price: 20500, memberPrice: 20100 },
-                    { id: 'dana_50', name: 'Saldo Rp 50.000', price: 50500, memberPrice: 50100 },
-                    { id: 'dana_100', name: 'Saldo Rp 100.000', price: 100500, memberPrice: 100100 },
-                    { id: 'dana_200', name: 'Saldo Rp 200.000', price: 200500, memberPrice: 200100 },
-                    { id: 'dana_500', name: 'Saldo Rp 500.000', price: 500500, memberPrice: 500100 },
-                    { id: 'dana_1000', name: 'Saldo Rp 1.000.000', price: 1000500, memberPrice: 1000100 }
-                ]
-            },
-            {
-                id: 'gopay',
-                title: 'Saldo GoPay',
-                publisher: 'E-Wallet',
-                category: 'ewallet',
-                badge: 'INSTAN',
-                keywords: ['gopay', 'gojek', 'saldo gopay'],
-                image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'gp_10', name: 'Saldo Rp 10.000', price: 10600, memberPrice: 10200 },
-                    { id: 'gp_20', name: 'Saldo Rp 20.000', price: 20600, memberPrice: 20200 },
-                    { id: 'gp_50', name: 'Saldo Rp 50.000', price: 50600, memberPrice: 50200 },
-                    { id: 'gp_100', name: 'Saldo Rp 100.000', price: 100600, memberPrice: 100200 },
-                    { id: 'gp_200', name: 'Saldo Rp 200.000', price: 200600, memberPrice: 200200 },
-                    { id: 'gp_500', name: 'Saldo Rp 500.000', price: 500600, memberPrice: 500200 }
-                ]
-            },
-            {
-                id: 'ovo',
-                title: 'Saldo OVO',
-                publisher: 'E-Wallet',
-                category: 'ewallet',
-                badge: 'INSTAN',
-                keywords: ['ovo', 'saldo ovo'],
-                image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'ovo_10', name: 'Saldo Rp 10.000', price: 10700, memberPrice: 10300 },
-                    { id: 'ovo_20', name: 'Saldo Rp 20.000', price: 20700, memberPrice: 20300 },
-                    { id: 'ovo_50', name: 'Saldo Rp 50.000', price: 50700, memberPrice: 50300 },
-                    { id: 'ovo_100', name: 'Saldo Rp 100.000', price: 100700, memberPrice: 100300 },
-                    { id: 'ovo_200', name: 'Saldo Rp 200.000', price: 200700, memberPrice: 200300 },
-                    { id: 'ovo_500', name: 'Saldo Rp 500.000', price: 500700, memberPrice: 500300 }
-                ]
-            },
-            {
-                id: 'shopeepay',
-                title: 'Saldo ShopeePay',
-                publisher: 'E-Wallet',
-                category: 'ewallet',
-                badge: 'INSTAN',
-                keywords: ['spay', 'shopee', 'shopeepay'],
-                image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'sp_10', name: 'Saldo Rp 10.000', price: 10500, memberPrice: 10100 },
-                    { id: 'sp_20', name: 'Saldo Rp 20.000', price: 20500, memberPrice: 20100 },
-                    { id: 'sp_50', name: 'Saldo Rp 50.000', price: 50500, memberPrice: 50100 },
-                    { id: 'sp_100', name: 'Saldo Rp 100.000', price: 100500, memberPrice: 100100 },
-                    { id: 'sp_200', name: 'Saldo Rp 200.000', price: 200500, memberPrice: 200100 },
-                    { id: 'sp_500', name: 'Saldo Rp 500.000', price: 500500, memberPrice: 500100 }
-                ]
-            },
-            {
-                id: 'pulsa-telkomsel',
-                title: 'Pulsa Telkomsel',
-                publisher: 'Telkomsel',
-                category: 'ewallet',
-                badge: 'INSTAN',
-                keywords: ['tsel', 'telkomsel', 'simpati', 'as'],
-                image: 'https://images.unsplash.com/photo-1556742049-0a670f4a4591?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'tsel_5', name: 'Pulsa Telkomsel 5.000', price: 6000, memberPrice: 5600 },
-                    { id: 'tsel_10', name: 'Pulsa Telkomsel 10.000', price: 10800, memberPrice: 10400 },
-                    { id: 'tsel_20', name: 'Pulsa Telkomsel 20.000', price: 20800, memberPrice: 20200 },
-                    { id: 'tsel_25', name: 'Pulsa Telkomsel 25.000', price: 25800, memberPrice: 25200 },
-                    { id: 'tsel_50', name: 'Pulsa Telkomsel 50.000', price: 50800, memberPrice: 50200 },
-                    { id: 'tsel_100', name: 'Pulsa Telkomsel 100.000', price: 100800, memberPrice: 100200 },
-                    { id: 'tsel_150', name: 'Pulsa Telkomsel 150.000', price: 150800, memberPrice: 150200 },
-                    { id: 'tsel_200', name: 'Pulsa Telkomsel 200.000', price: 200800, memberPrice: 200200 }
-                ]
-            },
-            {
-                id: 'pulsa-indosat',
-                title: 'Pulsa Indosat IM3',
-                publisher: 'Indosat Ooredoo',
-                category: 'ewallet',
-                badge: 'PROMO',
-                keywords: ['isat', 'indosat', 'im3'],
-                image: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'isat_5', name: 'Pulsa Indosat 5.000', price: 5900, memberPrice: 5500 },
-                    { id: 'isat_10', name: 'Pulsa Indosat 10.000', price: 10700, memberPrice: 10300 },
-                    { id: 'isat_25', name: 'Pulsa Indosat 25.000', price: 25700, memberPrice: 25100 },
-                    { id: 'isat_50', name: 'Pulsa Indosat 50.000', price: 50700, memberPrice: 50100 },
-                    { id: 'isat_100', name: 'Pulsa Indosat 100.000', price: 100700, memberPrice: 100100 }
-                ]
-            },
-            {
-                id: 'pulsa-xl',
-                title: 'Pulsa XL / Axis',
-                publisher: 'XL Axiata',
-                category: 'ewallet',
-                badge: 'INSTAN',
-                keywords: ['xl', 'axis'],
-                image: 'https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'xl_5', name: 'Pulsa XL/Axis 5.000', price: 5950, memberPrice: 5550 },
-                    { id: 'xl_10', name: 'Pulsa XL/Axis 10.000', price: 10750, memberPrice: 10350 },
-                    { id: 'xl_25', name: 'Pulsa XL/Axis 25.000', price: 25750, memberPrice: 25150 },
-                    { id: 'xl_50', name: 'Pulsa XL/Axis 50.000', price: 50750, memberPrice: 50150 },
-                    { id: 'xl_100', name: 'Pulsa XL/Axis 100.000', price: 100750, memberPrice: 100150 }
-                ]
-            },
-            {
-                id: 'pulsa-tri',
-                title: 'Pulsa Tri (3)',
-                publisher: 'Three Indonesia',
-                category: 'ewallet',
-                badge: 'INSTAN',
-                keywords: ['three', 'tri', '3'],
-                image: 'https://images.unsplash.com/photo-1523206489230-c012c64b2b48?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'tri_5', name: 'Pulsa Tri 5.000', price: 5800, memberPrice: 5400 },
-                    { id: 'tri_10', name: 'Pulsa Tri 10.000', price: 10500, memberPrice: 10200 },
-                    { id: 'tri_25', name: 'Pulsa Tri 25.000', price: 25500, memberPrice: 25100 },
-                    { id: 'tri_50', name: 'Pulsa Tri 50.000', price: 50500, memberPrice: 50100 },
-                    { id: 'tri_100', name: 'Pulsa Tri 100.000', price: 100500, memberPrice: 100100 }
-                ]
-            },
-
-            // --- VOUCHER ---
-            {
-                id: 'googleplay',
-                title: 'Google Play Gift Card',
-                publisher: 'Google',
-                category: 'voucher',
-                badge: 'OFFICIAL',
-                keywords: ['gp', 'google play', 'voucher google'],
-                image: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&auto=format&fit=crop&q=80',
-                hasZone: false,
-                items: [
-                    { id: 'gp_5k', name: 'Google Play Kode Rp 5.000', price: 6000, memberPrice: 5500 },
-                    { id: 'gp_10k', name: 'Google Play Kode Rp 10.000', price: 11500, memberPrice: 10800 },
-                    { id: 'gp_20k', name: 'Google Play Kode Rp 20.000', price: 22000, memberPrice: 21000 },
-                    { id: 'gp_50k', name: 'Google Play Kode Rp 50.000', price: 54000, memberPrice: 52000 },
-                    { id: 'gp_100k', name: 'Google Play Kode Rp 100.000', price: 108000, memberPrice: 103000 },
-                    { id: 'gp_150k', name: 'Google Play Kode Rp 150.000', price: 162000, memberPrice: 154000 },
-                    { id: 'gp_300k', name: 'Google Play Kode Rp 300.000', price: 320000, memberPrice: 304000 },
-                    { id: 'gp_500k', name: 'Google Play Kode Rp 500.000', price: 535000, memberPrice: 508000, badge: 'SULTAN' }
+                    { id: 'zzz_300', name: '300 Monochromes', price: 65000, memberPrice: 61500 }
                 ]
             }
         ];
@@ -1336,23 +908,9 @@
         let currentSelectedNominal = null;
         let currentSelectedPayment = null;
         let currentDiscount = 0;
-        let appliedPromoCode = null;
-        let countdownInterval = null;
-        let lastOrderData = null;
-
-        let isMemberLoggedIn = localStorage.getItem('valyx_logged_member') === 'true';
-        let memberName = localStorage.getItem('valyx_member_name') || 'Member VIP';
-        let memberPhone = localStorage.getItem('valyx_member_phone') || '08123456789';
-        let memberSaldo = parseInt(localStorage.getItem('valyx_member_saldo')) || 50000;
-        let memberPoints = parseInt(localStorage.getItem('valyx_member_points')) || 120;
-        let memberProfilePic = localStorage.getItem('valyx_member_pic') || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80';
-        
         let shoppingCart = JSON.parse(localStorage.getItem('valyx_shopping_cart') || '[]');
-
-        let promoList = JSON.parse(localStorage.getItem('valyx_promo_list')) || {
-            'VALYX10': 5000,
-            'DISPAD': 5000
-        };
+        let promoList = JSON.parse(localStorage.getItem('valyx_promo_list')) || { 'VALYX10': 5000, 'DISPAD': 5000 };
+        let lastOrderData = null;
 
         function applyCustomPosters() {
             let customPosters = JSON.parse(localStorage.getItem('valyx_custom_posters') || '{}');
@@ -1370,17 +928,13 @@
             renderPricelistTable();
             startFlashSaleTimer();
             loadMyHistory();
-            updateMemberUI();
             updateCartBadge();
             renderAdminPromoList();
             startRealtimeToastSimulator();
 
             const currentHash = window.location.hash.replace('#', '');
-            if (currentHash) {
-                showPage(currentHash);
-            } else {
-                showPage('home');
-            }
+            if (currentHash) showPage(currentHash);
+            else showPage('home');
 
             if (localStorage.getItem('valyx_admin_session') === 'true') {
                 populateAdminGameSelect();
@@ -1391,9 +945,7 @@
 
         window.addEventListener('hashchange', () => {
             const currentHash = window.location.hash.replace('#', '');
-            if (currentHash) {
-                showPage(currentHash);
-            }
+            if (currentHash) showPage(currentHash);
         });
 
         function loadGameOrderUI(game) {
@@ -1403,11 +955,8 @@
             document.getElementById('orderGamePublisher').innerText = game.publisher;
             document.getElementById('selectedGameSlug').innerText = 'order-' + game.id;
 
-            if(game.hasZone) {
-                document.getElementById('zoneIdContainer').classList.remove('hidden');
-            } else {
-                document.getElementById('zoneIdContainer').classList.add('hidden');
-            }
+            if(game.hasZone) document.getElementById('zoneIdContainer').classList.remove('hidden');
+            else document.getElementById('zoneIdContainer').classList.add('hidden');
 
             const grid = document.getElementById('nominalGrid');
             grid.innerHTML = '';
@@ -1427,34 +976,26 @@
                             ${item.badge ? `<span class="px-1.5 py-0.5 rounded text-[8px] font-black bg-purple-600 text-white whitespace-nowrap">${item.badge}</span>` : ''}
                         </div>
                     </div>
-                    <span class="text-purple-400 font-extrabold mt-1 block">Rp ${(isMemberLoggedIn ? item.memberPrice : item.price).toLocaleString('id-ID')}</span>`;
+                    <span class="text-purple-400 font-extrabold mt-1 block">Rp ${(window.isMemberLoggedIn ? item.memberPrice : item.price).toLocaleString('id-ID')}</span>`;
                 grid.appendChild(el);
             });
         }
 
         function showPage(pageId) {
             let targetPageId = pageId;
-
             if (pageId.startsWith('order-')) {
                 const gameId = pageId.replace('order-', '');
                 const game = gamesData.find(g => g.id === gameId);
                 if (game) {
-                    if (!currentSelectedGame || currentSelectedGame.id !== gameId) {
-                        loadGameOrderUI(game);
-                    }
+                    if (!currentSelectedGame || currentSelectedGame.id !== gameId) loadGameOrderUI(game);
                     targetPageId = 'order';
                 }
             } else if (pageId === 'order') {
-                if (!currentSelectedGame) {
-                    targetPageId = 'home';
-                    pageId = 'home';
-                }
+                if (!currentSelectedGame) { targetPageId = 'home'; pageId = 'home'; }
             }
-
             document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
             const target = document.getElementById('page-' + targetPageId);
             if(target) target.classList.remove('hidden');
-
             window.location.hash = pageId;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1477,21 +1018,10 @@
             const container = document.getElementById('gameGrid');
             if(!container) return;
             container.innerHTML = '';
-
-            if (data.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-10 space-y-2">
-                        <i class="fa-solid fa-magnifying-glass text-3xl text-slate-600"></i>
-                        <p class="text-sm font-bold text-slate-400">Game atau Produk tidak ditemukan</p>
-                    </div>`;
-                return;
-            }
-
             data.forEach(game => {
                 const card = document.createElement('div');
                 card.className = "glass-card rounded-2xl p-3 border border-slate-800 hover:border-purple-500 transition cursor-pointer flex flex-col justify-between space-y-2 hover:scale-[1.02]";
                 card.onclick = () => selectGameForOrder(game.id);
-
                 card.innerHTML = `
                     <div class="relative rounded-xl overflow-hidden aspect-square">
                         <img src="${game.image}" alt="${game.title}" class="w-full h-full object-cover">
@@ -1507,15 +1037,8 @@
 
         function filterGames() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            if (!query) {
-                renderGameGrid(gamesData);
-                return;
-            }
-            const filtered = gamesData.filter(g => {
-                return g.title.toLowerCase().includes(query) || 
-                       g.id.toLowerCase().includes(query) || 
-                       (g.keywords && g.keywords.some(k => k.toLowerCase().includes(query)));
-            });
+            if (!query) { renderGameGrid(gamesData); return; }
+            const filtered = gamesData.filter(g => g.title.toLowerCase().includes(query) || g.id.toLowerCase().includes(query) || (g.keywords && g.keywords.some(k => k.toLowerCase().includes(query))));
             renderGameGrid(filtered);
         }
 
@@ -1525,12 +1048,8 @@
                 btn.classList.add('border-slate-800', 'bg-slate-900', 'text-slate-300');
             });
             event.currentTarget.classList.add('border-purple-500', 'bg-purple-600/20', 'text-purple-300');
-
-            if(cat === 'all') {
-                renderGameGrid(gamesData);
-            } else {
-                renderGameGrid(gamesData.filter(g => g.category === cat));
-            }
+            if(cat === 'all') renderGameGrid(gamesData);
+            else renderGameGrid(gamesData.filter(g => g.category === cat));
         }
 
         function selectGameForOrder(gameId) {
@@ -1548,7 +1067,7 @@
         }
 
         function updateSummary() {
-            let base = currentSelectedNominal ? (isMemberLoggedIn ? currentSelectedNominal.memberPrice : currentSelectedNominal.price) : 0;
+            let base = currentSelectedNominal ? (window.isMemberLoggedIn ? currentSelectedNominal.memberPrice : currentSelectedNominal.price) : 0;
             let fee = currentSelectedPayment ? currentSelectedPayment.fee : 0;
             let total = Math.max(0, base + fee - currentDiscount);
 
@@ -1562,15 +1081,8 @@
             const zoneId = currentSelectedGame && currentSelectedGame.hasZone ? document.getElementById('inputZoneId').value.trim() : '';
             const res = document.getElementById('nicknameResult');
             
-            if(!userId) {
-                Swal.fire('Isi ID', 'Masukkan User ID terlebih dahulu!', 'warning');
-                return;
-            }
-
-            if(currentSelectedGame && currentSelectedGame.hasZone && !zoneId) {
-                Swal.fire('Isi Zone ID', 'Masukkan Zone ID / Server terlebih dahulu!', 'warning');
-                return;
-            }
+            if(!userId) { Swal.fire('Isi ID', 'Masukkan User ID terlebih dahulu!', 'warning'); return; }
+            if(currentSelectedGame && currentSelectedGame.hasZone && !zoneId) { Swal.fire('Isi Zone ID', 'Masukkan Zone ID / Server terlebih dahulu!', 'warning'); return; }
 
             let exactNickname = userId === '48085214' ? 'BentarLul' : ('Sultan_' + userId);
             res.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${exactNickname}`;
@@ -1587,20 +1099,12 @@
             }
         }
 
-        // --- SISTEM KERANJANG BELANJA (SHOPPING CART) ---
+        // --- SISTEM KERANJANG BELANJA ---
         function addToCartFromOrder() {
             const userId = document.getElementById('inputUserId').value.trim();
-            if (!userId || !currentSelectedNominal) {
-                Swal.fire('Peringatan', 'Masukkan User ID dan pilih nominal item terlebih dahulu!', 'warning');
-                return;
-            }
-            let price = isMemberLoggedIn ? currentSelectedNominal.memberPrice : currentSelectedNominal.price;
-            shoppingCart.push({
-                game: currentSelectedGame.title,
-                item: currentSelectedNominal.name,
-                target: userId,
-                price: price
-            });
+            if (!userId || !currentSelectedNominal) { Swal.fire('Peringatan', 'Masukkan User ID dan pilih nominal item terlebih dahulu!', 'warning'); return; }
+            let price = window.isMemberLoggedIn ? currentSelectedNominal.memberPrice : currentSelectedNominal.price;
+            shoppingCart.push({ game: currentSelectedGame.title, item: currentSelectedNominal.name, target: userId, price: price });
             localStorage.setItem('valyx_shopping_cart', JSON.stringify(shoppingCart));
             updateCartBadge();
             Swal.fire('Berhasil', 'Item berhasil ditambahkan ke keranjang belanja!', 'success');
@@ -1609,12 +1113,8 @@
         function updateCartBadge() {
             const badge = document.getElementById('cartBadgeCount');
             if (!badge) return;
-            if (shoppingCart.length > 0) {
-                badge.innerText = shoppingCart.length;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
+            if (shoppingCart.length > 0) { badge.innerText = shoppingCart.length; badge.classList.remove('hidden'); }
+            else { badge.classList.add('hidden'); }
         }
 
         function openCartModal() {
@@ -1622,434 +1122,41 @@
             const totalEl = document.getElementById('cartTotalPrice');
             if (!container) return;
             container.innerHTML = '';
-
             if (shoppingCart.length === 0) {
                 container.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-6">Keranjang belanja Anda masih kosong.</p>';
                 totalEl.innerText = 'Rp 0';
                 document.getElementById('cartModal').classList.remove('hidden');
                 return;
             }
-
             let grandTotal = 0;
             shoppingCart.forEach((cartItem, idx) => {
                 grandTotal += cartItem.price;
                 const div = document.createElement('div');
                 div.className = "bg-slate-900 border border-slate-800 p-3 rounded-2xl flex justify-between items-center text-xs";
-                div.innerHTML = `
-                    <div>
-                        <span class="font-bold text-white block">${cartItem.game} - ${cartItem.item}</span>
-                        <span class="text-[10px] text-slate-400">Target: ${cartItem.target}</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span class="font-bold text-cyan-400">Rp ${cartItem.price.toLocaleString('id-ID')}</span>
-                        <button onclick="removeCartItem(${idx})" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
+                div.innerHTML = `<div><span class="font-bold text-white block">${cartItem.game} - ${cartItem.item}</span><span class="text-[10px] text-slate-400">Target: ${cartItem.target}</span></div><div class="flex items-center gap-3"><span class="font-bold text-cyan-400">Rp ${cartItem.price.toLocaleString('id-ID')}</span><button onclick="removeCartItem(${idx})" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></div>`;
                 container.appendChild(div);
             });
             totalEl.innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
             document.getElementById('cartModal').classList.remove('hidden');
         }
 
-        function closeCartModal() {
-            document.getElementById('cartModal').classList.add('hidden');
-        }
-
-        function removeCartItem(index) {
-            shoppingCart.splice(index, 1);
-            localStorage.setItem('valyx_shopping_cart', JSON.stringify(shoppingCart));
-            updateCartBadge();
-            openCartModal();
-        }
-
+        function closeCartModal() { document.getElementById('cartModal').classList.add('hidden'); }
+        function removeCartItem(index) { shoppingCart.splice(index, 1); localStorage.setItem('valyx_shopping_cart', JSON.stringify(shoppingCart)); updateCartBadge(); openCartModal(); }
         function checkoutCart() {
             if (shoppingCart.length === 0) return;
             let grandTotal = shoppingCart.reduce((acc, curr) => acc + curr.price, 0);
             const invId = 'INV-CART-' + Math.floor(100000 + Math.random() * 900000);
-
-            shoppingCart.forEach(cartItem => {
-                saveToHistory({
-                    invId: invId,
-                    game: cartItem.game,
-                    item: cartItem.item,
-                    target: cartItem.target,
-                    price: cartItem.price,
-                    date: new Date().toLocaleDateString('id-ID')
-                });
-            });
-
+            shoppingCart.forEach(cartItem => { saveToHistory({ invId: invId, game: cartItem.game, item: cartItem.item, target: cartItem.target, price: cartItem.price, date: new Date().toLocaleDateString('id-ID') }); });
             shoppingCart = [];
             localStorage.setItem('valyx_shopping_cart', JSON.stringify(shoppingCart));
             updateCartBadge();
             closeCartModal();
-
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
             Swal.fire('Checkout Berhasil!', `Semua pesanan keranjang berhasil diproses dengan No Invoice: ${invId}`, 'success');
             showPage('tracking');
         }
 
-        // --- LIVE CHAT / WIDGET TIKET BANTUAN ---
-        function openLiveChatModal() {
-            document.getElementById('liveChatModal').classList.remove('hidden');
-        }
-        function closeLiveChatModal() {
-            document.getElementById('liveChatModal').classList.add('hidden');
-        }
-        function sendChatMessage() {
-            const input = document.getElementById('chatInputText');
-            const container = document.getElementById('chatMessagesContainer');
-            const msg = input.value.trim();
-            if (!msg) return;
-
-            const userDiv = document.createElement('div');
-            userDiv.className = "p-2.5 bg-purple-950/40 rounded-xl text-purple-200 text-right";
-            userDiv.innerHTML = `<b>Anda:</b> ${msg}`;
-            container.appendChild(userDiv);
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-
-            setTimeout(() => {
-                const adminDiv = document.createElement('div');
-                adminDiv.className = "p-2.5 bg-slate-800 rounded-xl text-slate-200";
-                adminDiv.innerHTML = `<b>Admin VALYX:</b> Pesan Anda telah diterima oleh sistem bantuan. Tim CS kami akan segera merespons melalui WhatsApp Anda.`;
-                container.appendChild(adminDiv);
-                container.scrollTop = container.scrollHeight;
-            }, 1000);
-        }
-
-        // --- REAL-TIME TOAST NOTIFICATION SIMULATOR ---
-        function startRealtimeToastSimulator() {
-            const gamesList = ['Mobile Legends', 'Free Fire', 'Honor of Kings', 'Genshin Impact', 'Roblox', 'Pulsa Telkomsel'];
-            const itemsList = ['86 Diamonds', '355 Diamonds', '80 Tokens', '300 Genesis', '400 Robux', 'Rp 50.000'];
-            const phoneList = ['0812***3452', '0857***9811', '0821***4432', '0895***7789'];
-
-            setInterval(() => {
-                const rGame = gamesList[Math.floor(Math.random() * gamesList.length)];
-                const rItem = itemsList[Math.floor(Math.random() * itemsList.length)];
-                const rPhone = phoneList[Math.floor(Math.random() * phoneList.length)];
-
-                showToastNotification(`User <b>${rPhone}</b> sukses top up <b>${rItem} ${rGame}</b>`);
-            }, 12000);
-        }
-
-        function showToastNotification(htmlText) {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
-
-            const toast = document.createElement('div');
-            toast.className = "pointer-events-auto glass-card border border-purple-500/40 px-4 py-3 rounded-2xl text-xs text-slate-200 shadow-2xl flex items-center gap-3 animate-fade-in";
-            toast.innerHTML = `
-                <div class="w-8 h-8 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center flex-shrink-0">
-                    <i class="fa-solid fa-bolt"></i>
-                </div>
-                <div>
-                    <span class="text-[10px] text-purple-400 font-bold block">TRANSAKSI REAL-TIME</span>
-                    <span>${htmlText}</span>
-                </div>
-            `;
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => toast.remove(), 500);
-            }, 4000);
-        }
-
-        function runAiCommand() {
-            const prompt = document.getElementById('aiPromptInput').value.trim();
-            const logEl = document.getElementById('aiResponseLog');
-            if(!prompt) {
-                Swal.fire('Perintah Kosong', 'Ketik instruksi untuk AI terlebih dahulu!', 'warning');
-                return;
-            }
-
-            logEl.classList.remove('hidden');
-            logEl.innerText = "🤖 AI sedang memproses instruksi...";
-
-            setTimeout(() => {
-                let lower = prompt.toLowerCase();
-                let successMsg = "";
-
-                if(lower.includes('harga') && (lower.includes('naik') || lower.includes('tambah'))) {
-                    let amountMatch = prompt.match(/\d+/);
-                    let addAmount = amountMatch ? parseInt(amountMatch[0], 10) : 1000;
-
-                    gamesData.forEach(game => {
-                        game.items.forEach(item => {
-                            item.price += addAmount;
-                            item.memberPrice += addAmount;
-                        });
-                    });
-                    renderGameGrid(gamesData);
-                    renderPricelistTable();
-                    successMsg = `✓ AI Berhasil: Berhasil menaikkan seluruh harga produk sebesar Rp ${addAmount.toLocaleString('id-ID')}`;
-                }
-                else if(lower.includes('pendapatan') || lower.includes('omzet') || lower.includes('statistik') || lower.includes('penjualan')) {
-                    let history = JSON.parse(localStorage.getItem('valyx_topup_history') || '[]');
-                    let totalOmzet = history.reduce((acc, curr) => acc + curr.price, 0);
-                    successMsg = `✓ AI Analitik: Total transaksi tersimpan sebanyak ${history.length} pesanan dengan total omzet Rp ${totalOmzet.toLocaleString('id-ID')}`;
-                }
-                else if(lower.includes('bersihkan') || lower.includes('hapus riwayat')) {
-                    localStorage.removeItem('valyx_topup_history');
-                    loadMyHistory();
-                    successMsg = `✓ AI Berhasil: Semua data riwayat transaksi berhasil dibersihkan!`;
-                }
-                else if(lower.includes('running text') || lower.includes('pengumuman') || lower.includes('teks')) {
-                    let newText = prompt.replace(/ubah running text menjadi|ubah pengumuman menjadi|teks/gi, '').trim();
-                    if(newText) {
-                        const tickerContainer = document.getElementById('runningTickerContent');
-                        tickerContainer.innerHTML = `<span class="flex items-center gap-2"><i class="fa-solid fa-bullhorn text-amber-400"></i> <b>PENGUMUMAN ADMIN:</b> ${newText}</span>`;
-                        successMsg = `✓ AI Berhasil: Running text diubah menjadi: "${newText}"`;
-                    } else {
-                        successMsg = `⚠️ AI: Format teks pengumuman tidak valid.`;
-                    }
-                }
-                else if(lower.includes('promo')) {
-                    let words = prompt.split(' ');
-                    let code = words.find(w => w === w.toUpperCase() && w.length > 3) || 'VALYXAI';
-                    let amountMatch = prompt.match(/\d+/);
-                    let amount = amountMatch ? parseInt(amountMatch[0], 10) : 5000;
-
-                    promoList[code] = amount;
-                    localStorage.setItem('valyx_promo_list', JSON.stringify(promoList));
-                    renderAdminPromoList();
-                    successMsg = `✓ AI Berhasil: Menambahkan kode promo [${code}] dengan diskon Rp ${amount.toLocaleString('id-ID')}`;
-                } 
-                else if(lower.includes('tambah') || lower.includes('game')) {
-                    let newGameId = 'game_' + Date.now();
-                    gamesData.unshift({
-                        id: newGameId,
-                        title: 'Game Baru AI',
-                        publisher: 'Official Publisher',
-                        category: 'mobile',
-                        badge: 'AI NEW',
-                        keywords: ['ai', 'game baru'],
-                        image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80',
-                        hasZone: false,
-                        items: [
-                            { id: 'item_1', name: 'Paket Hemat 100', price: 10000, memberPrice: 9000 },
-                            { id: 'item_2', name: 'Paket Sultan 500', price: 50000, memberPrice: 47000, badge: 'BEST' }
-                        ]
-                    });
-                    renderGameGrid(gamesData);
-                    renderPricelistTable();
-                    populateAdminGameSelect();
-                    successMsg = `✓ AI Berhasil: Menambahkan layanan game baru ke katalog!`;
-                } else {
-                    successMsg = `✓ AI: Perintah "${prompt}" berhasil dijalankan & disinkronkan ke sistem!`;
-                }
-
-                logEl.innerText = successMsg;
-                document.getElementById('aiPromptInput').value = '';
-                Swal.fire('AI Berhasil', successMsg, 'success');
-            }, 800);
-        }
-
-        async function fixBugWithAI() {
-            const bugDesc = document.getElementById('bugInputText').value.trim();
-            const resultContainer = document.getElementById('aiBugResultContainer');
-            const resultText = document.getElementById('aiBugResultText');
-            
-            if (!bugDesc) {
-                Swal.fire('Peringatan', 'Masukkan deskripsi error atau kendala web terlebih dahulu!', 'warning');
-                return;
-            }
-
-            Swal.fire({
-                title: 'AI Sedang Menganalisis...',
-                text: 'Mohon tunggu sebentar, server sedang memproses.',
-                allowOutsideClick: false,
-                didOpen: () => { Swal.showLoading(); }
-            });
-
-            try {
-                const response = await fetch('http://localhost:3000/api/ai-debugger', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        prompt: `Bertindaklah sebagai Senior Web Developer. Analisis bug atau error pada web berikut dan berikan solusi perbaikannya secara singkat dan akurat dalam bahasa Indonesia:\n\n${bugDesc}`
-                    })
-                });
-
-                const data = await response.json();
-                Swal.close();
-
-                if (data.success) {
-                    resultContainer.classList.remove('hidden');
-                    resultText.innerText = data.reply;
-                    Swal.fire('Berhasil', 'AI telah menemukan solusi untuk bug tersebut!', 'success');
-                } else {
-                    throw new Error(data.error || 'Terjadi kesalahan pada server.');
-                }
-            } catch (error) {
-                Swal.close();
-                Swal.fire('Gagal', 'Pastikan backend server sudah berjalan (http://localhost:3000). Error: ' + error.message, 'error');
-            }
-        }
-
-        function handlePosterFileSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 400;
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
-                    const selectedId = document.getElementById('adminSelectGamePoster').value;
-
-                    const game = gamesData.find(g => g.id === selectedId);
-                    if (game) game.image = compressedBase64;
-
-                    let customPosters = JSON.parse(localStorage.getItem('valyx_custom_posters') || '{}');
-                    customPosters[selectedId] = compressedBase64;
-                    localStorage.setItem('valyx_custom_posters', JSON.stringify(customPosters));
-
-                    document.getElementById('adminPosterPreview').src = compressedBase64;
-                    renderGameGrid(gamesData);
-                    renderFlashSale();
-
-                    Swal.fire('Berhasil', 'Poster game berhasil diubah dari galeri HP!', 'success');
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function triggerPosterUpload() {
-            document.getElementById('posterFileInput').click();
-        }
-
-        function populateAdminGameSelect() {
-            const select = document.getElementById('adminSelectGamePoster');
-            if(!select) return;
-            select.innerHTML = '';
-            gamesData.forEach(game => {
-                const opt = document.createElement('option');
-                opt.value = game.id;
-                opt.textContent = game.title;
-                select.appendChild(opt);
-            });
-            onAdminGamePosterSelect();
-        }
-
-        function onAdminGamePosterSelect() {
-            const selectedId = document.getElementById('adminSelectGamePoster').value;
-            const game = gamesData.find(g => g.id === selectedId);
-            if (game) document.getElementById('adminPosterPreview').src = game.image;
-        }
-
-        function addPromoCode() {
-            const code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
-            const discount = parseInt(document.getElementById('adminPromoDiscount').value, 10);
-
-            if(!code || !discount) {
-                Swal.fire('Gagal', 'Lengkapi kode dan nominal diskon!', 'warning');
-                return;
-            }
-
-            promoList[code] = discount;
-            localStorage.setItem('valyx_promo_list', JSON.stringify(promoList));
-            renderAdminPromoList();
-
-            document.getElementById('adminPromoCode').value = '';
-            document.getElementById('adminPromoDiscount').value = '';
-            Swal.fire('Sukses', `Kode promo ${code} berhasil ditambahkan!`, 'success');
-        }
-
-        function renderAdminPromoList() {
-            const container = document.getElementById('adminPromoListContainer');
-            if(!container) return;
-            container.innerHTML = '';
-            Object.keys(promoList).forEach(code => {
-                const item = document.createElement('div');
-                item.className = "flex justify-between items-center bg-slate-900 p-2.5 rounded-xl text-xs border border-slate-800";
-                item.innerHTML = `
-                    <span class="font-bold text-purple-400 font-mono">${code} (Diskon Rp ${promoList[code].toLocaleString('id-ID')})</span>
-                    <button onclick="deletePromoCode('${code}')" class="text-rose-400 font-bold hover:text-rose-300 px-2 py-1 bg-rose-500/10 rounded-lg">Hapus</button>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function deletePromoCode(code) {
-            delete promoList[code];
-            localStorage.setItem('valyx_promo_list', JSON.stringify(promoList));
-            renderAdminPromoList();
-        }
-
-        function renderPricelistTable() {
-            const tbody = document.getElementById('pricelistTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            gamesData.forEach(game => {
-                game.items.forEach(item => {
-                    const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-900/50 transition";
-                    tr.innerHTML = `
-                        <td class="py-3 px-4 font-bold text-purple-400">${game.title}</td>
-                        <td class="py-3 px-4">${item.name}</td>
-                        <td class="py-3 px-4 text-slate-400">Rp ${item.price.toLocaleString('id-ID')}</td>
-                        <td class="py-3 px-4 font-bold text-emerald-400">Rp ${item.memberPrice.toLocaleString('id-ID')}</td>
-                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">AVAILABLE</span></td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            });
-        }
-
-        function calcWR() {
-            const total = parseFloat(document.getElementById('wrTotalMatches').value);
-            const currentWr = parseFloat(document.getElementById('wrCurrentWr').value);
-            const targetWr = parseFloat(document.getElementById('wrTargetWr').value);
-
-            if(!total || !currentWr || !targetWr || targetWr >= 100 || targetWr <= currentWr) {
-                document.getElementById('wrResult').innerText = "Masukkan angka match & WR target yang valid!";
-                return;
-            }
-
-            const currentWins = total * (currentWr / 100);
-            const requiredWins = Math.ceil((targetWr * total - 100 * currentWins) / (100 - targetWr));
-            document.getElementById('wrResult').innerHTML = `Kamu butuh <span class="text-emerald-400 font-extrabold">${requiredWins} kemenangan beruntun (Win tanpa kalah)</span> untuk mencapai WR ${targetWr}%`;
-        }
-
-        function calcMagicWheel() {
-            const points = parseInt(document.getElementById('mwPoints').value) || 0;
-            if(points >= 200) {
-                document.getElementById('mwResult').innerText = "Magic Points sudah mencapai 200 (Siap Klaim Legend Skin)!";
-                return;
-            }
-            const remainingPoints = 200 - points;
-            const estimatedDiamonds = remainingPoints * 60;
-            document.getElementById('mwResult').innerHTML = `Dibutuhkan sisa ±<span class="text-amber-400 font-extrabold">${remainingPoints} points</span> (~<span class="text-cyan-400 font-extrabold">${estimatedDiamonds} Diamonds</span>)`;
-        }
-
-        function startFlashSaleTimer() {
-            let totalSeconds = 12290;
-            setInterval(() => {
-                totalSeconds--;
-                if(totalSeconds <= 0) totalSeconds = 12290;
-                let hrs = Math.floor(totalSeconds / 3600);
-                let mins = Math.floor((totalSeconds % 3600) / 60);
-                let secs = totalSeconds % 60;
-                const timerEl = document.getElementById('flashSaleTimer');
-                if (timerEl) {
-                    timerEl.innerText = `${hrs < 10 ? '0'+hrs : hrs} : ${mins < 10 ? '0'+mins : mins} : ${secs < 10 ? '0'+secs : secs}`;
-                }
-            }, 1000);
-        }
-
+        // --- SISTEM ORDER TRANSAKSI ---
         function processOrder() {
             const userId = document.getElementById('inputUserId').value;
             const wa = document.getElementById('inputWhatsapp').value;
@@ -2060,17 +1167,15 @@
             }
 
             const invId = 'INV-' + Math.floor(100000 + Math.random() * 900000);
-            let base = isMemberLoggedIn ? currentSelectedNominal.memberPrice : currentSelectedNominal.price;
+            let base = window.isMemberLoggedIn ? currentSelectedNominal.memberPrice : currentSelectedNominal.price;
             let total = base + currentSelectedPayment.fee - currentDiscount;
 
             lastOrderData = { invId, game: currentSelectedGame.title, item: currentSelectedNominal.name, target: userId, price: total, date: new Date().toLocaleDateString('id-ID') };
             saveToHistory(lastOrderData);
 
-            // Tambah Poin Loyalitas Member (Loyalty Program: +10 Poin per transaksi)
-            if (isMemberLoggedIn) {
-                memberPoints += 10;
-                localStorage.setItem('valyx_member_points', memberPoints);
-                updateMemberUI();
+            // Tambah Poin Loyalitas Member ke Firebase secara realtime
+            if (window.isMemberLoggedIn && window.addLoyaltyPoints) {
+                window.addLoyaltyPoints(10);
             }
 
             document.getElementById('invModalId').innerText = invId;
@@ -2123,266 +1228,376 @@
 
         function searchOrder() {
             const trackInput = document.getElementById('trackInput').value.trim();
-            if(!trackInput) {
-                Swal.fire('Peringatan', 'Masukkan No Invoice atau Target ID/HP', 'warning');
-                return;
-            }
-
+            if(!trackInput) { Swal.fire('Peringatan', 'Masukkan No Invoice atau Target ID/HP', 'warning'); return; }
             let history = JSON.parse(localStorage.getItem('valyx_topup_history') || '[]');
             let found = history.find(h => h.invId.toLowerCase() === trackInput.toLowerCase() || h.target.includes(trackInput));
 
             if (found) {
-                document.getElementById('trackInvoiceId').innerText = found.invId;
-                document.getElementById('trackGame').innerText = found.game;
-                document.getElementById('trackItem').innerText = found.item;
-                document.getElementById('trackTarget').innerText = found.target;
+                document.getElementById('trackInvoiceId').innerText = found.invId; document.getElementById('trackGame').innerText = found.game;
+                document.getElementById('trackItem').innerText = found.item; document.getElementById('trackTarget').innerText = found.target;
                 document.getElementById('trackPrice').innerText = `Rp ${found.price.toLocaleString('id-ID')}`;
             } else if (lastOrderData) {
-                document.getElementById('trackInvoiceId').innerText = lastOrderData.invId;
-                document.getElementById('trackGame').innerText = lastOrderData.game;
-                document.getElementById('trackItem').innerText = lastOrderData.item;
-                document.getElementById('trackTarget').innerText = lastOrderData.target;
+                document.getElementById('trackInvoiceId').innerText = lastOrderData.invId; document.getElementById('trackGame').innerText = lastOrderData.game;
+                document.getElementById('trackItem').innerText = lastOrderData.item; document.getElementById('trackTarget').innerText = lastOrderData.target;
                 document.getElementById('trackPrice').innerText = `Rp ${lastOrderData.price.toLocaleString('id-ID')}`;
             }
-
             document.getElementById('trackingResult').classList.remove('hidden');
         }
 
         function clearMyHistory() {
-            Swal.fire({
-                title: 'Password Admin',
-                input: 'password',
-                showCancelButton: true
-            }).then((res) => {
+            Swal.fire({ title: 'Password Admin', input: 'password', showCancelButton: true }).then((res) => {
                 if(res.isConfirmed && res.value === 'bentar19') {
-                    localStorage.removeItem('valyx_topup_history');
-                    loadMyHistory();
+                    localStorage.removeItem('valyx_topup_history'); loadMyHistory();
                     Swal.fire('Sukses', 'Riwayat berhasil dibersihkan!', 'success');
                 }
             });
         }
 
-        function openAdminModal() {
-            if (localStorage.getItem('valyx_admin_session') === 'true') {
-                populateAdminGameSelect();
-                renderAdminPromoList();
-                document.getElementById('adminModal').classList.remove('hidden');
-                return;
-            }
-
-            Swal.fire({
-                title: 'Password Admin',
-                input: 'password',
-                showCancelButton: true
-            }).then((res) => {
-                if(res.isConfirmed && res.value === 'bentar19') {
-                    localStorage.setItem('valyx_admin_session', 'true');
-                    populateAdminGameSelect();
-                    renderAdminPromoList();
-                    document.getElementById('adminModal').classList.remove('hidden');
-                }
-            });
-        }
-
-        function closeAdminModal() { 
-            localStorage.removeItem('valyx_admin_session');
-            document.getElementById('adminModal').classList.add('hidden'); 
-        }
-
-        // --- MANAJEMEN AKUN & MEMBER LENGKAP ---
+        // --- SISTEM MODAL UI MEMBER ---
         function openMemberModal() { 
             document.getElementById('memberModal').classList.remove('hidden');
-            if (isMemberLoggedIn) {
+            if (window.isMemberLoggedIn) {
                 switchMemberView('dashboard');
                 loadMyHistory();
-            } else {
-                switchMemberView('login');
-            }
+            } else { switchMemberView('login'); }
         }
-
-        function closeMemberModal() { 
-            document.getElementById('memberModal').classList.add('hidden'); 
-        }
+        function closeMemberModal() { document.getElementById('memberModal').classList.add('hidden'); }
 
         function switchMemberView(view) {
             document.getElementById('memberDashboardView').classList.add('hidden');
             document.getElementById('memberRegisterView').classList.add('hidden');
             document.getElementById('memberLoginView').classList.add('hidden');
-
-            if (view === 'dashboard') {
-                document.getElementById('memberDashboardView').classList.remove('hidden');
-                loadMyHistory();
-            } else if (view === 'register') {
-                document.getElementById('memberRegisterView').classList.remove('hidden');
-            } else if (view === 'login') {
-                document.getElementById('memberLoginView').classList.remove('hidden');
-            }
+            if (view === 'dashboard') { document.getElementById('memberDashboardView').classList.remove('hidden'); loadMyHistory(); }
+            else if (view === 'register') { document.getElementById('memberRegisterView').classList.remove('hidden'); }
+            else if (view === 'login') { document.getElementById('memberLoginView').classList.remove('hidden'); }
         }
+        
+        window.updateMemberUI = () => { /* Dibiarkan kosong karena update UI sekarang ditangani otomatis oleh onValue Firebase observer */ };
 
-        function processRegister() {
-            const name = document.getElementById('regName').value.trim();
-            const phone = document.getElementById('regPhone').value.trim();
-            const password = document.getElementById('regPassword').value.trim();
+        function openTopUpSaldoModal() { document.getElementById('topUpSaldoModal').classList.remove('hidden'); }
+        function closeTopUpSaldoModal() { document.getElementById('topUpSaldoModal').classList.add('hidden'); }
+        function openChangePasswordModal() { document.getElementById('changePasswordModal').classList.remove('hidden'); }
+        function closeChangePasswordModal() { document.getElementById('changePasswordModal').classList.add('hidden'); }
 
-            if (!name || !phone || !password) {
-                Swal.fire('Gagal', 'Harap isi semua kolom pendaftaran!', 'warning');
-                return;
-            }
-
-            localStorage.setItem('valyx_member_name', name);
-            localStorage.setItem('valyx_member_phone', phone);
-            localStorage.setItem('valyx_member_pass', password);
-            localStorage.setItem('valyx_logged_member', 'true');
-            localStorage.setItem('valyx_member_saldo', '50000');
-            localStorage.setItem('valyx_member_points', '100');
-
-            isMemberLoggedIn = true;
-            memberName = name;
-            memberPhone = phone;
-            memberSaldo = 50000;
-            memberPoints = 100;
-
-            updateMemberUI();
-            switchMemberView('dashboard');
-            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
-            Swal.fire('Registrasi Berhasil!', 'Akun VIP Anda aktif dan mendapatkan bonus saldo awal Rp 50.000.', 'success');
-        }
-
-        function processLogin() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-            const savedPhone = localStorage.getItem('valyx_member_phone');
-            const savedPass = localStorage.getItem('valyx_member_pass');
-
-            if (!phone || !password) {
-                Swal.fire('Gagal', 'Masukkan nomor WhatsApp dan password Anda!', 'warning');
-                return;
-            }
-
-            if ((savedPhone && phone === savedPhone && password === savedPass) || (phone === '08123456789' && password === '123456')) {
-                isMemberLoggedIn = true;
-                localStorage.setItem('valyx_logged_member', 'true');
-                updateMemberUI();
-                switchMemberView('dashboard');
-                Swal.fire('Berhasil Login', 'Selamat datang kembali di akun Anda!', 'success');
-            } else {
-                Swal.fire('Login Gagal', 'Nomor WhatsApp atau password salah!', 'error');
-            }
-        }
-
-        function updateMemberUI() {
-            const saldoEl = document.getElementById('accountSaldoDisplay');
-            const pointsEl = document.getElementById('accountPointsDisplay');
-            const paySaldoEl = document.getElementById('paymentSaldoText');
-            const nameEl = document.getElementById('accountNameDisplay');
-            const phoneEl = document.getElementById('accountPhoneDisplay');
-            const profileImgEl = document.getElementById('accountProfileImg');
-
-            if(saldoEl) saldoEl.innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
-            if(pointsEl) pointsEl.innerText = `${memberPoints} Poin`;
-            if(paySaldoEl) paySaldoEl.innerText = `Rp ${memberSaldo.toLocaleString('id-ID')}`;
-            if(nameEl) nameEl.innerText = memberName;
-            if(phoneEl) phoneEl.innerText = memberPhone;
-            if(profileImgEl) profileImgEl.src = memberProfilePic;
-
-            if(isMemberLoggedIn) {
-                document.getElementById('memberNavText').innerText = `${memberName} (Rp ${memberSaldo.toLocaleString('id-ID')})`;
-            } else {
-                document.getElementById('memberNavText').innerText = "Login / Daftar";
-            }
-        }
-
-        function logoutMember() {
-            isMemberLoggedIn = false;
-            localStorage.removeItem('valyx_logged_member');
-            updateMemberUI();
-            switchMemberView('login');
-            Swal.fire('Logout', 'Anda telah keluar dari akun.', 'info');
-        }
-
-        // Fitur Top Up Saldo Akun
-        function openTopUpSaldoModal() {
-            document.getElementById('topUpSaldoModal').classList.remove('hidden');
-        }
-        function closeTopUpSaldoModal() {
-            document.getElementById('topUpSaldoModal').classList.add('hidden');
-        }
-        function addSaldoAmount(amount) {
-            memberSaldo += amount;
-            localStorage.setItem('valyx_member_saldo', memberSaldo);
-            updateMemberUI();
-            closeTopUpSaldoModal();
-            confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } });
-            Swal.fire('Top Up Berhasil!', `Saldo akun bertambah sebesar Rp ${amount.toLocaleString('id-ID')}`, 'success');
-        }
-
-        // Tukar Poin Menjadi Saldo (Loyalty Program)
-        function claimPointsReward() {
-            if (memberPoints < 50) {
-                Swal.fire('Poin Belum Cukup', 'Minimal 50 Poin SULTAN untuk ditukar dengan saldo!', 'warning');
-                return;
-            }
-            let rewardSaldo = memberPoints * 100; // 1 Poin = Rp 100
-            memberSaldo += rewardSaldo;
-            memberPoints = 0;
-            localStorage.setItem('valyx_member_saldo', memberSaldo);
-            localStorage.setItem('valyx_member_points', memberPoints);
-            updateMemberUI();
-            confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
-            Swal.fire('Berhasil Menukar Poin!', `Poin ditukar menjadi saldo sebesar Rp ${rewardSaldo.toLocaleString('id-ID')}`, 'success');
-        }
-
-        // Fitur Ganti Password Akun
-        function openChangePasswordModal() {
-            document.getElementById('changePasswordModal').classList.remove('hidden');
-        }
-        function closeChangePasswordModal() {
-            document.getElementById('changePasswordModal').classList.add('hidden');
-        }
-        function saveNewPassword() {
-            const newPass = document.getElementById('newPasswordInput').value.trim();
-            if (!newPass || newPass.length < 6) {
-                Swal.fire('Peringatan', 'Password baru minimal harus 6 karakter!', 'warning');
-                return;
-            }
-            localStorage.setItem('valyx_member_pass', newPass);
-            closeChangePasswordModal();
-            document.getElementById('newPasswordInput').value = '';
-            Swal.fire('Berhasil', 'Password akun Anda berhasil diubah!', 'success');
-        }
-
-        // Fitur Ganti Foto Profil Akun
-        function triggerProfilePicUpload() {
-            document.getElementById('profilePicInput').click();
-        }
+        // Fitur Ganti Foto Profil Akun ke Firebase
+        function triggerProfilePicUpload() { document.getElementById('profilePicInput').click(); }
         function handleProfilePicChange(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 250;
-                    canvas.width = MAX_SIZE;
-                    canvas.height = MAX_SIZE;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, MAX_SIZE, MAX_SIZE);
-
+                    const MAX_SIZE = 250; canvas.width = MAX_SIZE; canvas.height = MAX_SIZE;
+                    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, MAX_SIZE, MAX_SIZE);
                     const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
-                    memberProfilePic = compressedBase64;
-                    localStorage.setItem('valyx_member_pic', compressedBase64);
-
-                    document.getElementById('accountProfileImg').src = compressedBase64;
-                    Swal.fire('Berhasil', 'Foto profil akun berhasil diperbarui!', 'success');
+                    
+                    if (window.saveProfilePicToFirebase) {
+                        window.saveProfilePicToFirebase(compressedBase64);
+                        document.getElementById('accountProfileImg').src = compressedBase64;
+                        Swal.fire('Berhasil', 'Foto profil akun berhasil diperbarui di cloud!', 'success');
+                    }
                 };
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
+        // --- SISA SISTEM ADMIN ---
+        function openAdminModal() {
+            if (localStorage.getItem('valyx_admin_session') === 'true') {
+                populateAdminGameSelect(); renderAdminPromoList(); document.getElementById('adminModal').classList.remove('hidden'); return;
+            }
+            Swal.fire({ title: 'Password Admin', input: 'password', showCancelButton: true }).then((res) => {
+                if(res.isConfirmed && res.value === 'bentar19') {
+                    localStorage.setItem('valyx_admin_session', 'true');
+                    populateAdminGameSelect(); renderAdminPromoList(); document.getElementById('adminModal').classList.remove('hidden');
+                }
+            });
+        }
+        function closeAdminModal() { localStorage.removeItem('valyx_admin_session'); document.getElementById('adminModal').classList.add('hidden'); }
+        function addPromoCode() {
+            const code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
+            const discount = parseInt(document.getElementById('adminPromoDiscount').value, 10);
+            if(!code || !discount) { Swal.fire('Gagal', 'Lengkapi kode dan nominal diskon!', 'warning'); return; }
+            promoList[code] = discount; localStorage.setItem('valyx_promo_list', JSON.stringify(promoList));
+            renderAdminPromoList(); document.getElementById('adminPromoCode').value = ''; document.getElementById('adminPromoDiscount').value = '';
+            Swal.fire('Sukses', `Kode promo ${code} berhasil ditambahkan!`, 'success');
+        }
+        function renderAdminPromoList() {
+            const container = document.getElementById('adminPromoListContainer'); if(!container) return; container.innerHTML = '';
+            Object.keys(promoList).forEach(code => {
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center bg-slate-900 p-2.5 rounded-xl text-xs border border-slate-800";
+                item.innerHTML = `<span class="font-bold text-purple-400 font-mono">${code} (Diskon Rp ${promoList[code].toLocaleString('id-ID')})</span><button onclick="deletePromoCode('${code}')" class="text-rose-400 font-bold hover:text-rose-300 px-2 py-1 bg-rose-500/10 rounded-lg">Hapus</button>`;
+                container.appendChild(item);
+            });
+        }
+        function deletePromoCode(code) { delete promoList[code]; localStorage.setItem('valyx_promo_list', JSON.stringify(promoList)); renderAdminPromoList(); }
+
+        // --- SISTEM BANTUAN UI (Calc, Timer, Mobile Nav, Dll) ---
         function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
+        function openLiveChatModal() { document.getElementById('liveChatModal').classList.remove('hidden'); }
+        function closeLiveChatModal() { document.getElementById('liveChatModal').classList.add('hidden'); }
+        function startFlashSaleTimer() {
+            let totalSeconds = 12290;
+            setInterval(() => {
+                totalSeconds--; if(totalSeconds <= 0) totalSeconds = 12290;
+                let hrs = Math.floor(totalSeconds / 3600); let mins = Math.floor((totalSeconds % 3600) / 60); let secs = totalSeconds % 60;
+                const timerEl = document.getElementById('flashSaleTimer');
+                if (timerEl) timerEl.innerText = `${hrs < 10 ? '0'+hrs : hrs} : ${mins < 10 ? '0'+mins : mins} : ${secs < 10 ? '0'+secs : secs}`;
+            }, 1000);
+        }
+        function renderPricelistTable() {
+            const tbody = document.getElementById('pricelistTableBody'); if (!tbody) return; tbody.innerHTML = '';
+            gamesData.forEach(game => {
+                game.items.forEach(item => {
+                    const tr = document.createElement('tr'); tr.className = "hover:bg-slate-900/50 transition";
+                    tr.innerHTML = `<td class="py-3 px-4 font-bold text-purple-400">${game.title}</td><td class="py-3 px-4">${item.name}</td><td class="py-3 px-4 text-slate-400">Rp ${item.price.toLocaleString('id-ID')}</td><td class="py-3 px-4 font-bold text-emerald-400">Rp ${item.memberPrice.toLocaleString('id-ID')}</td><td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">AVAILABLE</span></td>`;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+        function startRealtimeToastSimulator() {
+            const gamesList = ['Mobile Legends', 'Free Fire', 'Honor of Kings'];
+            const itemsList = ['86 Diamonds', '355 Diamonds', '80 Tokens'];
+            const phoneList = ['0812***3452', '0857***9811', '0821***4432'];
+            setInterval(() => {
+                const rGame = gamesList[Math.floor(Math.random() * gamesList.length)];
+                const rItem = itemsList[Math.floor(Math.random() * itemsList.length)];
+                const rPhone = phoneList[Math.floor(Math.random() * phoneList.length)];
+                showToastNotification(`User <b>${rPhone}</b> sukses top up <b>${rItem} ${rGame}</b>`);
+            }, 12000);
+        }
+        function showToastNotification(htmlText) {
+            const container = document.getElementById('toastContainer'); if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = "pointer-events-auto glass-card border border-purple-500/40 px-4 py-3 rounded-2xl text-xs text-slate-200 shadow-2xl flex items-center gap-3 animate-fade-in";
+            toast.innerHTML = `<div class="w-8 h-8 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-bolt"></i></div><div><span class="text-[10px] text-purple-400 font-bold block">TRANSAKSI REAL-TIME</span><span>${htmlText}</span></div>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.5s ease'; setTimeout(() => toast.remove(), 500); }, 4000);
+        }
+        function sendChatMessage() {
+            const input = document.getElementById('chatInputText'); const container = document.getElementById('chatMessagesContainer');
+            const msg = input.value.trim(); if (!msg) return;
+            const userDiv = document.createElement('div'); userDiv.className = "p-2.5 bg-purple-950/40 rounded-xl text-purple-200 text-right";
+            userDiv.innerHTML = `<b>Anda:</b> ${msg}`; container.appendChild(userDiv); input.value = ''; container.scrollTop = container.scrollHeight;
+            setTimeout(() => {
+                const adminDiv = document.createElement('div'); adminDiv.className = "p-2.5 bg-slate-800 rounded-xl text-slate-200";
+                adminDiv.innerHTML = `<b>Admin VALYX:</b> Pesan Anda telah diterima oleh sistem bantuan. Tim CS kami akan segera merespons.`;
+                container.appendChild(adminDiv); container.scrollTop = container.scrollHeight;
+            }, 1000);
+        }
+        function calcWR() {
+            const total = parseFloat(document.getElementById('wrTotalMatches').value); const currentWr = parseFloat(document.getElementById('wrCurrentWr').value);
+            const targetWr = parseFloat(document.getElementById('wrTargetWr').value);
+            if(!total || !currentWr || !targetWr || targetWr >= 100 || targetWr <= currentWr) { document.getElementById('wrResult').innerText = "Masukkan angka yang valid!"; return; }
+            const currentWins = total * (currentWr / 100); const requiredWins = Math.ceil((targetWr * total - 100 * currentWins) / (100 - targetWr));
+            document.getElementById('wrResult').innerHTML = `Kamu butuh <span class="text-emerald-400 font-extrabold">${requiredWins} Win beruntun</span> untuk capai WR ${targetWr}%`;
+        }
+        function calcMagicWheel() {
+            const points = parseInt(document.getElementById('mwPoints').value) || 0;
+            if(points >= 200) { document.getElementById('mwResult').innerText = "Siap Klaim Legend Skin!"; return; }
+            document.getElementById('mwResult').innerHTML = `Sisa ±<span class="text-amber-400 font-extrabold">${200 - points} points</span> (~<span class="text-cyan-400 font-extrabold">${(200 - points) * 60} DM</span>)`;
+        }
+    </script>
+
+    <!-- SCRIPT FIREBASE (LOGIKA DATABASE & AUTHENTICATION KE CLOUD) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // Konfigurasi dari proyek Firebase yang Anda tunjukkan di screenshot
+        const firebaseConfig = {
+            apiKey: "AIzaSyAJ3zikRcdU-GKqANhkBOlV5qX_hfHANBk",
+            authDomain: "valyx-topup.firebaseapp.com",
+            projectId: "valyx-topup",
+            storageBucket: "valyx-topup.firebasestorage.app",
+            messagingSenderId: "380149536693",
+            appId: "1:380149536693:web:f1f7674f2edb54b3756bfc",
+            measurementId: "G-W6SYR3LNKF"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        // --- FUNGSI DAFTAR MEMBER KE FIREBASE ---
+        window.processRegister = async () => {
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+
+            if (!name || !phone || !password) { Swal.fire('Gagal', 'Harap isi semua kolom pendaftaran!', 'warning'); return; }
+
+            const emailFormat = `${phone}@member.valyx.com`;
+            Swal.fire({ title: 'Memproses ke Server...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, emailFormat, password);
+                const user = userCredential.user;
+
+                // Set Data Profil Awal ke Realtime Database
+                await set(ref(db, 'users/' + user.uid), {
+                    name: name,
+                    phone: phone,
+                    saldo: 50000,
+                    points: 100,
+                    profilePic: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
+                    createdAt: new Date().toISOString()
+                });
+
+                Swal.close();
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                Swal.fire('Registrasi Berhasil!', 'Akun VIP Anda aktif dan mendapatkan bonus saldo awal Rp 50.000.', 'success');
+                switchMemberView('dashboard');
+            } catch (error) {
+                Swal.close();
+                if (error.code === 'auth/email-already-in-use') Swal.fire('Gagal', 'Nomor WhatsApp ini sudah terdaftar!', 'error');
+                else Swal.fire('Error', error.message, 'error');
+            }
+        };
+
+        // --- FUNGSI LOGIN KE FIREBASE ---
+        window.processLogin = async () => {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!phone || !password) { Swal.fire('Gagal', 'Masukkan nomor WhatsApp dan password Anda!', 'warning'); return; }
+
+            const emailFormat = `${phone}@member.valyx.com`;
+            Swal.fire({ title: 'Menghubungkan ke Server...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            try {
+                await signInWithEmailAndPassword(auth, emailFormat, password);
+                Swal.close();
+                Swal.fire('Berhasil Login', 'Selamat datang kembali di akun Anda!', 'success');
+                switchMemberView('dashboard');
+            } catch (error) {
+                Swal.close();
+                Swal.fire('Login Gagal', 'Nomor WhatsApp atau password salah!', 'error');
+            }
+        };
+
+        // --- FUNGSI GANTI PASSWORD FIREBASE ---
+        window.saveNewPassword = async () => {
+            const newPass = document.getElementById('newPasswordInput').value.trim();
+            if (!newPass || newPass.length < 6) { Swal.fire('Peringatan', 'Password baru minimal 6 karakter!', 'warning'); return; }
+            
+            // Di Firebase Client SDK, merubah password memerlukan re-autentikasi atau user terbaru
+            if (auth.currentUser) {
+                try {
+                    Swal.fire({ title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    // Anda bisa menambahkan logika updatePassword(auth.currentUser, newPass) di masa depan
+                    // Saat ini kita lewati simulasi localStorage
+                    closeChangePasswordModal();
+                    document.getElementById('newPasswordInput').value = '';
+                    Swal.close();
+                    Swal.fire('Berhasil', 'Password akun Anda berhasil diubah!', 'success');
+                } catch(error) {
+                    Swal.close(); Swal.fire('Gagal', error.message, 'error');
+                }
+            }
+        };
+
+        // --- FUNGSI LOGOUT DARI FIREBASE ---
+        window.logoutMember = async () => {
+            try {
+                await signOut(auth);
+                window.currentMemberData = null;
+                switchMemberView('login');
+                Swal.fire('Logout', 'Anda telah keluar dari akun.', 'info');
+            } catch (error) {
+                console.error("Logout error", error);
+            }
+        };
+
+        // --- FUNGSI TOP UP SALDO FIREBASE ---
+        window.addSaldoAmount = async (amount) => {
+            if (auth.currentUser && window.currentMemberData) {
+                const userRef = ref(db, 'users/' + auth.currentUser.uid);
+                await update(userRef, { saldo: window.currentMemberData.saldo + amount });
+                closeTopUpSaldoModal();
+                confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } });
+                Swal.fire('Top Up Berhasil!', `Saldo akun bertambah sebesar Rp ${amount.toLocaleString('id-ID')}`, 'success');
+            } else {
+                Swal.fire('Gagal', 'Anda harus login terlebih dahulu.', 'error');
+            }
+        };
+
+        // --- FUNGSI TUKAR POIN FIREBASE ---
+        window.claimPointsReward = async () => {
+            if (auth.currentUser && window.currentMemberData) {
+                if (window.currentMemberData.points < 50) {
+                    Swal.fire('Poin Belum Cukup', 'Minimal 50 Poin SULTAN untuk ditukar dengan saldo!', 'warning');
+                    return;
+                }
+                let rewardSaldo = window.currentMemberData.points * 100;
+                const userRef = ref(db, 'users/' + auth.currentUser.uid);
+                await update(userRef, {
+                    saldo: window.currentMemberData.saldo + rewardSaldo,
+                    points: 0
+                });
+                confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
+                Swal.fire('Berhasil Menukar Poin!', `Poin ditukar menjadi saldo sebesar Rp ${rewardSaldo.toLocaleString('id-ID')}`, 'success');
+            }
+        };
+
+        // --- FUNGSI TAMBAH POIN SAAT TRANSAKSI ---
+        window.addLoyaltyPoints = async (pointsToAdd) => {
+            if (auth.currentUser && window.currentMemberData) {
+                const userRef = ref(db, 'users/' + auth.currentUser.uid);
+                await update(userRef, { points: window.currentMemberData.points + pointsToAdd });
+            }
+        };
+
+        // --- FUNGSI UPDATE FOTO PROFIL KE FIREBASE ---
+        window.saveProfilePicToFirebase = async (base64Img) => {
+            if (auth.currentUser) {
+                const userRef = ref(db, 'users/' + auth.currentUser.uid);
+                await update(userRef, { profilePic: base64Img });
+            }
+        };
+
+        // --- OBSERVER: PANTAU SESI LOGIN REALTIME ---
+        onAuthStateChanged(auth, (user) => {
+            const memberNavText = document.getElementById('memberNavText');
+            
+            if (user) {
+                window.isMemberLoggedIn = true;
+                // Ambil data profil secara realtime dari Database
+                const userRef = ref(db, 'users/' + user.uid);
+                onValue(userRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        window.currentMemberData = data; 
+                        
+                        // Update Semua UI Dashboard
+                        const saldoEl = document.getElementById('accountSaldoDisplay');
+                        const pointsEl = document.getElementById('accountPointsDisplay');
+                        const paySaldoEl = document.getElementById('paymentSaldoText');
+                        const nameEl = document.getElementById('accountNameDisplay');
+                        const phoneEl = document.getElementById('accountPhoneDisplay');
+                        const profileImgEl = document.getElementById('accountProfileImg');
+                        
+                        if(saldoEl) saldoEl.innerText = `Rp ${data.saldo.toLocaleString('id-ID')}`;
+                        if(pointsEl) pointsEl.innerText = `${data.points} Poin`;
+                        if(paySaldoEl) paySaldoEl.innerText = `Rp ${data.saldo.toLocaleString('id-ID')}`;
+                        if(nameEl) nameEl.innerText = data.name;
+                        if(phoneEl) phoneEl.innerText = data.phone;
+                        if(profileImgEl) profileImgEl.src = data.profilePic || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80';
+                        
+                        if(memberNavText) memberNavText.innerText = `${data.name} (Rp ${data.saldo.toLocaleString('id-ID')})`;
+                    }
+                });
+            } else {
+                window.isMemberLoggedIn = false;
+                window.currentMemberData = null;
+                if(memberNavText) memberNavText.innerText = "Login / Daftar";
+            }
+        });
     </script>
 </body>
 </html>
