@@ -749,13 +749,16 @@
         </div>
     </div>
 
-    <!-- WIDGET FLOATING LIVE CHAT BUTTON -->
+    <!-- FLOATING BUTTONS (CS & PINTASAN ADMIN RAHASIA) -->
     <button onclick="openLiveChatModal()" class="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-emerald-500 to-teal-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl hover:scale-110 transition glow-effect">
         <i class="fa-solid fa-headset"></i>
     </button>
+    <button onclick="openAdminModal()" class="fixed bottom-6 left-6 z-40 bg-slate-900 border border-purple-500/50 text-purple-400 w-10 h-10 rounded-full shadow-xl flex items-center justify-center text-sm hover:scale-110 transition" title="Pintasan Admin">
+        <i class="fa-solid fa-gear"></i>
+    </button>
 
     <!-- REAL-TIME TOAST NOTIFICATION CONTAINER -->
-    <div id="toastContainer" class="fixed bottom-6 left-6 z-40 space-y-2 pointer-events-none"></div>
+    <div id="toastContainer" class="fixed bottom-20 left-6 z-40 space-y-2 pointer-events-none"></div>
 
     <!-- MODAL 7: ADMIN DASHBOARD (FULL SCREEN) -->
     <div id="adminModal" class="fixed inset-0 z-50 hidden bg-slate-950/95 backdrop-blur-xl w-full h-full overflow-y-auto p-2 sm:p-6">
@@ -933,19 +936,26 @@
             startRealtimeToastSimulator();
 
             const currentHash = window.location.hash.replace('#', '');
-            if (currentHash) showPage(currentHash);
-            else showPage('home');
+            if (currentHash === 'admin') {
+                openAdminModal();
+            } else if (currentHash) {
+                showPage(currentHash);
+            } else {
+                showPage('home');
+            }
 
             if (localStorage.getItem('valyx_admin_session') === 'true') {
-                populateAdminGameSelect();
                 renderAdminPromoList();
-                document.getElementById('adminModal').classList.remove('hidden');
             }
         });
 
         window.addEventListener('hashchange', () => {
             const currentHash = window.location.hash.replace('#', '');
-            if (currentHash) showPage(currentHash);
+            if (currentHash === 'admin') {
+                openAdminModal();
+            } else if (currentHash) {
+                showPage(currentHash);
+            }
         });
 
         function loadGameOrderUI(game) {
@@ -996,7 +1006,7 @@
             document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
             const target = document.getElementById('page-' + targetPageId);
             if(target) target.classList.remove('hidden');
-            window.location.hash = pageId;
+            if (pageId !== 'admin') window.location.hash = pageId;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -1173,7 +1183,6 @@
             lastOrderData = { invId, game: currentSelectedGame.title, item: currentSelectedNominal.name, target: userId, price: total, date: new Date().toLocaleDateString('id-ID') };
             saveToHistory(lastOrderData);
 
-            // Tambah Poin Loyalitas Member ke Firebase secara realtime
             if (window.isMemberLoggedIn && window.addLoyaltyPoints) {
                 window.addLoyaltyPoints(10);
             }
@@ -1272,14 +1281,13 @@
             else if (view === 'login') { document.getElementById('memberLoginView').classList.remove('hidden'); }
         }
         
-        window.updateMemberUI = () => { /* Dibiarkan kosong karena update UI sekarang ditangani otomatis oleh onValue Firebase observer */ };
+        window.updateMemberUI = () => {};
 
         function openTopUpSaldoModal() { document.getElementById('topUpSaldoModal').classList.remove('hidden'); }
         function closeTopUpSaldoModal() { document.getElementById('topUpSaldoModal').classList.add('hidden'); }
         function openChangePasswordModal() { document.getElementById('changePasswordModal').classList.remove('hidden'); }
         function closeChangePasswordModal() { document.getElementById('changePasswordModal').classList.add('hidden'); }
 
-        // Fitur Ganti Foto Profil Akun ke Firebase
         function triggerProfilePicUpload() { document.getElementById('profilePicInput').click(); }
         function handleProfilePicChange(event) {
             const file = event.target.files[0];
@@ -1304,19 +1312,38 @@
             reader.readAsDataURL(file);
         }
 
-        // --- SISA SISTEM ADMIN ---
+        // --- SISTEM ADMIN ---
         function openAdminModal() {
             if (localStorage.getItem('valyx_admin_session') === 'true') {
-                populateAdminGameSelect(); renderAdminPromoList(); document.getElementById('adminModal').classList.remove('hidden'); return;
+                renderAdminPromoList(); 
+                document.getElementById('adminModal').classList.remove('hidden'); 
+                return;
             }
-            Swal.fire({ title: 'Password Admin', input: 'password', showCancelButton: true }).then((res) => {
-                if(res.isConfirmed && res.value === 'bentar19') {
-                    localStorage.setItem('valyx_admin_session', 'true');
-                    populateAdminGameSelect(); renderAdminPromoList(); document.getElementById('adminModal').classList.remove('hidden');
+            Swal.fire({ 
+                title: 'Password Admin', 
+                input: 'password', 
+                inputPlaceholder: 'Masukkan sandi admin...',
+                showCancelButton: true,
+                confirmButtonText: 'Masuk'
+            }).then((res) => {
+                if(res.isConfirmed) {
+                    if (res.value === 'bentar19') {
+                        localStorage.setItem('valyx_admin_session', 'true');
+                        renderAdminPromoList(); 
+                        document.getElementById('adminModal').classList.remove('hidden');
+                    } else {
+                        Swal.fire('Gagal', 'Password admin salah!', 'error');
+                    }
                 }
             });
         }
-        function closeAdminModal() { localStorage.removeItem('valyx_admin_session'); document.getElementById('adminModal').classList.add('hidden'); }
+        function closeAdminModal() { 
+            localStorage.removeItem('valyx_admin_session'); 
+            document.getElementById('adminModal').classList.add('hidden'); 
+            if(window.location.hash === '#admin') {
+                window.location.hash = 'home';
+            }
+        }
         function addPromoCode() {
             const code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
             const discount = parseInt(document.getElementById('adminPromoDiscount').value, 10);
@@ -1336,7 +1363,7 @@
         }
         function deletePromoCode(code) { delete promoList[code]; localStorage.setItem('valyx_promo_list', JSON.stringify(promoList)); renderAdminPromoList(); }
 
-        // --- SISTEM BANTUAN UI (Calc, Timer, Mobile Nav, Dll) ---
+        // --- SISTEM BANTUAN UI ---
         function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
         function openLiveChatModal() { document.getElementById('liveChatModal').classList.remove('hidden'); }
         function closeLiveChatModal() { document.getElementById('liveChatModal').classList.add('hidden'); }
@@ -1403,13 +1430,12 @@
         }
     </script>
 
-    <!-- SCRIPT FIREBASE (LOGIKA DATABASE & AUTHENTICATION KE CLOUD) -->
+    <!-- SCRIPT FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Konfigurasi API yang sudah diperbaiki (menggunakan kode baru yang Anda kirimkan)
         const firebaseConfig = {
             apiKey: "AIzaSyAJ3zikRcdU-GKgANhk8O1V5qX_hfHANBk",
             authDomain: "valyx-topup.firebaseapp.com",
@@ -1424,7 +1450,6 @@
         const auth = getAuth(app);
         const db = getDatabase(app);
 
-        // --- FUNGSI DAFTAR MEMBER KE FIREBASE ---
         window.processRegister = async () => {
             const name = document.getElementById('regName').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
@@ -1439,7 +1464,6 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, emailFormat, password);
                 const user = userCredential.user;
 
-                // Set Data Profil Awal ke Realtime Database
                 await set(ref(db, 'users/' + user.uid), {
                     name: name,
                     phone: phone,
@@ -1460,7 +1484,6 @@
             }
         };
 
-        // --- FUNGSI LOGIN KE FIREBASE ---
         window.processLogin = async () => {
             const phone = document.getElementById('loginPhone').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
@@ -1481,17 +1504,12 @@
             }
         };
 
-        // --- FUNGSI GANTI PASSWORD FIREBASE ---
         window.saveNewPassword = async () => {
             const newPass = document.getElementById('newPasswordInput').value.trim();
             if (!newPass || newPass.length < 6) { Swal.fire('Peringatan', 'Password baru minimal 6 karakter!', 'warning'); return; }
-            
-            // Di Firebase Client SDK, merubah password memerlukan re-autentikasi atau user terbaru
             if (auth.currentUser) {
                 try {
                     Swal.fire({ title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-                    // Anda bisa menambahkan logika updatePassword(auth.currentUser, newPass) di masa depan
-                    // Saat ini kita lewati simulasi localStorage
                     closeChangePasswordModal();
                     document.getElementById('newPasswordInput').value = '';
                     Swal.close();
@@ -1502,7 +1520,6 @@
             }
         };
 
-        // --- FUNGSI LOGOUT DARI FIREBASE ---
         window.logoutMember = async () => {
             try {
                 await signOut(auth);
@@ -1514,7 +1531,6 @@
             }
         };
 
-        // --- FUNGSI TOP UP SALDO FIREBASE ---
         window.addSaldoAmount = async (amount) => {
             if (auth.currentUser && window.currentMemberData) {
                 const userRef = ref(db, 'users/' + auth.currentUser.uid);
@@ -1527,7 +1543,6 @@
             }
         };
 
-        // --- FUNGSI TUKAR POIN FIREBASE ---
         window.claimPointsReward = async () => {
             if (auth.currentUser && window.currentMemberData) {
                 if (window.currentMemberData.points < 50) {
@@ -1545,7 +1560,6 @@
             }
         };
 
-        // --- FUNGSI TAMBAH POIN SAAT TRANSAKSI ---
         window.addLoyaltyPoints = async (pointsToAdd) => {
             if (auth.currentUser && window.currentMemberData) {
                 const userRef = ref(db, 'users/' + auth.currentUser.uid);
@@ -1553,7 +1567,6 @@
             }
         };
 
-        // --- FUNGSI UPDATE FOTO PROFIL KE FIREBASE ---
         window.saveProfilePicToFirebase = async (base64Img) => {
             if (auth.currentUser) {
                 const userRef = ref(db, 'users/' + auth.currentUser.uid);
@@ -1561,20 +1574,17 @@
             }
         };
 
-        // --- OBSERVER: PANTAU SESI LOGIN REALTIME ---
         onAuthStateChanged(auth, (user) => {
             const memberNavText = document.getElementById('memberNavText');
             
             if (user) {
                 window.isMemberLoggedIn = true;
-                // Ambil data profil secara realtime dari Database
                 const userRef = ref(db, 'users/' + user.uid);
                 onValue(userRef, (snapshot) => {
                     const data = snapshot.val();
                     if (data) {
                         window.currentMemberData = data; 
                         
-                        // Update Semua UI Dashboard
                         const saldoEl = document.getElementById('accountSaldoDisplay');
                         const pointsEl = document.getElementById('accountPointsDisplay');
                         const paySaldoEl = document.getElementById('paymentSaldoText');
